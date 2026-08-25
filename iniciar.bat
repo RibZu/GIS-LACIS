@@ -1,12 +1,12 @@
-﻿@echo off
+@echo off
 setlocal enabledelayedexpansion
 
 echo ========================================================
-echo        GIS-LACIS - Script de Inicio Automático
+echo        GIS-LACIS - Script de Inicio Automtico
 echo ========================================================
 echo.
 
-:: Buscar PostgreSQL en C:\Program Files\PostgreSQL
+REM Buscar PostgreSQL en C:\Program Files\PostgreSQL
 set "PG_PATH="
 for /d %%D in ("C:\Program Files\PostgreSQL\*") do (
     if exist "%%D\bin\initdb.exe" (
@@ -23,12 +23,12 @@ if "!PG_PATH!"=="" (
 
 echo [INFO] PostgreSQL encontrado en: !PG_PATH!
 
-:: Verificar si el cluster ya existe
+REM Verificar si el cluster ya existe
 if not exist "pg_data\" (
-    echo [INFO] Inicializando nuevo cluster de base de datos local (pg_data)...
+    echo [INFO] Inicializando nuevo cluster de base de datos local...
     "!PG_PATH!\initdb.exe" -D "pg_data" -U postgres --auth=trust > nul
     
-    :: Cambiar puerto a 5433 en postgresql.conf
+    REM Cambiar puerto a 5433 en postgresql.conf
     (
         echo port = 5433
     ) >> "pg_data\postgresql.conf"
@@ -57,7 +57,7 @@ echo [INFO] Iniciando el Servidor Web (Go)...
 echo La pagina estara disponible en: http://localhost:8080
 echo ========================================================
 echo.
-start "" "cmd.exe" /c "go run cmd/api/main.go"
+start "" "cmd.exe" /k "go run cmd/api/main.go"
 
 echo.
 echo Presiona cualquier tecla para detener la base de datos...

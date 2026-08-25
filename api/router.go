@@ -5,6 +5,7 @@ import (
 	"PaginaSEG/internal/integrante"
 	"database/sql"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -32,8 +33,18 @@ func InitRoutes(e *gin.Engine) {
 	if err != nil {
 		logger.Fatal("No se pudo abrir conexión a PostgreSQL", zap.Error(err))
 	}
-	if err := db.Ping(); err != nil {
-		logger.Fatal("No se pudo hacer Ping a PostgreSQL", zap.Error(err))
+	
+	// Reintentar conexión hasta 20 veces (esperando a que inicie la DB tras crash recovery)
+	for i := 0; i < 20; i++ {
+		err = db.Ping()
+		if err == nil {
+			break
+		}
+		logger.Warn("Esperando a que la base de datos inicie...", zap.Error(err))
+		time.Sleep(2 * time.Second)
+	}
+	if err != nil {
+		logger.Fatal("No se pudo hacer Ping a PostgreSQL después de varios intentos", zap.Error(err))
 	}
 
 	// Servir archivos estáticos (CSS, JS, Imágenes)
