@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maestría en Calidad del Software - Software Engineering Group</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css-GIS/Styleheader.css">
+    <link rel="stylesheet" href="../../static/css-GIS/Posgrado.css">
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-expand-sm bg-is fixed-top shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="../../../index.html">
+        <img src="../../static/assets/img-GIS/SE.png" class="img-fluid" style="max-height: 50px;" alt="Logo grupo">
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarPosgrado" aria-controls="offcanvasNavbarPosgrado" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="offcanvas offcanvas-end" id="offcanvasNavbarPosgrado" tabindex="-1" aria-labelledby="offcanvasNavbarPosgradoLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarPosgradoLabel">El Grupo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item"><a class="nav-link" href="../../../index.html">El Grupo</a></li>
+            <li class="nav-item"><a class="nav-link" href="Lacis.html">LaCIS</a></li>
+            <li class="nav-item"><a class="nav-link" href="Proyecto.html">Proyectos</a></li>
+            <li class="nav-item"><a class="nav-link" href="integrantes.html">Integrantes</a></li>
+          </ul>
+          <a href="https://www.unsl.edu.ar/#gsc.tab=0">
+            <img src="../../static/assets/img-GIS/LogoUnsl.png" class="img-fluid" style="max-height: 50px;" alt="Logo Unsl">
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="seccion-posgrado">
+    <main class="container">
+        <div class="hero-posgrado">
+            <span class="badge badge-hero px-4 py-2 rounded-pill mb-4">
+                <i class="bi bi-award-fill me-2"></i> Acreditada por CONEAU categoría A
+            </span>
+            <h1 class="titulo-seccion">Maestría en <span>Calidad del Software</span></h1>
+            <h5 class="font-monospace">Título: Magister en Calidad del Software</h5>
+            
+            <div class="d-flex flex-wrap justify-content-center  gap-3 gap-md-5 mt-5 info">
+                <div class="text-center">
+                    <i class="bi bi-clock fs-2 text-primary mb-2 d-block" style="color: var(--azul-medio) ;"></i>
+                    <p class="mb-0"><strong>Duración</strong><br><span class="text-secundario">Dos años</span></p>
+                </div>
+                <div class="text-center border-start border-end px-5">
+                    <i class="bi bi-building fs-2 text-primary mb-2 d-block" style="color: var(--azul-medio);"></i>
+                    <p class="mb-0"><strong>Modalidad</strong><br><span class="text-secundario">Presencial/Sincrónica</span></p>
+                </div>
+                <div class="text-center">
+                    <i class="bi bi-cash-coin fs-2 text-primary mb-2 d-block" style="color: var(--azul-medio);"></i>
+                    <p class="mb-0"><strong>Costo</strong><br><span class="text-secundario">Arancelado</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bloque-principal">
+            
+            <ul class="nav nav-tabs justify-content-center mb-5" id="posgradoTab" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil-pane" type="button">Perfil</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="plan-tab" data-bs-toggle="tab" data-bs-target="#plan-pane" type="button">Plan de Estudios</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="requisitos-tab" data-bs-toggle="tab" data-bs-target="#requisitos-pane" type="button">Inscripción</button>
+                </li>
+                <li class="nav-item d-none">
+                    <button class="nav-link" id="tesis-tab" data-bs-toggle="tab" data-bs-target="#tesis-pane" type="button">Tesis</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="contacto-tab" data-bs-toggle="tab" data-bs-target="#contacto-pane" type="button">Contacto</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="posgradoTabContent">
+                
+                <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel">
+                    <h4 class="titulo-interno">Perfil del Egresado</h4>
+                    <p class="text-center mb-5 mx-auto" style="max-width: 800px;">
+                    La Maestría en Calidad del Software de la Universidad Nacional de San Luis aporta los conocimientos y habilidades necesarios para llevar a cabo la totalidad de los aspectos relacionados con Calidad en la construcción y mantenimiento de software confiable destinado a mercados de alta exigencia y a organizaciones complejas. Las capacidades del egresado, en principio, puede agruparse en:
+                    </p>
+                    
+                    </p>
+
+                    <div class="row justify-content-center mb-5">
+                        <div class="col-md-10">
+                            <ul class="list-group lista-limpia">
+                                <li class="list-group-item d-flex align-items-center text-start">
+                                    <i class="bi bi-check2-circle icono-lista me-2 mt-1 pe-1"></i>
+                                    <div>
+                                        <strong>Capacidades eminentemente tecnológicas</strong> que permitirán aplicar los criterios e instrumentos de
+                                        Calidad en la Industria del Software.
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center text-start">
+                                    <i class="bi bi-check2-circle icono-lista me-2 mt-1 pe-1"></i>
+                                    <div>
+                                        <strong>Capacidades de Gestión</strong> que permitirán identificar y seleccionar elegir las mejores alternativas
+                                        de estándares de Calidad en base a costos, confiabilidad y adaptabilidad para desarrollar software en las
+                                        mejores condiciones en mercados exigentes y complejos.
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center text-start">
+                                    <i class="bi bi-check2-circle icono-lista me-2 mt-1 pe-1"></i>
+                                    <div>
+                                        <strong>Capacidades de comunicación</strong> que faciliten transmitir, convencer de la necesidad de aplicar
+                                        estándares de Calidad de amplio reconocimiento en entornos complejos y para presentar a los aspectos de Calidad
+                                        de proyectos de software como inversiones atrayentes.
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center text-start">
+                                    <i class="bi bi-check2-circle icono-lista me-2 mt-1 pe-1"></i>
+                                    <div>
+                                        <strong>Capacidad para la gestión integral</strong> de los aspectos de Calidad en proyectos de software de alta
+                                        complejidad.
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center text-start">
+                                    <i class="bi bi-check2-circle icono-lista me-2 mt-1 pe-1"></i>
+                                    <div>
+                                        <strong>Capacidad para participar y coordinar equipos</strong> dedicados al Planeamiento Estratégico de Sistemas
+                                        de Información, a la Programación del Desarrollo de Sistemas, a la Definición de Especificaciones y Diseño de
+                                        Sistemas de Información, a la Programación e Implantación de Productos de Software, al Mantenimiento,
+                                        Reingeniería y Auditoría de Sistemas de Información desde el enfoque de la Calidad.
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center text-start">
+                                    <i class="bi bi-check2-circle icono-lista me-2 mt-1 pe-1"></i>
+                                    <div>
+                                        <strong>Capacidad de incidir significativamente</strong> en la Calidad y Productividad de la producción de
+                                        Software.
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-10">
+                            <h4 class="titulo-interno">Destinatarios</h4>
+                            <ul class="list-group lista-limpia">
+                                    <li class="list-group-item"><i class="bi bi-check2-circle icono-lista"></i> Profesionales en Informática (Licenciados en
+                                        Ciencias de la Computación, Licenciados en Sistemas, Ingenieros en Sistemas o en Informática y títulos finales de
+                                        grado similares correspondientes a carreras con planes de estudio que impliquen de cuatro o más años de duración).
+                                    </li>
+                                    <li class="list-group-item"><i class="bi bi-check2-circle icono-lista"></i> Profesionales en Ciencias Económicas
+                                        (Licenciados en Administración, Actuarios, Licenciados en Economía, Contadores) que aspiren a obtener la aptitud de
+                                        integrarse a equipos multidisciplinarios de Calidad del Software.</li>
+                                    <li class="list-group-item"><i class="bi bi-check2-circle icono-lista"></i> Profesionales en Ingeniería (título de
+                                        Ingeniero en las diversas especialidades) que deseen poseer la capacidad de integrarse a equipos de Calidad del
+                                        Software.</li>
+                                    <li class="list-group-item"><i class="bi bi-check2-circle icono-lista"></i> Profesionales en Ciencias Exactas o
+                                        Naturales que deseen desarrollar la capacidad de formar parte de equipos de Calidad del Software.</li>
+                                    <li class="list-group-item"><i class="bi bi-check2-circle icono-lista"></i> Profesionales universitarios, graduados en
+                                        universidades de gestión pública o privada de nuestro país o del exterior, en carreras de grado de cuatro o más años
+                                        de duración, que manifiesten una muy firme decisión de integrarse a equipos multidisciplinarios de Calidad del
+                                        Software.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="plan-pane" role="tabpanel">
+                    <h4 class="titulo-interno">Estructura Curricular</h4>
+                    <p class="text-center mb-4">Total Carga Horaria: <strong style="color: var(--azul-principal);">29 créditos (580 horas)</strong></p>
+                    
+                    <div class="table-responsive">
+                        <table class="table tabla-plan align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Nro. Curso</th>
+                                    <th>C</th>
+                                    <th>Año</th>
+                                    <th>Asignatura</th>
+                                    <th class="text-center">Créditos</th>
+                                    <th class="text-center">CH T</th>
+                                    <th class="text-center">CH P</th>
+                                    <th class="text-center">CHT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">1</td>
+                                    <td class="text-center">1</td>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">1º Año</td>
+                                    <td>Programacion, Algoritmos y Estructuras de Datos</td>
+                                    <td class="text-center">3</td>
+                                    <td class="text-center">30 hs</td>
+                                    <td class="text-center">30 hs</td>
+                                    <td class="text-center">60 hs</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">1</td>
+                                    <td class="text-center">1</td>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">1º Año</td>
+                                    <td>Principios de administracion de calidad</td>
+                                    <td class="text-center">3</td>
+                                    <td class="text-center">40 hs</td>
+                                    <td class="text-center">20 hs</td>
+                                    <td class="text-center">60 hs</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">3</td>
+                                    <td class="text-center">1</td>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">1º Año</td>
+                                    <td>Tópicos de Probabilidad y Estadística aplicados a la Calidad</td>
+                                    <td class="text-center">3</td>
+                                    <td class="text-center">30 hs</td>
+                                    <td class="text-center">30 hs</td>
+                                    <td class="text-center">60 hs</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">4</td>
+                                    <td class="text-center">2</td>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">1º Año</td>
+                                    <td>Control Estadístico de Calidad</td>
+                                    <td class="text-center">4</td>
+                                    <td class="text-center">50 hs</td>
+                                    <td class="text-center">30 hs</td>
+                                    <td class="text-center">80 hs</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">5</td>
+                                    <td class="text-center">2</td>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">1º Año</td>
+                                    <td>Gestión de Proyectos de Software</td>
+                                    <td class="text-center">4</td>
+                                    <td class="text-center">50 hs</td>
+                                    <td class="text-center">30 hs</td>
+                                    <td class="text-center">80 hs</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">6</td>
+                                    <td class="text-center">2</td>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">1º Año</td>
+                                    <td>Estándares de Calidad</td>
+                                    <td class="text-center">4</td>
+                                    <td class="text-center">50 hs</td>
+                                    <td class="text-center">30 hs</td>
+                                    <td class="text-center">80 hs</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">7</td>
+                                    <td class="text-center">1</td>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">2º Año</td>
+                                    <td>Modelos de Madurez y Capacidad</td>
+                                    <td class="text-center">4</td>
+                                    <td class="text-center">50 hs</td>
+                                    <td class="text-center">30 hs</td>
+                                    <td class="text-center">80 hs</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">8</td>
+                                    <td class="text-center">1</td>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">2º Año</td>
+                                    <td>Validación y Verificación de Productos de Software</td>
+                                    <td class="text-center">4</td>
+                                    <td class="text-center">50 hs</td>
+                                    <td class="text-center">30 hs</td>
+                                    <td class="text-center">80 hs</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">9</td>
+                                    <td class="text-center">2</td>
+                                    <td class="fw-bold" style="color: var(--azul-principal);">2º Año</td>
+                                    <td>Tutoría en Proyecto de Investigación acreditado orientado a la Calidad del Software (*)</td>
+                                    <td class="text-center">8</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-center"></td>
+                                    <td class="text-center">160 hs</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-secundario text-center mt-3">(*) El Maestrando deberá realizar Tutorias y Tareas de Investigación (sin incluir horas dedicadas al desarrollo de la Tesis) en un Proyecto de Investigación acreditado orientado a la Calidad del Software.</p>
+                </div>
+
+                <div class="tab-pane fade" id="requisitos-pane" role="tabpanel">
+                    <div class="row g-5">
+                        <div class="col-lg-6">
+                            <h4 class="titulo-interno">Requisitos</h4>
+                            <ul class="list-group lista-limpia">
+                                <li class="list-group-item"><i class="bi bi-file-earmark-pdf icono-lista"></i> Formulario de preinscripción.</li>
+                                <li class="list-group-item"><i class="bi bi-file-earmark-pdf icono-lista"></i> Título de Grado (DIPLOMA) -certificado que es copia fiel del original </li>
+                                <li class="list-group-item"><i class="bi bi-file-earmark-pdf icono-lista"></i> Analítico - certificado que es copia fiel del original</li>
+                                <li class="list-group-item"><i class="bi bi-file-earmark-pdf icono-lista"></i> DNI (actualizado)</li>
+                                <li class="list-group-item"><i class="bi bi-file-earmark-pdf icono-lista"></i> Curriculum Vitae del/la interesado/a</li>
+                            
+                            </ul>
+                        </div>
+                        <div class="col-lg-6">
+                            <h4 class="titulo-interno">Becas</h4>
+                            <div class="p-4 rounded-4" style="background-color: var(--azul-pastel);">
+                                <p class="mb-2"><strong>100% Cobertura:</strong> Docentes UNSL.</p>
+                                <p class="mb-0"><strong>50% Bonificación:</strong> Graduados UNSL.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade d-none" id="tesis-pane" role="tabpanel">
+                    <h4 class="titulo-interno">Tesis Realizadas</h4>
+                    
+                    <div class="d-flex justify-content-center mb-5 mt-4">
+                        <div class="input-group shadow-sm" style="max-width: 350px;">
+                            <span class="input-group-text bg-white border-end-0" style="border-color: var(--azul-claro);">
+                                <i class="bi bi-search" style="color: var(--azul-medio);"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0" placeholder="Buscar trabajos finales..." style="border-color: var(--azul-claro); box-shadow: none;">
+                        </div>
+                    </div>
+
+                    <div class="list-group lista-limpia">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1 fw-bold">Arquitectura de Microservicios en Educación</h6>
+                                <p class="text-secundario mb-0">Autor: Ing. Juan Pérez | 2023</p>
+                            </div>
+                            <a href="#" class="btn btn-sm d-inline-flex align-items-center" style="background-color: var(--azul-claro); color: var(--azul-principal); border-radius: 10px; padding: 6px 12px;">
+                                <i class="bi bi-download icono-btn-descarga"></i>
+                                <span class="texto-btn-descarga ms-2">Descargar PDF</span>
+                            </a>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1 fw-bold">Métricas de Calidad en Metodologías Ágiles</h6>
+                                <p class="text-secundario mb-0">Autor: Lic. María Gómez | 2022</p>
+                            </div>
+                            <a href="#" class="btn btn-sm d-inline-flex align-items-center" style="background-color: var(--azul-claro); color: var(--azul-principal); border-radius: 10px; padding: 6px 12px;">
+                                <i class="bi bi-download icono-btn-descarga"></i>
+                                <span class="texto-btn-descarga ms-2">Descargar PDF</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="contacto-pane" role="tabpanel">
+                <div class="row g-5 contacto-grid">
+                        
+                    
+                        <div class="col-lg-6">
+                            <h4 class="titulo-interno">Autoridades</h4>
+                            <div class="caja-autoridades p-4 rounded-4 shadow-sm" style="background-color: var(--azul-pastel); border: 1px solid var(--azul-claro);">
+                                <div class="mb-4">
+                                    <h5 class="fw-bold mb-1" style="color: var(--azul-principal);">
+                                        <i class="bi bi-person-workspace me-2" style="color: var(--azul-medio);"></i>Director
+                                    </h5>
+                                    <p class="mb-0 ms-4">Mg. Carlos Humberto SALGADO</p>
+                                </div>
+                                <div class="mb-4">
+                                    <h5 class="fw-bold mb-1" style="color: var(--azul-principal);">
+                                        <i class="bi bi-person-video3 me-2" style="color: var(--azul-medio);"></i>Codirector
+                                    </h5>
+                                    <p class="mb-0 ms-4">Dr. Mario Marcelo BERÓN</p>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-2" style="color: var(--azul-principal);">
+                                        <i class="bi bi-people-fill me-2" style="color: var(--azul-medio);"></i>Comité Académico
+                                    </h5>
+                                    <ul class="list-unstyled mb-0 ms-4">
+                                        <li><i class="bi bi-check2 text-primary me-2"></i>Dra. Ana Gabriela GARIS</li>
+                                        <li><i class="bi bi-check2 text-primary me-2"></i>Dr. Daniel Edgardo RIESCO</li>
+                                        <li><i class="bi bi-check2 text-primary me-2"></i>Mg. Lorena Soledad BAIGORRIA FERNANDEZ</li>
+                                        <li><i class="bi bi-check2 text-primary me-2"></i>Mg. Carlos Humberto SALGADO</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                
+                        <div class="col-lg-6">
+                            <div class="mb-5">
+                                <h4 class="titulo-interno">Consultas Académicas</h4>
+                                <p class="text-secundario mb-3"><em>(Consultas de de clases, aranceles, cursos, horarios, etc.)</em></p>
+                                <p class="mb-2"><i class="bi bi-envelope-fill me-2 fs-5" style="color: var(--azul-medio); vertical-align: middle;"></i> magister@unsl.edu.ar</p>
+                                <p class="text-secundario mb-0"><i class="bi bi-telephone-fill me-2 fs-5" style="color: var(--azul-medio); vertical-align: middle;"></i> 0266 - 4520300 int. 2101 </p>
+                            </div>
+                            <div>
+                                <h4 class="titulo-interno">Consultas Administrativas</h4>
+                                <p class="text-secundario mb-3"><em>(Consultas de documentación para la inscripción, resoluciones, certificados, etc.)</em></p>
+                                <p class="mb-2"><i class="bi bi-envelope-fill me-2 fs-5" style="color: var(--azul-medio); vertical-align: middle;"></i> posgradofmn@gmail.com</p>
+                                <p class="text-secundario mb-0"><i class="bi bi-telephone-fill me-2 fs-5" style="color: var(--azul-medio); vertical-align: middle;"></i> 0266 - 4520300 int. 5559</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+</div>
+<footer class="text-white pb-4 bg-dark"><!--footer-->
+  <div class="container text-center text-md-left">
+    <div class="row text-center ">
+      
+
+
+      <!-- Contacto -->
+      <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
+        <h5 class="text-uppercase mb-4 font-weight-bold text-success">Contacto</h5>
+        <p><strong>Ubicación:</strong> Bloque II - 1 piso </p>
+        <p><strong>Oficinas:</strong> N° 1-2-3-26-27-28-29</p>
+        <p><strong>Teléfono:</strong> 4520300 Int. 2101</p>
+
+      </div>
+
+      <!-- Logos -->
+      <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3" >
+        <a class="navbar-brand" href="https://dirinfo.unsl.edu.ar/">
+          <img src="../../static/assets/img-GIS/logo informatica.png" alt="Logo Dirinfo" class="mx-auto d-block img-fluid mb-5 w-50">
+        </a>
+        
+        <a class="navbar-brand" href="https://fmn.unsl.edu.ar/">
+          <img src="../../static/assets/img-GIS/LogoFMYN.png" alt="Logo FCFMYN" class="mx-auto d-block img-fluid mb-3 w-50">
+        </a>
+      </div>
+      <!-- Mapa -->
+      <div class="col-sm-4 align-items-center  mt-3">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d833.7578096159137!2d-66.33956090446108!3d-33.291845731959555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95d4394ea3733e7d%3A0x97d6d6cdd5bc7546!2sDepartamento%20de%20Inform%C3%A1tica%20-%20FCFMyN%20-%20UNSL!5e0!3m2!1ses!2sar!4v1768354243401!5m2!1ses!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" id="mapa"></iframe>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Derechos -->
+  <div class="container-fluid mt-3">
+    <div class="row">
+      <div class="col-md-8 text-center">
+        <p class="text-secondary mb-0">© 2026 Universidad Nacional de San Luis. Todos los derechos reservados.</p>
+      </div>
+      <div class="col-sm-4 text-right">
+        <p class="text-secondary">Hecho por: <a href="https://www.linkedin.com/in/ismael-alexander-farias-7a64b520b" target="_blank" rel="noopener noreferrer" >Ismael Farias</a> <a href="">Riberi Simon</a> <a href="">Gonzalez Emanuel</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

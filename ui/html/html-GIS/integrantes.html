@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integrantes - Software Engineering Group</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.12.1/font/bootstrap-icons.min.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" href="../../static/css-GIS/estilosIntegrantes.css">
+  <link rel="icon" href="../../static/assets/img-GIS/ing.ico">
+  <link rel="stylesheet" href="../../static/css-GIS/Styleheader.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+   
+
+    <header>
+        {{ template "nav" . }}
+    </header>
+
+
+    <!-- secccion de filtros y buscadores -->
+    <main>
+      <section>
+      <div class="container my-1 display-1 titulo ">
+          <div class="text-center py-5 px-4 hero-investigators">
+            <p class="hero-eyebrow" data-aos="fade-right" data-aos-duration="1000" >Nuestro equipo</p>
+            <h2 class="hero-titulo" data-aos="fade-right" data-aos-duration="1500">Nuestra Comunidad de<br><span class="invest">Investigación</span></h2>
+            <p class="hero-sub" data-aos="fade-right" data-aos-duration="2000">
+              Conoce al equipo multidisciplinario dedicado a explorar la vanguardia tecnológica y la optimización de sistemas. Nuestro compromiso con la excelencia técnica y la ingeniería de software de alta calidad guía cada una de nuestras investigaciones.
+            </p>
+            <div class="hero-arrow">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="py-3 sticky-left d-none d-md-block">
+          <div class="container bg-white shadow rounded-4 p-3 filtro-wrapper">
+            <div class="row justify-content-center gx-2 gy-2" id="filtro-barra">
+              <div class="col-auto">
+                <button class="btn filtro-btn active botones-menu" id="todos">Todos</button>
+              </div>
+               <div class="col-auto">
+                <button class="btn filtro-btn active botones-menu" id="lacis">LaCIS</button>
+              </div>
+              <div class="col-auto">
+                <button class="btn filtro-btn botones-menu" id="director">Directores</button>
+              </div>
+              <div class="col-auto">
+                <button class="btn filtro-btn botones-menu" id="investigador">Investigadores</button>
+              </div>
+              <div class="col-auto">
+                <button class="btn filtro-btn botones-menu" id="asesorExterno">Asesor Externo</button>
+              </div>
+              <div class="col-auto">
+                <button class="btn filtro-btn botones-menu" id="estudiante">Estudiantes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="d-block d-md-none">
+          <button class="btn btn-filtros-moderno" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">☰ Filtros</button>
+          <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
+            aria-labelledby="offcanvasWithBothOptionsLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Eliga el rol </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <div class="col-auto">
+                <button class="btn filtro-btn  botones-menu-canvas" id="todos">Todos</button>
+              </div>
+               <div class="col-auto">
+                <button class="btn filtro-btn  botones-menu-canvas" id="lacis">LaCIS</button>
+              </div>
+              <div class="col-auto">
+                <button class="btn filtro-btn botones-menu-canvas" id="director">Directores</button>
+              </div>
+              <div class="col-auto">
+                <button class="btn  filtro-btn  botones-menu-canvas" id="investigador">Investigadores</button>
+              </div>
+              <div class="col-auto">
+                <button class="btn filtro-btn  botones-menu-canvas" id="asesorExterno">Asesor Externo</button>
+              </div>
+              <div class="col-auto">
+                <button class="btn  filtro-btn  botones-menu-canvas" id="estudiante">Estudiante</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+
+      <!-- secccion de cartas -->
+      <section>
+        <div class="container">
+          <div class="container my-5 subtitulo titulo-director" >
+            <h2 class="text-center ">DIRECTORES</h2>
+          </div>
+
+
+          <div class="row" id="contenedor-director"> <!--  row-cols-lg-2 en caso de que en el diseño se requira , colocar dos cartas como director/es--> 
+          </div>
+
+          <div class="row text-center row-cols-md-1  row-cols-lg-2  row-cols-sm-1   justify-content-center my-5 "
+            id="contenedor-directores-deLinea">
+          </div>
+
+          <div class="container my-5 titulo-integrantes" data-aos="fade-right" data-aos-duration="1000">
+            <h2 class="integrantes text-center">INTEGRANTES </h2>
+          </div>
+
+          <div
+            class="row row-cols-1 row-cols-md-2  row-cols-lg-3  row-cols-sm-1  g-4 my-4 justify-content-center text-center"
+            id="contenedor-cartas-integrantes">
+          </div>
+        </div>
+      </section>
+    </main>
+
+
+
+<footer class="text-white pb-4 bg-dark"><!--footer-->
+  {{ template "footer" . }}
+</footer>
+
+
+
+
+
+
+
+
+
+    <!-- SCRIPTS de JS para la funcionaldiad de la pagina -->
+
+    <script src="../../static/js-GIS/ingresarNuevoIntegrante.js"></script>
+    <script> AOS.init(); </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+      crossorigin="anonymous"></script>
+    <script src="../../static/js-GIS/despliegue.js"></script>
+    <script src="../../static/js-GIS/interacion.js"></script>
+    <script src="../../static/js-GIS/filtrado.js"></script>
+
+
+
+
+</body>
+
+
+</html>

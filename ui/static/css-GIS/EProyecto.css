@@ -1,0 +1,211 @@
+.letraVerde{
+  color: var(--secondary-color);
+}
+.letraAzul{
+  color: var(--primary-color);
+}
+main{
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(to right, #daeaf6, #f0f7ff);
+}
+#mapa{
+  width: 100%;
+  height: 100%;
+  margin: 3px;
+}
+.bloque-principal {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.lista-scroll {
+  max-height: 350px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.lista-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-scroll::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.lista-scroll li {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+  color: #333;
+}
+
+.lista-scroll li:hover {
+  background-color: #e9f5ff; /* un celeste suave */
+  color: #007bff; /* color azul bootstrap para resaltar */
+}
+
+.lista-scroll li.active {
+  background-color: #007bff;
+  color: white;
+  font-weight: 700;
+}
+#info-extra h6 {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+#info-extra p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.titulo-seccion {
+  font-size: 2.5rem;
+  font-weight: 700;
+  
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #111;
+}
+.titulo-seccion span {
+  color: #007e33 ; 
+  border-bottom: 5px solid #007e33;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  
+}
+.descripcion-seccion {
+  font-size: 1.1rem;
+  color: #444;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.extras-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  padding: 1rem 0;
+}
+.card-flip {
+  background: white;
+  border-radius: 0.5rem;
+  min-width: 210px;
+  max-width: 100%;
+  height: 320px;
+  perspective: 1000px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.card-flip:hover {
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.3);
+}
+
+.card-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.card-flip:hover .card-flip-inner {
+  transform: rotateY(180deg);
+}
+
+.card-flip-front, .card-flip-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.card-flip-front {
+  background-color: #ffffff;
+  color: #333333;
+}
+
+.card-flip-front i {
+  font-size: 4rem;
+  color: var(--primary-color); /* azul Bootstrap */
+  margin-bottom: 1rem;
+}
+.card-flip-front h3 {
+  margin-bottom: 0.5rem;
+}
+
+.card-flip-back {
+  background-color: var(--primary-color);
+  color: white;
+  transform: rotateY(180deg);
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+#colab .card-flip{
+  min-width: 220px;
+}
+@media (max-width: 576px){
+  #colab .card-flip{
+  min-width: 170px;
+  }
+}
+.dosProyectos{
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+.circulo-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;           /* tamaño del círculo */
+  height: 60px;
+  border-radius: 50%;    /* forma circular */
+  border: 2px solid #28a745; /* color del borde (verde por ejemplo) */
+  color: #28a745;        /* color del ícono */
+  font-size: 24px;       /* tamaño del ícono */
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.circulo-icono:hover {
+  background-color: #28a745;
+  color: white;
+}
+#emailTexto {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.5s ease;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+#emailTexto.activo {
+  margin-top: 10px;
+  max-height: 100px; /* suficiente para el contenido */
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+
+.blur-in{animation:blur-in 0.4s linear both} @keyframes blur-in{0%{filter:blur(12px);opacity:0}100%{filter:blur(0);opacity:1}}
+.slide-top{animation:slide-top 0.4s linear both}@keyframes slide-top{0%{transform:translateY(0)}100%{transform:translateY(-100px)}}

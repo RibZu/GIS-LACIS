@@ -1,0 +1,35 @@
+
+{{define "nav"}}
+
+
+      <nav class="navbar navbar-expand-sm bg-is fixed-top shadow-sm">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">
+            <img src="/ui/static/assets/img-GIS/SE.png" class="img-fluid" style="max-height: 50px;" alt="Logo grupo">
+          </a>
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button> 
+
+          <div class="offcanvas offcanvas-end" id="offcanvasNavbar" tabindex="-1" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">El Grupo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3"> 
+                    <li class="nav-item"><a class="nav-link" href="/">El Grupo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/lacis">LaCIS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/proyectos">Proyectos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/integrantes">Integrantes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+              </ul>
+              <a href="https://www.unsl.edu.ar/#gsc.tab=0"><img src="/ui/static/assets/img-GIS/LogoUnsl.png" class="img-fluid" style="max-height: 50px;" alt="Logo Unsl"></a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    
+
+{{end}}

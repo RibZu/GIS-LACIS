@@ -1,0 +1,30 @@
+[
+    
+    {
+          
+        "clase_rol":"director",
+        "rol": "DIRECTOR",
+        "nombre": "Mg. Baigorria Lorena",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/baigorria_lorena - Lorena Baigorria.jpeg",
+        "cv": "../../static/assets/CVs-GIS/CV_Baigorria - Lorena Baigorria.pdf",
+        "linkedin": "https://www.linkedin.com/in/lorena-baigorria/",
+        "especializacion": "Blockchain, Desarrollo Web, Tecnologías, Metodologías de Desarrollo, Modelos",
+        "descripcion": "Blockchain, Seguridad, Lenguajes de programación, Desarrollo Web"
+    },
+
+   
+    {
+        
+        "clase_rol":"director",
+        "rol": "CO-DIRECTOR",
+        "nombre": "Esp. Peralta Mario Gabriel",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/marioPeralta.jpeg",
+        "cv": "../../static/assets/CVs-GIS/CV- MarioPeralta.pdf",
+        "mail": "mperalta@unsl.edu.ar",
+        "especializacion": "Desarrollo Web, movil",
+        "descripcion": "Docente e investigador en UNSL. Participación en equipos de I+D+I de la UNSL"
+
+
+    }
+    
+]

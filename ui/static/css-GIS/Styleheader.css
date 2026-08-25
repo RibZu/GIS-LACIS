@@ -1,0 +1,95 @@
+/*variables*/
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #28a745;
+  --azul-logo: #1a4484;
+  --azul-profundo: #0A1E2E;
+  --blanco-fondo: #FDFDFD;
+  --gris-texto: #4A4A4A;
+  --acento-linea: #C4C4C4;
+  --azul-pastel-fondo: #E0F2F7;
+  --azul-logo: #1a4484;
+  --azul-profundo: #0A1E2E;
+  --gris-texto: #4A4A4A;
+  --acento-linea: #C4C4C4;
+  --azul-pastel-fondo: #E0F2F7;;
+  --color-principal: #1a4484; 
+  --color-secundario: #8BC34A;
+  --color-fondo-claro: #e6f4f1;
+  --color-texto-oscuro: #333333;
+  --bs-font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-main: 'Cormorant Garamond', serif;
+  --cuerpo: linear-gradient(to right, #daeaf6, #f0f7ff);
+  --color-botones_menu_filtro_hover: 0 0 10px rgba(13, 110, 253, 0.3);
+  --color-boton-menu-hamburguesa:#0d6efd;
+  --sombra-boton-menu-hamburguesa: 0 4px 8px rgba(13, 110, 253, 0.2);
+  --sombra-carta-imagen-hover:0 8px 20px rgba(13, 110, 253, 0.3);
+  --lacis-primary: #5a8a2a;
+--lacis-sombra-carta: 0 8px 20px rgba(139, 195, 74, 0.35);
+--lacis-sombra-filtro: 0 0 10px rgba(139, 195, 74, 0.4);
+--lacis-sombra-hamburguesa: 0 4px 8px rgba(90, 138, 42, 0.25);
+--lacis-fondo: linear-gradient(to bottom, #ffffff, #e6f4f1);
+--lacis-pulso-inicio: rgba(90, 138, 42, 0.4);
+--lacis-pulso-fin: rgba(90, 138, 42, 0);
+}
+/*estilos*/
+
+footer{
+  color: var(--secondary-color);
+}
+html{
+  scroll-behavior: smooth;
+}
+.grilla {
+    display: grid;
+    min-height: 100dvh;
+    grid-template-rows: 
+    auto 1fr auto;
+}
+/* Navbar general */
+nav.bg-is {
+  background-color: var(--blanco-fondo);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transition: background-color 0.3s ease;
+}
+
+/* Enlaces */
+nav.bg-is .nav-link {
+  color: var(--azul-logo);
+  position: relative;
+  transition: color 0.3s;
+
+  font-size: 1.1rem;
+
+  margin-right: 10px;
+}
+
+nav.bg-is .nav-link:hover {
+  color: var(--secondary-color);
+}
+
+nav.bg-is .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 0;
+  background-color: var(--secondary-color);
+  transition: width 0.3s ease;
+}
+
+nav.bg-is .nav-link:hover::after {
+  width: 100%;
+}
+/*Mapa footer*/
+#mapa{
+  width: 100%;
+  height: 100%;
+  margin: 3px;
+}
+
+
+
+
+

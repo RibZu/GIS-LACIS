@@ -1,0 +1,262 @@
+[
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Dr. Abdelahad Corina",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Foto Cori - Corina Abdelahad.jpg",
+        "cv": "../../static/assets/CVs-GIS/CV Abdelahad Resumido - Corina Abdelahad.pdf",
+        "linkedin": "https://www.linkedin.com/in/corina-abdelahad-09a0482a1",
+        "especializacion": " Modelos, Transformación de Modelos",
+        "descripcion": "Profesor Adjunto e Investigadora en el Departamento de Informática de la FCFMyN (UNSL)"
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Esp.Albornoz María Claudia",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Clau2025 - Maria Claudia Albornoz.jpg",
+        "cv": "../../static/assets/CVs-GIS/CV-Resum-MCAloroz2025 - Maria Claudia Albornoz.pdf",
+        "mail": "albornoz@email.unsl.edu.ar",
+        "especializacion": "Interfaz Gráfica de Usuario",
+        "descripcion": "Soy M. Claudia Albornoz Docente e Investigadora de la UNSL."
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Lic. Arroyuelo Mónica del Valle ",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Monica Arroyuelo.jpeg",
+        "cv": "../../static/assets/CVs-GIS/CVArroyuelo - Monica Arroyuelo.pdf",
+        "mail": "Mdarroyu@email.unsl.edu.ar",
+        "especializacion": "Programación - Análisis de Código - Seguridad",
+        "descripcion": "Docente e investigadora de la Universidad Nacional de San Luis. Sus áreas de interés incluyen la programación, el análisis de código, la seguridad de software y la protección frente a amenazas y vulnerabilidades en sistemas informáticos. Complementa su actividad académica con proyectos de innovación educativa y formación en tecnologías emergentes."
+    },
+    {
+        "clase_rol": "asesor-externo",
+        "rol": "ASESOR EXTERNO",
+        "nombre": "Ing.Ayala Camila",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/foto_perfil - Camila Ayala.jpeg",
+        "cv": "../../static/assets/CVs-GIS/Camila_Ayala_CV_Ingenieria_Informatica - Camila Ayala.pdf",
+        "linkedin": "https://www.linkedin.com/in/camila-ayala-44288b3a1/",
+        "especializacion": "Frontend, Backend, Diseño, Análisis, Base de datos",
+        "descripcion": "Ingeniera en Informática - Desarrollo de soluciones escalables y sistemas multiplataforma con Metodologías Ágiles"
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Mg. Baigorria Lorena",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/baigorria_lorena - Lorena Baigorria.jpeg",
+        "cv": "../../static/assets/CVs-GIS/CV_Baigorria - Lorena Baigorria.pdf",
+        "linkedin": "https://www.linkedin.com/in/lorena-baigorria/",
+        "especializacion": "Blockchain, Desarrollo Web, Tecnologías, Metodologías de Desarrollo, Modelos",
+        "descripcion": "Blockchain, Seguridad, Lenguajes de programación, Desarrollo Web"
+    },
+    {
+        "clase_rol": "asesor-externo",
+        "rol": "ASESOR EXTERNO",
+        "nombre": "Ing.Bascuñan Agustin Ezequiel",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/fotoCuadrada - Agustin Bascuñan.jpg",
+        "cv": "../../static/assets/CVs-GIS/Agustin_Bascunan_CV_spanish_1PAGINA - Agustin Bascuñan.pdf",
+        "linkedin": "https://www.linkedin.com/in/agustin-bascunan/",
+        "especializacion": "Frontend, Backend, Base de Datos, Diseño, Análisis ",
+        "descripcion": "Ingeniero en Informática por la Universidad Nacional de San Luis. Desarrollo de software (frontend y backend), gestión de bases de datos y trabajo colaborativo mediante metodologías ágiles (Scrum). "
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Lic. Bernardis Edgardo",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/eBernardisFoto - Edgardo Bernardis.jpg",
+        "cv": "../../static/assets/CVs-GIS/ebernardis_CV RESUMIDO - Edgardo Bernardis.pdf",
+        "linkedin": "https://www.linkedin.com/in/edgardo-bernardis-b58a8732a/",
+        "especializacion": " Ingeniería del Software, Seguridad.",
+        "descripcion": "Gestión de proyectos; actualmente investigo ofuscación de código en el área de Seguridad Informática."
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Mg. Bernardis Hernán ",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/HB - Hernán Bernardis.jpg",
+        "cv": "../../static/assets/CVs-GIS/Hernán bernardis CV resumido - Hernán Bernardis.pdf",
+        "linkedin": "https://www.linkedin.com/in/hbernardis/",
+        "especializacion": " Seguridad Informática, Ingeniería Reversa, Comprensión de Programas",
+        "descripcion": "Ciberseguridad y Seguridad Informática | Blue Team | Docente e Investigador"
+    },
+    {
+        "clase_rol": "asesor-externo",
+        "rol": "ASESOR EXTERNO",
+        "nombre": "Mg. Doria Maria Vanesa",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Foto de perfil Vanesa _fondo Blanco - Mg. Vanesa Doria.png",
+        "cv": "../../static/assets/CVs-GIS//2025-María Vanesa Doria CV-Abreviado - Mg. Vanesa Doria.pdf",
+        "mail": "vanesadoria@tecno.unca.edu.ar ",
+        "especializacion": "Gestion de proyectos,gestión de talento humano, acceso abierto",
+        "descripcion": "Especialista en Ingeniería de Software (gestion de proyectos y gestión detalento humano), Docencia Universitaria y Acceso Abierto"
+    },
+    {
+        "clase_rol": "asesor-externo",
+        "rol": "ASESOR EXTERNO",
+        "nombre": "Mg. Flores Carola Victoria",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/2024-07-Foto de perfil Carola - Carola Flores.jpeg",
+        "cv": "../../static/assets/CVs-GIS/2025-Carola Victoria Flores CV-Abreviado - Carola Flores.pdf",
+        "mail": "carolaflores@tecno.unca.edu.ar",
+        "especializacion": "Ingeniería de requisitos, educación en ingeniería,acceso abierto",
+        "descripcion": "Especialista en Ingeniería de requisitos de software, Docencia Universitaria y Acceso abierto"
+    },
+    {
+        "clase_rol": "becario",
+        "rol": "BECARIO",
+        "nombre": "Ing. Godoy Inalen",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Inalén Godoy.jpeg",
+        "cv": "../../static/assets/CVs-GIS/curriculum_godoy - Inalén Godoy.pdf",
+        "linkedin": "www.linkedin.com/in/inalén-godoy-79238b13a",
+        "especializacion": "Informática forense, análisis geoespacial, georreferenciación",
+        "descripcion": "Soy Técnico Universitario en Web y estudiante avanzada de Ingeniería en Informática. Actualmente me encuentro desarrollando mi Proyecto Integrador, enfocado en el análisis geoespacial aplicado a la informática forense."
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Ing. Guiñazu Joaquin",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Joaquin Guiñazu.jpeg",
+        "cv": "../../static/assets/CVs-GIS/CV - Guinazu Joaquin.pdF",
+        "linkedin": "https://www.linkedin.com/in/joaquin-gui%C3%B1azu-16b0332aa?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
+        "especializacion": "TOPSIS, MADM",
+        "descripcion": "Software Engineering Student | Software & Web Developer"
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Ing. Loyola Maria Luciana",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Maria Luciana Loyola.jpeg",
+        "cv": "../../static/assets/CVs-GIS/CV_Py_Loyola - Maria Luciana Loyola.pdf",
+        "linkedin": "https://www.linkedin.com/in/maria-luciana-loyola",
+        "especializacion": "IA",
+        "descripcion": "Ingeniera en Informática con formación en desarrollo de software y bases de la computación."
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Dr. Miranda Enrique ",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/foto perfil - Enrique Miranda.jpeg",
+        "cv": "../../static/assets/CVs-GIS/CV-Miranda Enrique - FINAL - Enrique Miranda.pdf",
+        "linkedin": "https://www.linkedin.com/in/eamiranda-ok",
+        "especializacion": "Informática Forense,Comprensión de Programas, Ingeniería Reversa",
+        "descripcion": "Doctor en Ingeniería Informática (beca CONICET), docente/investigador de grado yposgrado en UNSL en Ing. de Software e Informática Forense."
+    },
+    {
+        "clase_rol": "asesor-externo",
+        "rol": "ASESOR EXTERNO",
+        "nombre": "Dr.Novillo Rangone Gabriel",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/novillo rangone.jpeg",
+        "cv": "../../static/assets/CVs-GIS/CV Novillo Rangone.pdf",
+        "linkedin": "https://www.linkedin.com/in/gabriel-novillo-rangone-331314237/",
+        "especializacion": "Inteligencia Artificial, Mineria de Datos, Ciencia de Datos",
+        "descripcion": "Secretario de Ciencia y Tecnica y Vinculacion Tecnologica de la UNVIME, Profesor Adj. Exc en UNVIME, Profesor de Posgrado en UNSL FCFQyM, y en UTN-FRC"
+    },
+    {
+        "clase_rol": "asesor-externo",
+        "rol": "ASESOR EXTERNO",
+        "nombre": "Dr.Sci Ochoa Claudio ",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/claudio - Claudio Ochoa.jpg",
+        "cv": "../../static/assets/CVs-GIS/ClaudioOchoaResumeEn - Claudio Ochoa.pdf",
+        "linkedin": "https://www.linkedin.com/in/claudioochoa/",
+        "especializacion": "Backend architecture, scalability",
+        "descripcion": "Senior Principal Software Engineer"
+    },
+    {
+        "clase_rol": "becario",
+        "rol": "BECARIO",
+        "nombre": "Est. Olguin Quevedo Gonzalo Gabriel",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Olguin.jpeg",
+        "cv": "../../static/assets/CVs-GIS/Currículum Programador moderno turquesa - Gonzalo Olguin.pdf",
+        "linkedin": "https://www.linkedin.com/in/gonzalo-olguin-quevedo-689b25212/",
+        "especializacion": "Backend, Frontend, IA",
+        "descripcion": "Soy un desarrollador con iniciativa, actitud positiva y habilidades interdisciplinarias, adaptable a diversos entornos. De rápido aprendizaje, mi enfoque carismático y actitud solidaria hacen que disfrute compartir conocimientos y experiencias con el equipo. Apasionado por enseñar lo que domino y aportar significativamente al éxito del proyecto asignado."
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Lic. Paez Braian",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Foto Braian Paez - Braian Paez.jpeg",
+        "cv": "../../static/assets/CVs-GIS/CV_Braian_Paez - Braian Paez.pdf",
+        "linkedin": "https://www.linkedin.com/in/braian-paez-9891b6306/",
+        "especializacion": "Web, calidad",
+        "descripcion": "Soy Licenciado en Ciencia de la Computacion, me gusta poder encontrar soluciones a los problemas que se presenten mediante el desarrollo de software."
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Esp. Peralta Mario Gabriel",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/marioPeralta.jpeg",
+        "cv": "../../static/assets/CVs-GIS/CV- MarioPeralta.pdf",
+        "mail": "mperalta@unsl.edu.ar",
+        "especializacion": "Desarrollo Web, movil",
+        "descripcion": "Docente e investigador en UNSL. Participación en equipos de I+D+I de la UNSL"
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Mg. Perez Norma Beatriz",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/foto_Norma - Perez Norma Beatriz.png",
+        "cv": "../../static/assets/CVs-GIS/CV_Resumido_NormaPerez2025 - Perez Norma Beatriz.pdf",
+        "mail": "nbperez@email.unsl.edu.ar",
+        "especializacion": "Ingeniería de la información - Gamificación - Seguridad - Base de Datos - Lenguajes",
+        "descripcion": "Mis investigaciones están focalizadas en el generar nuevas propuestas que permitan optimizar y obtener un software reutilizable y de calidad."
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Ing. Riera Bauer Fabricio José",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Foto perfil - Fabrizio José Riera Bauer.jpg",
+        "cv": "../../static/assets/CVs-GIS/CV - Riera Bauer Fabrizio  - Fabrizio José Riera Bauer.pdf",
+        "mail": "fjrbauer@email.unsl.edu.ar",
+        "especializacion": "Web - IA",
+        "descripcion": "Estudiante avanzado, auxiliar de segunda categoría y apasionado nunca parar de aprender."
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Dr. Riesco Daniel",
+        "cv": "../../static/assets/CVs-GIS/CV_ORG_1_CV-ARGENTINO-COMPLETO_20163167973 2023 - Daniel Riesco.pdf",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Foto Riesco - Daniel Riesco.jpg",
+        "mail": "driesco@unsl.edu.ar",
+        "especializacion": "Arquitectura de Software, Cloud Computing, Métodos Formales",
+        "descripcion": "Doctor en Informática por la Univ. de Vigo, con Maestría en Ing. del Conocimiento por la Univ. Politécnica de Madrid y Lic. en Cs de la Computación"
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Ing. Salinas Francisco Rodrigo",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Francisco Rodrigo.jpeg",
+        "cv": "../../static/assets/CVs-GIS/Curriculum vitae-3 - Francisco Rodrigo.pdf",
+        "linkedin": "https://www.linkedin.com/in/francisco-rodrigo-salinas-b753b6316/",
+        "especializacion": "Calidad, Ingenieria de Software",
+        "descripcion": "Estudiante de quinto año de la carrera de Ingenieria en Informatica. Acreedor de la beca ARFITEC, actualmente desempeñando tareas de pasante en el laboratorio ETIS"
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Mg. Sanchez Alberto ",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/FotoPerfil20231019_1 - Alberto Sanchez.jpg",
+        "cv": "../../static/assets/CVs-GIS/CV_Resumen_Alberto_Sanchez - Alberto Sanchez.pdf",
+        "linkedin": "https://www.linkedin.com/in/albertosanchez-gpfsoluciones",
+        "especializacion": "Calidad de procesos, productos y servicios",
+        "descripcion": "Magíster en Economía y Negocios, Licenciado en Ciencias de la Computación y Profesor en Computación. Consultor, auditor y docente universitario"
+    },
+    {
+        "clase_rol": "investigador",
+        "rol": "INVESTIGADOR",
+        "nombre": "Mg. Sanchez Alejandro ",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Alejandro Sanchez.jpeg",
+        "cv": "../../static/assets/CVs-GIS/CV - Alejandro Sanchez.pdf",
+        "linkedin": "https://www.linkedin.com/in/aljsanchez/",
+        "especializacion": "Métodos formales",
+        "descripcion": "Docente, investigador y practicante de la ingeniería de software.  Fue miembro del Center for Electronic Governance, centro que dio lugar al actual Open Unit on Policy-Driven Electronic Governance (UNU-EGOV) en el área de interoperabilidad semántica para gobierno electrónico. Previo a este período, trabajó en la industria de software ocupando roles de programador, arquitecto de software, y líder de proyecto. Es autor de 35 publicaciones: 3 artículos de revista, 3 capítulos de libro, 29 papers en conferencias internacionales y nacionales."
+    },
+    {
+        "clase_rol": "asesor-externo",
+        "rol": "ASESOR EXTERNO",
+        "nombre": "Ing.Velez Priscila Zoe",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/fotodecente - Zoé Velez.jpeg",
+        "cv": "../../static/assets/CVs-GIS/Velez Priscila- CV (resumido) - Zoé Velez.pdf",
+        "linkedin": "https://www.linkedin.com/in/priscila-zoe-velez-941635276",
+        "especializacion": "Frontend, backend, Base de datos, microservicios, Reingeniería, Diseño, Análisis",
+        "descripcion": "Enfoque en desarrollo Full Stack y bases de datos. Experiencia en aplicaciones web y mobile utilizando React, Next.js, NestJS y React Native, trabajando bajo metodologías ágiles (SCRUM) y abarcando todo el ciclo de desarrollo"
+    }
+]

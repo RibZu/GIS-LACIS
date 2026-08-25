@@ -1,0 +1,27 @@
+[
+    {
+
+    "clase_rol":"director",
+    "rol": "DIRECTOR",
+    "nombre": "Dr. Salgado Carlos Humberto ",
+    "imagen": "../../static/assets/img-GIS/IMGintegrantes/salgado.jpeg",
+    "cv": "../../static/assets/CVs-GIS/CV - HumbertoSalgado.pdf",
+    "mail": "csalgado@email.unsl.edu.ar",
+    "especializacion": "Metodologías de Desarrollo Seguro de Software",
+    "descripcion": "Calidad de Software y Testing. Docente e investigador en UNSL. Participación en equipos de I+D+I de la UNSL"
+
+    },
+    
+    {
+
+    "clase_rol":"director",
+    "rol": "DIRECTOR",
+    "nombre": "Dr. Garis Ana Gabriela ",
+    "imagen": "../../static/assets/img-GIS/IMGintegrantes/foto_ana_garis 1 - Ana Garis.png",
+    "cv": "../../static/assets/CVs-GIS/CV Ana Garis resumido short bio-2025 - Ana Garis.pdf",
+    "linkedin": "https://www.linkedin.com/in/ana-garis-5738364",
+    "especializacion": "Protección contra Amenazas, Vulnerabilidades y Riesgos vinculados a los Artefactos de Software",
+    "descripcion": "Docente e investigadora en UNSL. Participación en equipos de I+D+I de la UNSL, del IIST (China), de la Universidad de Minho y la de Porto (Portugal)."
+
+    }
+]

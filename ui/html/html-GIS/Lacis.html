@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LaCIS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <link rel="icon" href="../../static/assets/img-GIS/ing.ico">
+    <link rel="stylesheet" href="../../static/css-GIS/Lacis.css">
+    <link rel="stylesheet" href="../../static/css-GIS/Styleheader.css">
+
+    
+    
+</head>
+<body>
+    <header>
+      {{ template "nav" . }}
+    </header>
+    <main>
+        <section class="principal">
+            <div class="container">
+                <div class="row align-items-center g-5 flex-column-reverse flex-lg-row">
+                   
+                    <div class="col-12 col-lg-6" data-aos="fade-right" data-aos-duration="1100">
+                        <h1 class="titulo fw-bold mb-3">
+                            Laboratorio de
+                            <span class="texto-verde">Calidad e Ingeniería</span>
+                            de Software
+                        </h1>
+                        <p class="lead pb-4">
+                            LaCIS impulsa la vanguardia tecnológica a través de la investigación,
+                            el desarrollo y la formación especializada en el ámbito de ingeniería de software.
+                        </p>
+                        <div class="d-flex flex-column flex-sm-row  gap-2 gap-md-3 mt-4">
+                            <a href="#fines-lacis" class="hero-btn-primary">Fines →</a>
+                            <a href="#servicios-lacis" class="hero-btn-outline">Servicios</a>
+                            <a href="#contactos" class="hero-btn-outline">Contáctanos</a>
+                        </div>
+                    </div>
+                  
+                    <div class="principal-logo col-12 col-lg-6 text-center" data-aos="fade-left" data-aos-duration="1100"
+                        data-aos-delay="200">
+                        <img src="../../static/assets/img-GIS/logo.jpg" alt="Logo LaCIS" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fines-lacis" class="py-5">
+            <div class="container my-5">
+                <div class="text-center mb-5">
+                    <h2 class="titulo-seccion fs-2 fw-bold d-inline-block mb-3 text-dark">Nuestros <span class="text-secondary texto-verde">Fines</span></h2>
+                </div>
+
+                <div class="row g-4 justify-content-center">
+                    <div class="col-12 col-md-6" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
+                        <div class="lacis-card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="card-icon-container">
+                                    <i class="ti ti-dna"></i>
+                                </div>
+                                <h5 class="card-title fw-bold mb-2 pb-3">Fomentar la Investigación y Desarrollo</h5>
+                                <p class="card-text  text-muted">Impulsar el desarrollo de tareas de investigación científica, tecnológica y de desarrollo en el campo de las ingeniería de software.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 " data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
+                        <div class="lacis-card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="card-icon-container">
+                                    <i class="ti ti-arrows-transfer-down"></i>
+                                </div>
+                                <h5 class="card-title fw-bold mb-2 pb-3">Promover la Transferencia Tecnológica</h5>
+                                <p class="card-text text-muted">Promover activamente la transferencia tecnológica y la asistencia técnica al medio, asegurando que nuestras innovaciones impacten positivamente.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000">
+                        <div class="lacis-card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="card-icon-container">
+                                    <i class="ti ti-report-analytics"></i>
+                                </div>
+                                <h5 class="card-title fw-bold mb-2 pb-3">Ejecutar Planificaciones y Proyectos</h5>
+                                <p class="card-text text-muted">Realizar planificaciones detalladas, estudios y proyectos específicos que nos sean requeridos, aportando soluciones a medida.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000">
+                        <div class="lacis-card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="card-icon-container">
+                                    <i class="ti ti-users-group"></i>
+                                </div>
+                                <h5 class="card-title fw-bold mb-2 pb-3">Estimular la Formación de Investigadores</h5>
+                                <p class="card-text text-muted"> A través de la enseñanza específicamente dirigida a tal efecto, la participación en la actividad del Laboratorio o del trabajo en común con investigadores formados.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="servicios-lacis">
+            <div class="container">
+                <div class="seccion-servicios text-center my-5">
+                    <h2 class="titulo-seccion fs-2 fw-bold d-inline-block mb-3 text-dark">Nuestros <span class="text-secondary texto-verde">Servicios</span></h2>
+                    <p class="descripcion-seccion fs-6 text-muted mx-auto mt-3" style="max-width: 600px;">Para su cumplimiento se desarrollarán las siguientes funciones:</p>
+                </div>
+
+                <div class="row my-5 g-4 justify-content-center">
+                    <div class="col-12 col-md-6 col-lg-4 mb-3" data-aos="fade-up" data-aos-delay="0" data-aos-duration="1000">
+                        <div class="carta-flipped">
+                            <div class="carta-flipped-interior">
+                                <div class="carta-frontal">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="card-icon-container">
+                                            <i class="ti ti-cloud-computing"></i>
+                                        </div>
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Tecnología Aplicada</h5>
+                                            <button class="btn boton-efecto mt-4 flip-btn">Ver más</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carta-trasera">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Tecnología Aplicada</h5>
+                                            <p class="card-text text-start text-muted">Planificar, organizar y desarrollar programas específicos de investigación científica y tecnológica.</p>
+                                            <button class="btn boton-efecto mt-4 flip-btn">volver</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4 mb-3" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
+                        <div class="carta-flipped">
+                            <div class="carta-flipped-interior">
+                                <div class="carta-frontal">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="card-icon-container">
+                                            <i class="ti ti-certificate"></i>
+                                        </div>
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Promover el Desarrollo</h5>
+                                            <button class="btn boton-efecto mt-4 flip-btn">Ver más</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carta-trasera">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Promover el Desarrollo</h5>
+                                            <p class="card-text text-start text-muted">Promover el desarrollo e implementación de cursos de posgrado y actualización profesional en las temáticas específicas de investigación del laboratorio.</p>
+                                            <button class="btn boton-efecto mt-4 flip-btn">volver</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="col-12 col-md-6 col-lg-4 mb-3" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
+                        <div class="carta-flipped">
+                            <div class="carta-flipped-interior">
+                                <div class="carta-frontal">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="card-icon-container">
+                                            <i class="ti ti-code"></i>
+                                        </div>
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Posgrado en Investigación TI</h5>
+                                            <button class="btn boton-efecto mt-4 flip-btn">Ver más</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carta-trasera">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Posgrado en Investigación TI</h5>
+                                            <p class="card-text text-start text-muted">Planificar y organizar actividades relativas al desarrollo de tesis de Carreras de Posgrado directamente vinculadas con las Tecnologías de la Información y las Comunicaciones.</p>
+                                            <button class="btn boton-efecto mt-4 flip-btn">volver</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4 mb-3" data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000">
+                        <div class="carta-flipped">
+                            <div class="carta-flipped-interior">
+                                <div class="carta-frontal">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="card-icon-container">
+                                            <i class="ti ti-exchange"></i>
+                                        </div>
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Cooperación Académica Int.</h5>
+                                            <button class="btn boton-efecto mt-4 flip-btn">Ver más</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carta-trasera">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Cooperación Académica Int.</h5>
+                                            <p class="card-text text-start text-muted">Establecer vínculos de cooperación con instituciones nacionales y/o extranjeras abocadas a tareas de formación, investigación y producción en áreas afines.</p>
+                                            <button class="btn boton-efecto mt-4 flip-btn">volver</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4 mb-3" data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000">
+                        <div class="carta-flipped">
+                            <div class="carta-flipped-interior">
+                                <div class="carta-frontal">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="card-icon-container">
+                                            <i class="ti ti-settings-plus"></i>
+                                        </div>
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Servicios Externos</h5>
+                                            <button class="btn boton-efecto mt-4 flip-btn">Ver más</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carta-trasera">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Servicios Externos</h5>
+                                            <p class="card-text text-start text-muted">Coordinar y organizar el desarrollo de tareas de extensión con el objeto de transferir productos y tecnologías y ofrecer asesoramiento y otros servicios externos al medio, dentro de su área de competencia.</p>
+                                            <button class="btn boton-efecto mt-4 flip-btn">volver</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4 mb-3" data-aos="fade-up" data-aos-delay="500" data-aos-duration="1000">
+                        <div class="carta-flipped">
+                            <div class="carta-flipped-interior">
+                                <div class="carta-frontal">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="card-icon-container">
+                                            <i class="ti ti-news"></i> </div>
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Publicación de Hallazgos</h5>
+                                            <button class="btn boton-efecto mt-4 flip-btn">Ver más</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carta-trasera">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Publicación de Hallazgos</h5>
+                                            <p class="card-text text-start text-muted">Difundir los resultados de las actividades del laboratorio por medio de eventos científicos nacionales e internacionales, o por otros medios que se consideren apropiados.</p>
+                                            <button class="btn boton-efecto mt-4 flip-btn">volver</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4 mb-3" data-aos="fade-up" data-aos-delay="600" data-aos-duration="1000">
+                        <div class="carta-flipped">
+                            <div class="carta-flipped-interior">
+                                <div class="carta-frontal">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="card-icon-container">
+                                            <i class="ti ti-users-plus"></i> </div>
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Convocatoria Investigativa</h5>
+                                            <button class="btn boton-efecto mt-4 flip-btn">Ver más</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carta-trasera">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Convocatoria Investigativa</h5>
+                                            <p class="card-text text-start text-muted">Convocar a investigadores, becarios, pasantes, estudiantes y graduados universitarios, para la realización de trabajos de investigación científica y desarrollo en áreas específicamente vinculadas.</p>
+                                            <button class="btn boton-efecto mt-4 flip-btn">volver</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4 mb-3" data-aos="fade-up" data-aos-delay="700" data-aos-duration="1000">
+                        <div class="carta-flipped">
+                            <div class="carta-flipped-interior">
+                                <div class="carta-frontal">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="card-icon-container">
+                                            <i class="ti ti-tool"></i> </div>
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Asesoría Especializada</h5>
+                                            <button class="btn boton-efecto mt-4 flip-btn">Ver más</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carta-trasera">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Asesoría Especializada</h5>
+                                            <p class="card-text text-start text-muted">Brindar asesoramiento y otros servicios externos, dentro de su área de competencia.</p>
+                                            <button class="btn boton-efecto mt-4 flip-btn">volver</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4 mb-3" data-aos="fade-up" data-aos-delay="800" data-aos-duration="1000">
+                        <div class="carta-flipped">
+                            <div class="carta-flipped-interior">
+                                <div class="carta-frontal">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="card-icon-container">
+                                            <i class="ti ti-database"></i> </div>
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Proveer Recursos</h5>
+                                            <button class="btn boton-efecto mt-4 flip-btn">Ver más</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carta-trasera">
+                                    <div class="card mx-auto shadow-sm">
+                                        <div class="servicio card-body">
+                                            <h5 class="servicio-titulo card-title fw-bold">Proveer Recursos para Investigacion</h5>
+                                            <p class="card-text text-start text-muted">Brindar y facilitar a los investigadores toda aquella información necesaria para acceder a los bancos de datos existentes nacionales e internacionales.</p>
+                                            <button class="btn boton-efecto mt-4 flip-btn">volver</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+     
+<!-- ══ FIN SECCIÓN INTEGRANTES ══ -->
+    </main>
+<footer id="contactos" class="text-white pb-4 bg-dark"><!--footer-->
+    {{ template "footer" . }}
+</footer>   
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+        crossorigin="anonymous"></script>
+    <script src="../../static/js-GIS/lacis.js"></script>
+</body>
+</html>
+
+
+

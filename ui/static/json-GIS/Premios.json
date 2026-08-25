@@ -1,0 +1,50 @@
+[
+    {
+        "prem": "Categorizacion de docentes en el programa de incentivos.",
+        "desc": "3 Categoria I \n 1 Categoria II \n 7 Categoria III."
+    },
+    {
+        "prem": "Vinculacion con universidades internacionales.",
+        "desc": "Vinculacion con al menos 11 universidades internacionales."
+    },
+    {
+        "prem": "Participacion a nivel mundial",
+        "desc": "Participacion en conferencias y estancias de investigacion en Europa."
+    },
+    {
+        "prem": "Supervisión académica de proyectos y tesis de posgrado",
+        "desc": "Direccion de proyectos finales integradores, tesis de doctorado y maestria."
+    },
+    {
+        "prem": "Mención Especial en los Premios Sadosky 2017",
+        "desc": "Reconocimiento al Grupo de Ingeniería de Software de la UNSL por su contribución al desarrollo de software de alta calidad y su participación en la definición de modelos de evaluación aplicados a la calidad de software."
+    },
+    {
+        "prem":"Difusión Académica de la Ingeniería de Software en Universidades Nacionales",
+        "desc":"Difusión de la ingeniería de software, en particular el metamodelado en UML y arquitectura de Software, a traves de cursos de posgrados desde 1995 en la Universidad Nacional de Rio IV, UN de Catamarca, UN de Jujuy, UN La Pampa, UN La Rioja, UTN Cordoba, UC Santiago del Estero."
+    },
+    {
+        "prem":"Desarrollo de Herramienta para Visualización de Evidencia Digital en Informática Forense",
+        "desc":"una herramienta utilizada en el campo de la Informática Forense, en particular un visualizador de Evidencia Digital con la capacidad de escalar a diversas aplicaciones de mensajería en el contexto de aporte voluntario."
+    },
+    {
+        "prem":"Vinculación Tecnológica entre la UNCA y la Municipalidad de San Fernando del Valle de Catamarca",
+        "desc":"Vinculador tecnológico de la UNCA con Dirección General de Modernización e Innovación de la Municipalidad de San Fernando del Valle de Catamarca"
+    },
+    {
+        "prem":"Referentes en Acceso Abierto y Repositorios Digitales en la FTyCA-UNCA",
+        "desc":"Diversas actividades como Referentes en Acceso Abierto y Repositorios Digitales de la FTyCA-UNCA"
+    },
+    {
+        "prem":"Fomento del Emprendimiento Informático en Estudiantes de Grado y Posgrado",
+        "desc":"Estimularmos a los estudiantes de grado y posgrado a generar su emprendimiento informatico"
+    },
+    {
+        "prem":"Mejor trabajo I+D CoNaIISI 2023",
+        "desc":"Reconocimiento al Mejor Trabajo de Investigación y Desarrollo (CoNaIISI 2023)"
+    },
+    {
+        "prem":"12 Patentes Registradas",
+        "desc":"Doce patentes registradas que protegen innovaciones tecnológicas y contribuyen al avance científico y la competitividad."
+    }
+]

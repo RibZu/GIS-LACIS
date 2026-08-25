@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GIS-LACIS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.12.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/ui/static/css-GIS/Styleheader.css">
+    <link rel="stylesheet" href="/ui/static/css-GIS/style.css">
+    <style>
+        body { background-color: var(--azul-pastel-fondo); }
+        .dash-card { transition: transform 0.2s; border-left: 5px solid var(--azul-logo); }
+        .dash-card:hover { transform: translateY(-5px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="grilla">
+    <header>
+        {{ template "nav" . }}
+    </header>
+    <main class="py-5 mt-5">
+        <div class="container">
+            <h2 class="mb-4" style="color: var(--azul-logo);">Panel de Administración (Dashboard)</h2>
+            <p class="text-muted">Bienvenido al panel central. Desde aquí puedes gestionar los diferentes módulos del sitio.</p>
+            
+            <div class="row g-4 mt-2">
+                <!-- Historias SCRUM preventivas -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 dash-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-person-badge text-primary"></i> Gestionar Integrantes</h5>
+                            <p class="card-text small text-muted">Alta, baja y modificación de integrantes y sus roles.</p>
+                            <a href="/admin/integrantes" class="btn btn-sm btn-outline-primary mt-2">Ir a Módulo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 dash-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-folder text-success"></i> Proyectos I+D+i</h5>
+                            <p class="card-text small text-muted">Cargar y actualizar los nombres e información de los proyectos del laboratorio.</p>
+                            <a href="#" class="btn btn-sm btn-outline-secondary mt-2 disabled">Próximamente</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 dash-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-trophy text-warning"></i> Reconocimientos</h5>
+                            <p class="card-text small text-muted">Gestionar premios institucionales (premisa y descripción).</p>
+                            <a href="#" class="btn btn-sm btn-outline-secondary mt-2 disabled">Próximamente</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 dash-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-building text-info"></i> Empresas Colaboradoras</h5>
+                            <p class="card-text small text-muted">Registrar instituciones y empresas colaboradoras (logo y descripción).</p>
+                            <a href="#" class="btn btn-sm btn-outline-secondary mt-2 disabled">Próximamente</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 dash-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-shield-lock text-danger"></i> Administradores</h5>
+                            <p class="card-text small text-muted">Registrar nuevos usuarios con privilegios de gestión y acceso al panel.</p>
+                            <a href="#" class="btn btn-sm btn-outline-secondary mt-2 disabled">Próximamente</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-5">
+                <a href="/logout" class="btn btn-danger"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
+            </div>
+        </div>
+    </main>
+    <footer class="text-white pb-4 bg-dark mt-auto">
+        {{ template "footer" . }}
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

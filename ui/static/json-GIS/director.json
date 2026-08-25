@@ -1,0 +1,28 @@
+[
+
+    {
+
+        "clase_rol":"director",
+        "rol":"DIRECTOR",
+        "nombre":"Dr. Montegano German",
+        "imagen":"../../static/assets/img-GIS/IMGintegrantes/Foto German - German A Montejano.jpg",
+        "cv":"../../static/assets/CVs-GIS/Bio Germán Montejano-CV resumido - German A Montejano.pdf",
+        "mail":"german.a.montejano@gmail.com",
+        "especializacion":"Ingenieria de Software",
+        "descripcion":"Doctor en Ingenieria de Software, Investigador categoría 1"
+
+    },
+    {
+
+        "clase_rol":"director",
+        "rol":"CO-DIRECTOR",
+        "nombre":"Dr. Berón Mario",
+        "imagen":"../../static/assets/img-GIS/IMGintegrantes/mario beron.jpeg",
+        "cv":"../../static/assets/CVs-GIS/MBeron.pdf",
+        "mail":"mberon@unsl.edu.ar",
+        "especializacion":"Seguridad de Sistemas, Ingenieria Inversa",
+        "descripcion":"Doctor en Ciencias de la Computacion de la UNSL, Doutor en Ciencias da Computação , Universidade do Minho-BragaPortugal."
+    }
+
+
+]
