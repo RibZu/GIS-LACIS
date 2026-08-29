@@ -69,7 +69,10 @@ CREATE TABLE proyecto (
     titulo VARCHAR(255) NOT NULL,
     descripcion TEXT,
     enlace VARCHAR(500),
-    equipo_historico VARCHAR(500)
+    equipo_historico VARCHAR(500),
+    anio_inicio INT NOT NULL,
+    anio_fin INT NOT NULL
+    
 );
 
 CREATE TABLE desarrollo (
