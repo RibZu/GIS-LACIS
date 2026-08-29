@@ -3,9 +3,11 @@ package handler
 import (
 	"PaginaSEG/internal/usuario" // Importamos tu nuevo paquete de usuarios
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthHandler struct {
@@ -39,10 +41,18 @@ func (h *AuthHandler) ProcessLogin(c *gin.Context) {
 
 	}
 
-	if user.PasswordHash != nil && *user.PasswordHash == password {
-		h.logger.Info("Login Existoso", zap.String("username", username))
-		c.SetCookie("session", "auth", 3600, "/", "", false, true)
-		c.Redirect(http.StatusFound, "/admin/dashboard")
+	if user.PasswordHash != nil {
+		err := bcrypt.CompareHashAndPassword([]byte(*user.PasswordHash), []byte(password))
+		if err == nil {
+			h.logger.Warn("Usuario correcto", zap.String("username", username))
+			c.SetCookie("session", strconv.Itoa(user.ID), 3600, "/", "", false, true)
+			c.Redirect(http.StatusFound, "/admin/dashboard")
+			return
+		}
+		h.logger.Warn("Intento de login fallido: contrasena incorrecta", zap.String("username", username))
+		c.HTML(http.StatusUnauthorized, "Login.html", gin.H{
+			"Error": "Intento de login fallido",
+		})
 		return
 	}
 
@@ -58,10 +68,17 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 }
 
 func (h *AuthHandler) ShowDashboard(c *gin.Context) {
-	cookie, err := c.Cookie("session")
-	if err != nil || cookie != "auth" {
+	u, ok := currentUsuario(c, h.usuarioService)
+	if !ok {
 		c.Redirect(http.StatusFound, "/login")
 		return
 	}
-	c.HTML(http.StatusOK, "Dashboard.html", gin.H{})
+	c.HTML(http.StatusOK, "Dashboard.html", gin.H{
+		"LoggedIn":             true,
+		"EsAdmin":              esAdmin(u),
+		"TieneIntegrantes":     tieneModulo(u, "integrantes"),
+		"TieneProyectos":       tieneModulo(u, "proyectos"),
+		"TieneReconocimientos": tieneModulo(u, "reconocimientos"),
+		"TieneEmpresas":        tieneModulo(u, "empresas"),
+	})
 }

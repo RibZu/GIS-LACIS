@@ -42,7 +42,8 @@ CREATE TABLE usuario_gestor (
     password_hash VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     ultimo_acceso TIMESTAMP WITH TIME ZONE,
-    rol VARCHAR(50) NOT NULL DEFAULT 'GESTOR'
+    rol VARCHAR(50) NOT NULL DEFAULT 'GESTOR', -- Calculado: ADMIN, nombre de módulo, o GESTOR si tiene 2+ módulos
+    modulos VARCHAR(255) NOT NULL DEFAULT '' -- Lista de módulos separados por coma, ej: "integrantes,proyectos"
 );
 
 CREATE TABLE configuracion_sitio (
@@ -200,7 +201,7 @@ CREATE INDEX idx_desarrollo_reconocimientos_rec ON desarrollo_reconocimientos(re
 -- DATOS POR DEFECTO
 -- -----------------------------------------------------------------------------
 -- Creamos el usuario administrador por defecto para poder iniciar sesión
-INSERT INTO usuario_gestor (username, password_hash, email, rol) 
-VALUES ('admin', 'admin123', 'admin@lacis.com', 'GESTOR');
+INSERT INTO usuario_gestor (username, password_hash, email, rol)
+VALUES ('admin', 'admin123', 'admin@lacis.com', 'ADMIN');
 
 COMMIT;

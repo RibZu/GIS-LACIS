@@ -1,0 +1,202 @@
+:root {
+    --adm-navy: #16294F;
+    --adm-accent: #3E6FC4;
+    --adm-bg: #F7F9FC;
+    --adm-border: #DEE3EC;
+    --adm-ink: #16294F;
+    --adm-ink-soft: #5A6B85;
+    --adm-gold: #A8701F;
+    --adm-red: #B3261E;
+}
+
+body {
+    background-color: var(--adm-bg);
+    font-family: 'Montserrat', sans-serif;
+    padding-top: 80px;
+}
+
+/* El sitio público usa serif (Cormorant Garamond, style.css) para h1-h5;
+   en el panel admin usamos la misma tipografía que ya tiene el header (Montserrat)
+   para que los títulos se sientan parte del mismo sistema. */
+h1, h2, h3, h4, h5 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+/* El sitio público usa un degradé azul en <main> (style.css); en el panel admin
+   lo pisamos por un fondo plano de borde a borde, sin la caja angosta del degradé. */
+main {
+    background: var(--adm-bg) !important;
+}
+
+.admin-card,
+.form-card,
+.login-card {
+    background: #ffffff;
+    border: 1px solid var(--adm-border);
+    border-top: 3px solid var(--adm-navy);
+    border-radius: .3rem;
+    box-shadow: 0 1px 2px rgba(22, 41, 79, 0.06);
+    padding: 24px;
+}
+
+.form-card {
+    padding: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.login-card {
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+}
+
+.login-card .card-header {
+    background: #ffffff;
+    color: var(--adm-navy);
+    border-bottom: 1px solid var(--adm-border);
+    text-align: center;
+    padding: 1.75rem 1.5rem 1.25rem;
+}
+
+.login-card .card-header h4 {
+    margin: 0;
+    font-weight: 700;
+}
+
+.login-card .card-header .eyebrow {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--adm-accent);
+    font-weight: 700;
+    margin-bottom: .35rem;
+}
+
+.login-card .card-body {
+    padding: 1.75rem;
+}
+
+.btn-crear,
+.btn-guardar,
+.btn-institucional {
+    background-color: var(--adm-navy);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 0;
+    padding: 10px 22px;
+    border: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-crear:hover,
+.btn-guardar:hover,
+.btn-institucional:hover {
+    background-color: var(--adm-accent);
+    color: #ffffff;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--adm-ink);
+    font-size: 0.9rem;
+}
+
+.admin-card .form-control,
+.form-card .form-control,
+.login-card .form-control {
+    border-radius: 0;
+    border-color: var(--adm-border);
+}
+
+.admin-card .form-control:focus,
+.form-card .form-control:focus,
+.login-card .form-control:focus {
+    border-color: var(--adm-accent);
+    box-shadow: 0 0 0 .2rem rgba(62, 111, 196, .15);
+}
+
+.admin-card .input-group .btn-outline-secondary,
+.form-card .input-group .btn-outline-secondary,
+.login-card .input-group .btn-outline-secondary {
+    border-radius: 0;
+    border-color: var(--adm-border);
+    color: var(--adm-ink-soft);
+}
+
+.admin-card .input-group .btn-outline-secondary:hover,
+.form-card .input-group .btn-outline-secondary:hover,
+.login-card .input-group .btn-outline-secondary:hover {
+    background: var(--adm-bg);
+    color: var(--adm-navy);
+}
+
+.table-custom th {
+    color: var(--adm-ink-soft);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    border-bottom: 2px solid var(--adm-navy);
+    padding-bottom: 12px;
+}
+
+.table-custom td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--adm-border);
+}
+
+.table-custom tbody tr:nth-child(even) {
+    background: #F7F9FC;
+}
+
+.chip-inst {
+    display: inline-flex;
+    align-items: center;
+    padding: .25rem .7rem;
+    border: 1px solid var(--adm-accent);
+    border-radius: 0;
+    font-size: .72rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--adm-accent);
+    font-weight: 600;
+    background: transparent;
+}
+
+.chip-inst.gold,
+.chip-inst[data-rol="ADMIN"] {
+    border-color: var(--adm-gold);
+    color: var(--adm-gold);
+}
+
+.btn-logout {
+    background: transparent;
+    color: var(--adm-red);
+    border: 1px solid var(--adm-red);
+    border-radius: 0;
+    font-weight: 600;
+    padding: 8px 18px;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.btn-logout:hover {
+    background: var(--adm-red);
+    color: #ffffff;
+}
+
+.dash-card {
+    border: 1px solid var(--adm-border);
+    border-top: 3px solid var(--adm-navy);
+    border-radius: .3rem;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.dash-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(22, 41, 79, .12);
+}

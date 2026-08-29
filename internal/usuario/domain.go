@@ -14,6 +14,7 @@ type UsuarioGestor struct {
 
 	UltimoAcceso *string `json:"ultimo_acceso"`
 	Rol          *string `json:"rol"`
+	Modulos      *string `json:"modulos"`
 }
 
 type UpdateFieldGestor struct {
@@ -21,6 +22,7 @@ type UpdateFieldGestor struct {
 	PasswordHash *string `json:"password_hash"`
 	Email        *string `json:"email"`
 	Rol          *string `json:"rol"`
+	Modulos      *string `json:"modulos"`
 	//En este caso se estan usando punteros en los String ya que estos permiten que el campo sea nulo en go
 	//Es decir que se puede dejar Vacio
 }
