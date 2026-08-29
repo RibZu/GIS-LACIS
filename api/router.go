@@ -3,6 +3,7 @@ package api
 import (
 	"PaginaSEG/api/handler"
 	"PaginaSEG/internal/integrante"
+	"PaginaSEG/internal/usuario"
 	"database/sql"
 	"net/http"
 	"time"
@@ -33,7 +34,7 @@ func InitRoutes(e *gin.Engine) {
 	if err != nil {
 		logger.Fatal("No se pudo abrir conexión a PostgreSQL", zap.Error(err))
 	}
-	
+
 	// Reintentar conexión hasta 20 veces (esperando a que inicie la DB tras crash recovery)
 	for i := 0; i < 20; i++ {
 		err = db.Ping()
@@ -95,7 +96,10 @@ func InitRoutes(e *gin.Engine) {
 	integranteStorage := integrante.NewPostgresStorage(db)
 	integranteService := integrante.NewService(integranteStorage, logger)
 	integranteHandler := handler.NewIntegranteHandler(integranteService, logger)
-	authHandler := handler.NewAuthHandler()
+
+	usuarioStorage := usuario.NewPostgressStorage(db)
+	usuarioService := usuario.NewService(usuarioStorage, logger)
+	authHandler := handler.NewAuthHandler(usuarioService, logger)
 
 	e.GET("/login", authHandler.ShowLogin)
 	e.POST("/login", authHandler.ProcessLogin)

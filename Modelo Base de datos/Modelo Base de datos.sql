@@ -196,4 +196,11 @@ CREATE INDEX idx_proyecto_reconocimientos_rec ON proyecto_reconocimientos(recono
 CREATE INDEX idx_desarrollo_reconocimientos_des ON desarrollo_reconocimientos(desarrollo_id);
 CREATE INDEX idx_desarrollo_reconocimientos_rec ON desarrollo_reconocimientos(reconocimiento_id);
 
+-- -----------------------------------------------------------------------------
+-- DATOS POR DEFECTO
+-- -----------------------------------------------------------------------------
+-- Creamos el usuario administrador por defecto para poder iniciar sesión
+INSERT INTO usuario_gestor (username, password_hash, email, rol) 
+VALUES ('admin', 'admin123', 'admin@lacis.com', 'GESTOR');
+
 COMMIT;

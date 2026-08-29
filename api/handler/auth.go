@@ -1,15 +1,23 @@
-﻿package handler
+package handler
 
 import (
+	"PaginaSEG/internal/usuario" // Importamos tu nuevo paquete de usuarios
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
-type AuthHandler struct{}
+type AuthHandler struct {
+	usuarioService *usuario.Service
+	logger         *zap.Logger
+}
 
-func NewAuthHandler() *AuthHandler {
-	return &AuthHandler{}
+func NewAuthHandler(us *usuario.Service, l *zap.Logger) *AuthHandler {
+	return &AuthHandler{
+		usuarioService: us,
+		logger:         l,
+	}
 }
 
 func (h *AuthHandler) ShowLogin(c *gin.Context) {
@@ -20,12 +28,25 @@ func (h *AuthHandler) ProcessLogin(c *gin.Context) {
 	username := c.PostForm("username")
 	password := c.PostForm("password")
 
-	if username == "admin" && password == "admin123" {
+	user, err := h.usuarioService.ReadByUsername(username)
+
+	if err != nil {
+		h.logger.Warn("Usuario no existe", zap.Error(err))
+		c.HTML(http.StatusOK, "Login.html", gin.H{
+			"Error": "Usuario o contrasna incorrecto",
+		})
+		return
+
+	}
+
+	if user.PasswordHash != nil && *user.PasswordHash == password {
+		h.logger.Info("Login Existoso", zap.String("username", username))
 		c.SetCookie("session", "auth", 3600, "/", "", false, true)
 		c.Redirect(http.StatusFound, "/admin/dashboard")
 		return
 	}
 
+	h.logger.Warn("Intento de login fallido: contrasena incorrecta", zap.String("username", username))
 	c.HTML(http.StatusUnauthorized, "Login.html", gin.H{
 		"Error": "Usuario o contraseña incorrectos",
 	})
