@@ -3,123 +3,468 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Admin - Lista Integrantes PostgreSQL</title>
+    <title>Gestión de Integrantes - Admin GIS-LACIS</title>
     
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.12.1/font/bootstrap-icons.min.css">
     
-  
     <link rel="stylesheet" href="/ui/static/css-GIS/Styleheader.css">
-    <link rel="stylesheet" href="/ui/static/css-GIS/style.css">
-    <link  rel="stylesheet" href="/ui/static/css-GIS/lista.css" >
+    <link rel="stylesheet" href="/ui/static/css-GIS/lista.css">
 </head>
-<body>
+<body class="grilla">
 
     <!-- Header / Navbar Compartido -->
-    {{ template "nav" . }}
+    <header>
+        {{ template "nav" . }}
+    </header>
 
-    <main class="container my-5">
-        
-       
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h3 class="fw-bold text-dark mb-1">Administración de Integrantes</h3>
-                <p class="text-muted mb-0 fs-6">Renderizado directamente desde la base de datos <strong>PostgreSQL</strong> mediante plantillas de Go</p>
-            </div>
+    <main class="admin-main py-4">
+        <div class="container">
             
-            <a href="/admin/crear-integrante" class="btn btn-crear d-inline-flex align-items-center gap-2">
-                <i class="bi bi-plus-circle-fill fs-5"></i>
-                <span>Ingresar Nuevo Integrante</span>
-            </a>
-        </div>
-
-    
-        <div class="admin-card">
-            
-            
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
-                <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-dark rounded-pill px-3 fw-semibold">Todos (PostgreSQL)</button>
+            <!-- Encabezado y Navegación rápida -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-1 small">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard" class="text-decoration-none" style="color: var(--azul-logo);">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page" style="color: var(--azul-profundo);">Integrantes</li>
+                        </ol>
+                    </nav>
+                    <h2 class="admin-header-title mb-1">
+                        <i class="bi bi-person-badge me-2" style="color: var(--azul-logo);"></i>Gestión de Integrantes
+                    </h2>
+                    <p class="text-muted mb-0 small">Administración, alta, baja y edición de docentes, investigadores, directores y becarios.</p>
                 </div>
-                <div class="text-muted small">
-                    <i class="bi bi-funnel"></i> Filtrar
+                
+                <div>
+                    <a href="/admin/crear-integrante" class="btn btn-crear d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-person-plus-fill fs-5"></i>
+                        <span>Ingresar Integrante</span>
+                    </a>
                 </div>
             </div>
 
-        
-            <div class="table-responsive">
-                <table class="table table-custom align-middle">
-                    <thead>
-                        <tr>
-                            <th>NOMBRE</th>
-                            <th>CARGO (ROL)</th>
-                            <th>EMAIL / CONTACTO</th>
-                            <th>ESTADO</th>
-                            <th class="text-end">ACCIONES</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{ range .Integrantes }}
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="avatar-circle">
-                                        {{ .Nombre }}
-                                    </div>
-                                    <div>
-                                        <div class="fw-bold text-dark">{{ .Nombre }} {{ .Apellido }}</div>
-                                        <small class="text-muted d-block">{{ .Especializacion }}</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge bg-light text-primary border border-primary-subtle px-3 py-2 rounded-pill">
-                                    {{ if .Rol.Nombre }}{{ .Rol.Nombre }}{{ else }}Rol #{{ .RolID }}{{ end }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="text-secondary">{{ .Contacto }}</span>
-                            </td>
-                            <td>
-                                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill">
-                                    ACTIVO
-                                </span>
-                            </td>
-                            <td class="text-end">
-                                <a href="/admin/editar-integrante?id={{ .ID }}" class="btn btn-sm btn-outline-primary me-1" title="Editar">
-                                    <i class="bi bi-pencil-fill"></i>
-                                </a>
-                                <a href="/admin/borrar-integrante?id={{ .ID }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de eliminar a {{ .Nombre }} {{ .Apellido }} de PostgreSQL?');" title="Borrar">
-                                    <i class="bi bi-trash-fill"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        {{ else }}
-                        <tr>
-                            <td colspan="5" class="text-center py-4 text-muted">
-                                <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary"></i>
-                                No hay integrantes registrados en la base de datos PostgreSQL.
-                            </td>
-                        </tr>
-                        {{ end }}
-                    </tbody>
-                </table>
-            </div>
+            <!-- Contenedor Principal (Tarjeta Admin con borde izquierdo azul) -->
+            <div class="admin-card">
+                
+                <!-- Barra de Filtros y Búsqueda Interactiva -->
+                <div class="filter-container">
+                    <div class="row g-3 align-items-center">
+                        
+                        <!-- Buscador por Nombre o Apellido -->
+                        <div class="col-lg-5 col-md-6">
+                            <div class="input-group search-input-group">
+                                <input type="text" id="buscadorInput" class="form-control" placeholder="Buscar por nombre, apellido o título...">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            </div>
+                        </div>
 
-           
-            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top text-muted fs-6">
-                <span>Registros cargados dinámicamente con plantillas de Go (Server-Side Rendering)</span>
+                        <!-- Filtro de Roles Rápidos (Pills) -->
+                        <div class="col-lg-7 col-md-6 d-flex flex-wrap gap-2 justify-content-lg-end">
+                            <span class="filter-pill active" data-filter="all">Todos</span>
+                            <span class="filter-pill" data-filter="DIRECTOR">Directores</span>
+                            <span class="filter-pill" data-filter="INVESTIGADOR">Investigadores</span>
+                            <span class="filter-pill" data-filter="ASESOR">Asesores</span>
+                            <span class="filter-pill" data-filter="ESTUDIANTE">Estudiantes / Becarios</span>
+                        </div>
+                    </div>
+
+                    <!-- Filtros Secundarios de Pertenencia Institucional -->
+                    <div class="d-flex align-items-center gap-2 mt-3 pt-2 border-top">
+                        <small class="text-muted fw-semibold me-2"><i class="bi bi-funnel"></i> Pertenencia:</small>
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 btn-pertenencia active" data-pertenencia="all">Todas</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 btn-pertenencia" data-pertenencia="lacis">Solo LaCIS</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 btn-pertenencia" data-pertenencia="software">Solo Grupo Software</button>
+                    </div>
+                </div>
+
+                <!-- Tabla de Integrantes -->
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle" id="tablaIntegrantes">
+                        <thead>
+                            <tr>
+                                <th style="width: 32%;">INTEGRANTE Y TÍTULO</th>
+                                <th style="width: 18%;">ROL / CARGO</th>
+                                <th style="width: 16%;">PERTENENCIA</th>
+                                <th style="width: 16%;">CONTACTO Y REDES</th>
+                                <th style="width: 8%;">ESTADO</th>
+                                <th style="width: 10%;" class="text-end">ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ range .Integrantes }}
+                            <tr class="integrante-row" 
+                                data-rol="{{ if eq .RolID 1 }}DIRECTOR{{ else if eq .RolID 2 }}INVESTIGADOR{{ else if eq .RolID 3 }}ASESOR{{ else if eq .RolID 4 }}ESTUDIANTE{{ else }}{{ .Rol.Nombre }}{{ end }}" 
+                                data-lacis="{{ .PerteneceLacis }}" 
+                                data-software="{{ .PerteneceGrupoSoftware }}" 
+                                data-nombre="{{ .Nombre }} {{ .Apellido }} {{ .Especializacion }}">
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar-wrapper">
+                                            {{ if .Imagen }}
+                                                <img src="{{ .Imagen }}" alt="{{ .Nombre }}">
+                                            {{ else }}
+                                                {{ .Nombre }}
+                                            {{ end }}
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark fs-6 nombre-integrante">{{ .Nombre }} {{ .Apellido }}</div>
+                                            <small class="text-muted d-block titulo-integrante">{{ .Especializacion }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ if eq .RolID 1 }}
+                                        <span class="badge badge-rol-director"><i class="bi bi-award-fill me-1"></i> DIRECTOR</span>
+                                    {{ else if eq .RolID 2 }}
+                                        <span class="badge badge-rol-investigador"><i class="bi bi-journal-code me-1"></i> INVESTIGADOR</span>
+                                    {{ else if eq .RolID 3 }}
+                                        <span class="badge badge-rol-asesor"><i class="bi bi-globe me-1"></i> ASESOR EXTERNO</span>
+                                    {{ else if eq .RolID 4 }}
+                                        <span class="badge badge-rol-estudiante"><i class="bi bi-mortarboard-fill me-1"></i> ESTUDIANTE / BECARIO</span>
+                                    {{ else }}
+                                        <span class="badge badge-rol-investigador">{{ if .Rol.Nombre }}{{ .Rol.Nombre }}{{ else }}Rol #{{ .RolID }}{{ end }}</span>
+                                    {{ end }}
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column gap-1">
+                                        {{ if .PerteneceLacis }}
+                                            <span class="badge-pertenencia"><i class="bi bi-building me-1"></i> LaCIS</span>
+                                        {{ end }}
+                                        {{ if .PerteneceGrupoSoftware }}
+                                            <span class="badge-pertenencia"><i class="bi bi-code-slash me-1"></i> Grupo Software</span>
+                                        {{ end }}
+                                        {{ if and (not .PerteneceLacis) (not .PerteneceGrupoSoftware) }}
+                                            <span class="text-muted small">-</span>
+                                        {{ end }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        {{ if .Contacto }}
+                                        <a href="mailto:{{ .Contacto }}" class="text-secondary fs-5" title="Enviar Email: {{ .Contacto }}">
+                                            <i class="bi bi-envelope-at" style="color: var(--azul-logo);"></i>
+                                        </a>
+                                        {{ end }}
+                                        {{ if .ContactoLinkedin }}
+                                        <a href="{{ .ContactoLinkedin }}" target="_blank" class="text-secondary fs-5" title="Perfil de LinkedIn">
+                                            <i class="bi bi-linkedin" style="color: #0077b5;"></i>
+                                        </a>
+                                        {{ end }}
+                                        {{ if .CV }}
+                                        <a href="{{ .CV }}" target="_blank" class="text-secondary fs-5" title="Descargar CV (PDF)">
+                                            <i class="bi bi-file-earmark-pdf" style="color: var(--azul-profundo);"></i>
+                                        </a>
+                                        {{ end }}
+                                    </div>
+                                    <small class="text-muted d-block mt-1">{{ .Contacto }}</small>
+                                </td>
+                                <td>
+                                    {{ if .Activo }}
+                                        <span class="badge-estado-activo">ACTIVO</span>
+                                    {{ else }}
+                                        <span class="badge-estado-inactivo">INACTIVO</span>
+                                    {{ end }}
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn-action btn-action-ver" title="Ver Detalles" onclick="verDetalles('{{ .Nombre }} {{ .Apellido }}', '{{ .Especializacion }}', '{{ if eq .RolID 1 }}DIRECTOR{{ else if eq .RolID 2 }}INVESTIGADOR{{ else if eq .RolID 3 }}ASESOR{{ else }}ESTUDIANTE{{ end }}', '{{ .Descripcion }}', '{{ .Contacto }}', '{{ .ContactoLinkedin }}', '{{ if .PerteneceLacis }}LaCIS {{ end }}{{ if .PerteneceGrupoSoftware }}Grupo Software{{ end }}')">
+                                            <i class="bi bi-eye-fill"></i>
+                                        </button>
+                                        <a href="/admin/editar-integrante?id={{ .ID }}" class="btn-action btn-action-edit" title="Editar Integrante">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                        <a href="/admin/borrar-integrante?id={{ .ID }}" class="btn-action btn-action-delete" title="Eliminar" onclick="return confirm('¿Está seguro de que desea eliminar a {{ .Nombre }} {{ .Apellido }}?');">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {{ else }}
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="bi bi-person-x fs-1 d-block mb-2" style="color: var(--azul-logo);"></i>
+                                    <div class="fw-semibold fs-5 text-dark mb-1">No hay integrantes registrados en PostgreSQL</div>
+                                    <p class="small text-secondary mb-3">Comienza dando de alta al primer integrante de tu laboratorio o grupo de investigación.</p>
+                                    <a href="/admin/crear-integrante" class="btn btn-sm btn-crear">
+                                        <i class="bi bi-person-plus-fill me-1"></i> Ingresar Primer Integrante
+                                    </a>
+                                </td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mensaje cuando no hay resultados de búsqueda -->
+                <div id="noResultsMsg" class="text-center py-5 d-none text-muted">
+                    <i class="bi bi-search fs-2 d-block mb-2 text-secondary"></i>
+                    No se encontraron integrantes que coincidan con los filtros aplicados.
+                </div>
+
+                <!-- Footer de la Tarjeta y Paginación -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 pt-3 border-top text-muted small gap-3">
+                    <span id="contadorRegistros" class="fw-semibold">Mostrando 1 a 10 de 36 integrantes</span>
+                    
+                    <!-- Controles de Paginación -->
+                    <nav aria-label="Navegación de páginas">
+                        <ul class="pagination pagination-sm pagination-custom mb-0" id="paginationControls">
+                            <!-- Se generan dinámicamente con JS -->
+                        </ul>
+                    </nav>
+                </div>
+
             </div>
 
         </div>
-
     </main>
 
-    <!-- Footer Compartido -->
-    {{ template "footer" . }}
+    <!-- Modal para "Ver Detalle" Completo del Integrante -->
+    <div class="modal fade" id="modalDetalleIntegrante" tabindex="-1" aria-labelledby="modalTitulo" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title fs-5 fw-bold" id="modalTitulo">
+                        <i class="bi bi-person-lines-fill me-2"></i>Ficha del Integrante
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-3">
+                        <div class="avatar-wrapper mx-auto mb-2" style="width: 72px; height: 72px; font-size: 1.6rem;" id="modalAvatar">
+                            --
+                        </div>
+                        <h4 class="fw-bold mb-1" id="modalNombre" style="color: var(--azul-logo);"></h4>
+                        <p class="text-muted small mb-2" id="modalTituloJerarquia"></p>
+                        <span class="badge" id="modalRolBadge"></span>
+                    </div>
 
-  
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                    <div class="border-top pt-3 mt-3">
+                        <h6 class="fw-bold mb-2" style="color: var(--azul-profundo); font-size: 0.85rem; text-transform: uppercase;">Biografía / Descripción</h6>
+                        <p class="text-secondary small mb-3" id="modalDescripcion" style="line-height: 1.6;"></p>
+
+                        <h6 class="fw-bold mb-2" style="color: var(--azul-profundo); font-size: 0.85rem; text-transform: uppercase;">Pertenencia Institucional</h6>
+                        <p class="text-secondary small mb-3" id="modalPertenencia"></p>
+
+                        <h6 class="fw-bold mb-2" style="color: var(--azul-profundo); font-size: 0.85rem; text-transform: uppercase;">Contacto</h6>
+                        <div class="d-flex align-items-center gap-2 small text-secondary mb-1">
+                            <i class="bi bi-envelope-at" style="color: var(--azul-logo);"></i>
+                            <span id="modalEmail"></span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 small text-secondary" id="modalLinkedinWrapper">
+                            <i class="bi bi-linkedin" style="color: #0077b5;"></i>
+                            <a href="#" id="modalLinkedin" target="_blank" class="text-decoration-none text-secondary">Ver perfil de LinkedIn</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top bg-light">
+                    <button type="button" class="btn btn-sm btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Compartido -->
+    <footer>
+        {{ template "footer" . }}
+    </footer>
+
+    <!-- Scripts de Bootstrap y Filtrado con Paginación en Tiempo Real -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const buscador = document.getElementById('buscadorInput');
+            const filterPills = document.querySelectorAll('.filter-pill');
+            const pertenenciaBtns = document.querySelectorAll('.btn-pertenencia');
+            const rows = Array.from(document.querySelectorAll('.integrante-row'));
+            const noResultsMsg = document.getElementById('noResultsMsg');
+            const contadorRegistros = document.getElementById('contadorRegistros');
+            const paginationControls = document.getElementById('paginationControls');
+
+            const ITEMS_PER_PAGE = 10;
+            let currentPage = 1;
+            let activeRole = 'all';
+            let activePertenencia = 'all';
+
+            function renderPagination(totalFiltered, totalPages) {
+                paginationControls.innerHTML = '';
+                if (totalFiltered === 0 || totalPages <= 1) {
+                    if (totalPages <= 1 && totalFiltered > 0) {
+                        paginationControls.innerHTML = `<li class="page-item active"><span class="page-link">1</span></li>`;
+                    }
+                    return;
+                }
+
+                // Botón Anterior
+                const prevLi = document.createElement('li');
+                prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+                prevLi.innerHTML = `<a class="page-link" href="#" aria-label="Anterior"><i class="bi bi-chevron-left"></i> Anterior</a>`;
+                prevLi.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (currentPage > 1) {
+                        currentPage--;
+                        applyFiltersAndPagination();
+                    }
+                });
+                paginationControls.appendChild(prevLi);
+
+                // Botones Numéricos
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageLi = document.createElement('li');
+                    pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                    pageLi.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                    pageLi.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        currentPage = i;
+                        applyFiltersAndPagination();
+                    });
+                    paginationControls.appendChild(pageLi);
+                }
+
+                // Botón Siguiente
+                const nextLi = document.createElement('li');
+                nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+                nextLi.innerHTML = `<a class="page-link" href="#" aria-label="Siguiente">Siguiente <i class="bi bi-chevron-right"></i></a>`;
+                nextLi.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        applyFiltersAndPagination();
+                    }
+                });
+                paginationControls.appendChild(nextLi);
+            }
+
+            function applyFiltersAndPagination() {
+                const searchText = buscador.value.toLowerCase().trim();
+
+                // 1. Filtrar filas
+                const matchingRows = rows.filter(row => {
+                    const rowName = row.getAttribute('data-nombre') ? row.getAttribute('data-nombre').toLowerCase() : '';
+                    const tituloElem = row.querySelector('.titulo-integrante');
+                    const rowTitle = tituloElem ? tituloElem.textContent.toLowerCase() : '';
+                    const rowRole = row.getAttribute('data-rol');
+                    const isLacis = row.getAttribute('data-lacis') === 'true';
+                    const isSoftware = row.getAttribute('data-software') === 'true';
+
+                    const matchesSearch = rowName.includes(searchText) || rowTitle.includes(searchText);
+                    const matchesRole = (activeRole === 'all') || (rowRole === activeRole);
+
+                    let matchesPertenencia = true;
+                    if (activePertenencia === 'lacis') matchesPertenencia = isLacis;
+                    if (activePertenencia === 'software') matchesPertenencia = isSoftware;
+
+                    return matchesSearch && matchesRole && matchesPertenencia;
+                });
+
+                const totalFiltered = matchingRows.length;
+                const totalPages = Math.ceil(totalFiltered / ITEMS_PER_PAGE) || 1;
+
+                if (currentPage > totalPages) {
+                    currentPage = totalPages;
+                }
+
+                const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+                const endIndex = startIndex + ITEMS_PER_PAGE;
+
+                // 2. Ocultar todas y mostrar solo la página activa
+                rows.forEach(row => {
+                    row.style.display = 'none';
+                });
+
+                matchingRows.forEach((row, index) => {
+                    if (index >= startIndex && index < endIndex) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                // 3. Texto del contador y mensaje vacío
+                if (totalFiltered === 0) {
+                    noResultsMsg.classList.remove('d-none');
+                    contadorRegistros.textContent = '0 integrantes encontrados';
+                } else {
+                    noResultsMsg.classList.add('d-none');
+                    const fromNum = startIndex + 1;
+                    const toNum = Math.min(endIndex, totalFiltered);
+                    contadorRegistros.textContent = `Mostrando ${fromNum} a ${toNum} de ${totalFiltered} integrantes (Página ${currentPage} de ${totalPages})`;
+                }
+
+                // 4. Renderizar controles
+                renderPagination(totalFiltered, totalPages);
+            }
+
+            // Eventos
+            buscador.addEventListener('input', function() {
+                currentPage = 1;
+                applyFiltersAndPagination();
+            });
+
+            filterPills.forEach(pill => {
+                pill.addEventListener('click', function () {
+                    filterPills.forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                    activeRole = this.getAttribute('data-filter');
+                    currentPage = 1;
+                    applyFiltersAndPagination();
+                });
+            });
+
+            pertenenciaBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    pertenenciaBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    activePertenencia = this.getAttribute('data-pertenencia');
+                    currentPage = 1;
+                    applyFiltersAndPagination();
+                });
+            });
+
+            // Inicializar al cargar
+            applyFiltersAndPagination();
+        });
+
+        // Función para abrir el modal con los detalles completos
+        function verDetalles(nombre, titulo, rol, descripcion, email, linkedin, pertenencia) {
+            document.getElementById('modalNombre').textContent = nombre;
+            document.getElementById('modalTituloJerarquia').textContent = titulo;
+            document.getElementById('modalDescripcion').textContent = descripcion;
+            document.getElementById('modalEmail').textContent = email;
+            document.getElementById('modalPertenencia').textContent = pertenencia;
+
+            // Iniciales avatar
+            const partes = nombre.replace(/^(Dr\.|Dra\.|Lic\.|Ing\.|Est\.|Mg\.|Esp\.)\s+/, '').split(' ');
+            let iniciales = '';
+            if (partes.length >= 2) {
+                iniciales = (partes[0][0] + partes[1][0]).toUpperCase();
+            } else if (partes.length === 1) {
+                iniciales = partes[0].substring(0, 2).toUpperCase();
+            }
+            document.getElementById('modalAvatar').textContent = iniciales;
+
+            // Badge Rol
+            const rolBadge = document.getElementById('modalRolBadge');
+            rolBadge.className = 'badge';
+            if (rol === 'DIRECTOR') rolBadge.classList.add('badge-rol-director');
+            else if (rol === 'INVESTIGADOR') rolBadge.classList.add('badge-rol-investigador');
+            else if (rol === 'ASESOR') rolBadge.classList.add('badge-rol-asesor');
+            else rolBadge.classList.add('badge-rol-estudiante');
+            rolBadge.textContent = rol;
+
+            // LinkedIn
+            const linkedinWrapper = document.getElementById('modalLinkedinWrapper');
+            const linkedinLink = document.getElementById('modalLinkedin');
+            if (linkedin && linkedin.trim() !== '') {
+                linkedinWrapper.style.display = 'flex';
+                linkedinLink.href = linkedin;
+            } else {
+                linkedinWrapper.style.display = 'none';
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('modalDetalleIntegrante'));
+            modal.show();
+        }
+    </script>
 </body>
 </html>

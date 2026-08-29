@@ -1,58 +1,328 @@
- body {
-            background-color: #f4f6f9;
-            font-family: 'Montserrat', sans-serif;
-            padding-top: 80px;
-        }
+/* ==========================================================================
+   GIS-LACIS - Estilos de Lista y Tabla de Integrantes (Admin)
+   Paleta: Azules institucionales (--azul-logo, --azul-profundo, --azul-pastel-fondo)
+   SIN COLOR VERDE
+   ========================================================================== */
 
-        .admin-card {
-            background: #ffffff;
-            border-radius: 16px;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            padding: 24px;
-        }
+:root {
+    --azul-logo: #1a4484;
+    --azul-profundo: #0A1E2E;
+    --azul-hover: #133363;
+    --azul-pastel-fondo: #E0F2F7;
+    --azul-claro-badge: #e8f0fe;
+    --azul-texto-badge: #1a4484;
+    --borde-tarjeta: #e2e8f0;
+    --gris-fondo-card: #ffffff;
+    --gris-subtle: #f8fafc;
+}
 
-        .btn-crear {
-            background-color: #0056b3;
-            color: #ffffff;
-            font-weight: 600;
-            border-radius: 10px;
-            padding: 10px 22px;
-            border: none;
-            box-shadow: 0 4px 12px rgba(0, 86, 179, 0.25);
-            transition: all 0.2s ease-in-out;
-        }
+body {
+    background-color: var(--azul-pastel-fondo) !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2d3748;
+    margin: 0;
+    padding: 0;
+}
 
-        .btn-crear:hover {
-            background-color: #004085;
-            color: #ffffff;
-            transform: translateY(-2px);
-        }
+main.admin-main, main {
+    background: transparent !important;
+    padding-top: 100px !important;
+    padding-bottom: 40px !important;
+    margin: 0 !important;
+}
 
-        .avatar-circle {
-            width: 42px;
-            height: 42px;
-            background-color: #e8f0fe;
-            color: #1a73e8;
-            font-weight: 700;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.95rem;
-        }
+/* Tarjeta Principal de Administración */
+.admin-card {
+    background: var(--gris-fondo-card);
+    border-radius: 16px;
+    border: 1px solid var(--borde-tarjeta);
+    border-left: 5px solid var(--azul-logo);
+    box-shadow: 0 4px 20px rgba(10, 30, 46, 0.07);
+    padding: 28px;
+    margin-bottom: 40px;
+}
 
-        .table-custom th {
-            color: #6c757d;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 700;
-            border-bottom: 2px solid #eef2f5;
-            padding-bottom: 12px;
-        }
+/* Título de Sección */
+.admin-header-title {
+    color: var(--azul-logo);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
 
-        .table-custom td {
-            padding: 16px 12px;
-            border-bottom: 1px solid #f1f3f5;
-        }
+/* Botón Crear / Ingresar Integrante */
+.btn-crear {
+    background-color: var(--azul-logo);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px 24px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(26, 68, 132, 0.25);
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-crear:hover {
+    background-color: var(--azul-hover);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(26, 68, 132, 0.35);
+}
+
+/* Barra de Filtros y Búsqueda */
+.filter-container {
+    background-color: var(--gris-subtle);
+    border: 1px solid #edf2f7;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.search-input-group .form-control {
+    border-radius: 8px 0 0 8px;
+    border-color: #cbd5e1;
+}
+
+.search-input-group .input-group-text {
+    background-color: #ffffff;
+    border-color: #cbd5e1;
+    color: var(--azul-logo);
+    border-radius: 0 8px 8px 0;
+}
+
+/* Botones de Filtro Rápido (Pills) */
+.filter-pill {
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 6px 16px;
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #4a5568;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.filter-pill:hover,
+.filter-pill.active {
+    background-color: var(--azul-logo);
+    color: #ffffff;
+    border-color: var(--azul-logo);
+    box-shadow: 0 2px 8px rgba(26, 68, 132, 0.2);
+}
+
+/* Tabla Estilizada */
+.table-custom {
+    margin-bottom: 0;
+}
+
+.table-custom th {
+    background-color: #f1f5f9;
+    color: var(--azul-profundo);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    font-weight: 700;
+    border-bottom: 2px solid #cbd5e1;
+    padding: 14px 16px;
+}
+
+.table-custom td {
+    padding: 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.table-custom tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.table-custom tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* Avatar / Foto de Perfil */
+.avatar-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid #cbd5e1;
+    background-color: var(--azul-claro-badge);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--azul-texto-badge);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Badges de Roles y Estado (Azules y Neutros, CERO VERDE) */
+.badge-rol-director {
+    background-color: #0A1E2E;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    letter-spacing: 0.3px;
+}
+
+.badge-rol-investigador {
+    background-color: var(--azul-claro-badge);
+    color: var(--azul-logo);
+    border: 1px solid #b8daff;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+}
+
+.badge-rol-asesor {
+    background-color: #e2e8f0;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+}
+
+.badge-rol-estudiante {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+}
+
+.badge-pertenencia {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.badge-estado-activo {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.badge-estado-inactivo {
+    background-color: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+/* Botones de Acción */
+.btn-action {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-action-ver {
+    background-color: #eff6ff;
+    color: var(--azul-logo);
+    border: 1px solid #bfdbfe;
+}
+.btn-action-ver:hover {
+    background-color: var(--azul-logo);
+    color: #ffffff;
+}
+
+.btn-action-edit {
+    background-color: #f0f4f8;
+    color: #0A1E2E;
+    border: 1px solid #cbd5e1;
+}
+.btn-action-edit:hover {
+    background-color: #0A1E2E;
+    color: #ffffff;
+}
+
+.btn-action-delete {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+.btn-action-delete:hover {
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+/* Modal de Detalle */
+.modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.modal-header-custom {
+    background-color: var(--azul-logo);
+    color: #ffffff;
+    border-bottom: none;
+    border-radius: 16px 16px 0 0;
+    padding: 20px 24px;
+}
+
+/* Paginación Elegante */
+.pagination-custom .page-link {
+    color: var(--azul-logo);
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin: 0 3px;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.pagination-custom .page-link:hover {
+    background-color: #eff6ff;
+    border-color: var(--azul-logo);
+    color: var(--azul-logo);
+}
+
+.pagination-custom .page-item.active .page-link {
+    background-color: var(--azul-logo);
+    border-color: var(--azul-logo);
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(26, 68, 132, 0.3);
+}
+
+.pagination-custom .page-item.disabled .page-link {
+    color: #94a3b8;
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+}

@@ -6,11 +6,11 @@ import (
 	"fmt"
 )
 
-// ErrNotFound devuldce el error Not found, cuando no se encuentra el USUARIO CON EL ID proporcionado
-var ErrNotFound = errors.New("usuario no encontrado")
+// ErrNotFound devuelve el error cuando no se encuentra el integrante con el ID proporcionado
+var ErrNotFound = errors.New("integrante no encontrado")
 
-// ErrEmptyID retorna eso cuando el usuario no tiene el ID VACIO
-var ErrEmptyID = errors.New("Id de usuario vacio")
+// ErrEmptyID retorna error cuando el ID es inválido
+var ErrEmptyID = errors.New("ID de integrante vacío o inválido")
 
 type Storage interface {
 	Create(integrante *Integrante) error
@@ -31,20 +31,36 @@ func NewPostgresStorage(db *sql.DB) *PostgresStorage {
 }
 
 func (c *PostgresStorage) Create(integrante *Integrante) error {
-
-	query := `INSERT INTO integrante (nombre, apellido, cv, imagen, contacto, especializacion, descripcion, rol)
-	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+	query := `INSERT INTO integrante (
+				nombre, 
+				apellido, 
+				titulo_especializacion, 
+				descripcion, 
+				contacto_mail, 
+				contacto_linkedin, 
+				imagen_url, 
+				cv_url, 
+				pertenece_lacis, 
+				pertenece_grupo_software, 
+				activo, 
+				rol_id
+			  )
+	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 	          RETURNING id`
 
 	err := c.db.QueryRow(
 		query,
 		integrante.Nombre,
 		integrante.Apellido,
-		integrante.CV,
-		integrante.Imagen,
-		integrante.Contacto,
 		integrante.Especializacion,
 		integrante.Descripcion,
+		integrante.Contacto,
+		integrante.ContactoLinkedin,
+		integrante.Imagen,
+		integrante.CV,
+		integrante.PerteneceLacis,
+		integrante.PerteneceGrupoSoftware,
+		integrante.Activo,
 		integrante.RolID,
 	).Scan(&integrante.ID)
 
@@ -57,9 +73,22 @@ func (c *PostgresStorage) Create(integrante *Integrante) error {
 
 func (s *PostgresStorage) Read(id int) (*Integrante, error) {
 	query := `
-		SELECT i.id, i.nombre, i.apellido, i.cv, i.imagen, i.contacto, i.especializacion, i.descripcion, i.rol, r.nombre
+		SELECT i.id, 
+		       i.nombre, 
+		       i.apellido, 
+		       COALESCE(i.titulo_especializacion, ''), 
+		       COALESCE(i.descripcion, ''), 
+		       COALESCE(i.contacto_mail, ''), 
+		       COALESCE(i.contacto_linkedin, ''), 
+		       COALESCE(i.imagen_url, ''), 
+		       COALESCE(i.cv_url, ''), 
+		       COALESCE(i.pertenece_lacis, false), 
+		       COALESCE(i.pertenece_grupo_software, false), 
+		       COALESCE(i.activo, true), 
+		       COALESCE(i.rol_id, 0), 
+		       COALESCE(r.nombre, '')
 		FROM integrante i
-		LEFT JOIN rol r ON i.rol = r.id
+		LEFT JOIN rol r ON i.rol_id = r.id
 		WHERE i.id = $1`
 	row := s.db.QueryRow(query, id)
 	var u Integrante
@@ -68,11 +97,15 @@ func (s *PostgresStorage) Read(id int) (*Integrante, error) {
 		&u.ID,
 		&u.Nombre,
 		&u.Apellido,
-		&u.CV,
-		&u.Imagen,
-		&u.Contacto,
 		&u.Especializacion,
 		&u.Descripcion,
+		&u.Contacto,
+		&u.ContactoLinkedin,
+		&u.Imagen,
+		&u.CV,
+		&u.PerteneceLacis,
+		&u.PerteneceGrupoSoftware,
+		&u.Activo,
 		&u.RolID,
 		&u.Rol.Nombre,
 	)
@@ -88,10 +121,23 @@ func (s *PostgresStorage) Read(id int) (*Integrante, error) {
 
 func (s *PostgresStorage) GetAll() ([]Integrante, error) {
 	query := `
-		SELECT i.id, i.nombre, i.apellido, i.cv, i.imagen, i.contacto, i.especializacion, i.descripcion, i.rol, r.nombre
+		SELECT i.id, 
+		       i.nombre, 
+		       i.apellido, 
+		       COALESCE(i.titulo_especializacion, ''), 
+		       COALESCE(i.descripcion, ''), 
+		       COALESCE(i.contacto_mail, ''), 
+		       COALESCE(i.contacto_linkedin, ''), 
+		       COALESCE(i.imagen_url, ''), 
+		       COALESCE(i.cv_url, ''), 
+		       COALESCE(i.pertenece_lacis, false), 
+		       COALESCE(i.pertenece_grupo_software, false), 
+		       COALESCE(i.activo, true), 
+		       COALESCE(i.rol_id, 0), 
+		       COALESCE(r.nombre, '')
 		FROM integrante i
-		LEFT JOIN rol r ON i.rol = r.id
-		ORDER BY i.apellido ASC`
+		LEFT JOIN rol r ON i.rol_id = r.id
+		ORDER BY i.id ASC`
 	rows, err := s.db.Query(query)
 	if err != nil {
 		return nil, fmt.Errorf("error al consultar integrantes en PostgreSQL: %w", err)
@@ -104,11 +150,15 @@ func (s *PostgresStorage) GetAll() ([]Integrante, error) {
 			&u.ID,
 			&u.Nombre,
 			&u.Apellido,
-			&u.CV,
-			&u.Imagen,
-			&u.Contacto,
 			&u.Especializacion,
 			&u.Descripcion,
+			&u.Contacto,
+			&u.ContactoLinkedin,
+			&u.Imagen,
+			&u.CV,
+			&u.PerteneceLacis,
+			&u.PerteneceGrupoSoftware,
+			&u.Activo,
 			&u.RolID,
 			&u.Rol.Nombre,
 		)
@@ -130,7 +180,6 @@ func (s *PostgresStorage) Delete(id int) error {
 	if err != nil {
 		return fmt.Errorf("error al eliminar integrante en PostgreSQL: %w", err)
 	}
-	// Verificamos si se eliminó alguna fila
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
 		return err
@@ -145,6 +194,7 @@ func (s *PostgresStorage) Update(id int, fields UpdateFields) error {
 	var query string = "UPDATE integrante SET "
 	var args []interface{}
 	var argID int = 1
+
 	if fields.Nombre != nil {
 		query += fmt.Sprintf("nombre = $%d, ", argID)
 		args = append(args, *fields.Nombre)
@@ -155,25 +205,8 @@ func (s *PostgresStorage) Update(id int, fields UpdateFields) error {
 		args = append(args, *fields.Apellido)
 		argID++
 	}
-	if fields.CV != nil {
-		query += fmt.Sprintf("cv = $%d, ", argID)
-		args = append(args, *fields.CV)
-		argID++
-	}
-
-	if fields.Imagen != nil {
-		query += fmt.Sprintf("imagen = $%d, ", argID)
-		args = append(args, *fields.Imagen)
-		argID++
-	}
-
-	if fields.Contacto != nil {
-		query += fmt.Sprintf("contacto = $%d, ", argID)
-		args = append(args, *fields.Contacto)
-		argID++
-	}
 	if fields.Especializacion != nil {
-		query += fmt.Sprintf("especializacion = $%d, ", argID)
+		query += fmt.Sprintf("titulo_especializacion = $%d, ", argID)
 		args = append(args, *fields.Especializacion)
 		argID++
 	}
@@ -182,12 +215,47 @@ func (s *PostgresStorage) Update(id int, fields UpdateFields) error {
 		args = append(args, *fields.Descripcion)
 		argID++
 	}
+	if fields.Contacto != nil {
+		query += fmt.Sprintf("contacto_mail = $%d, ", argID)
+		args = append(args, *fields.Contacto)
+		argID++
+	}
+	if fields.ContactoLinkedin != nil {
+		query += fmt.Sprintf("contacto_linkedin = $%d, ", argID)
+		args = append(args, *fields.ContactoLinkedin)
+		argID++
+	}
+	if fields.Imagen != nil {
+		query += fmt.Sprintf("imagen_url = $%d, ", argID)
+		args = append(args, *fields.Imagen)
+		argID++
+	}
+	if fields.CV != nil {
+		query += fmt.Sprintf("cv_url = $%d, ", argID)
+		args = append(args, *fields.CV)
+		argID++
+	}
+	if fields.PerteneceLacis != nil {
+		query += fmt.Sprintf("pertenece_lacis = $%d, ", argID)
+		args = append(args, *fields.PerteneceLacis)
+		argID++
+	}
+	if fields.PerteneceGrupoSoftware != nil {
+		query += fmt.Sprintf("pertenece_grupo_software = $%d, ", argID)
+		args = append(args, *fields.PerteneceGrupoSoftware)
+		argID++
+	}
+	if fields.Activo != nil {
+		query += fmt.Sprintf("activo = $%d, ", argID)
+		args = append(args, *fields.Activo)
+		argID++
+	}
 	if fields.RolID != nil {
-		query += fmt.Sprintf("rol = $%d, ", argID)
+		query += fmt.Sprintf("rol_id = $%d, ", argID)
 		args = append(args, *fields.RolID)
 		argID++
 	}
-	// Si no se envió ningún campo para actualizar, salimos sin error
+
 	if len(args) == 0 {
 		return nil
 	}
