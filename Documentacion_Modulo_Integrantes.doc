@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>Documentación Técnica - Módulo Integrantes GIS-LaCIS</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #1e293b;
+        line-height: 1.6;
+        margin: 40px;
+        background-color: #ffffff;
+    }
+    h1 {
+        color: #1a4484;
+        font-size: 26pt;
+        font-weight: bold;
+        border-bottom: 3px solid #1a4484;
+        padding-bottom: 8px;
+        margin-top: 0;
+    }
+    h2 {
+        color: #0A1E2E;
+        font-size: 16pt;
+        border-bottom: 1.5px solid #cbd5e1;
+        padding-bottom: 5px;
+        margin-top: 25pt;
+    }
+    h3 {
+        color: #1a4484;
+        font-size: 13pt;
+        margin-top: 15pt;
+    }
+    p, li {
+        font-size: 11pt;
+        color: #334155;
+    }
+    .badge {
+        background-color: #e0f2f7;
+        color: #1a4484;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 9.5pt;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 10.5pt;
+    }
+    th {
+        background-color: #1a4484;
+        color: #ffffff;
+        font-weight: 600;
+        text-align: left;
+        padding: 10px;
+        border: 1px solid #1a4484;
+    }
+    td {
+        padding: 9px 10px;
+        border: 1px solid #cbd5e1;
+        vertical-align: top;
+    }
+    tr:nth-child(even) td {
+        background-color: #f8fafc;
+    }
+    .info-box {
+        background-color: #f0f7ff;
+        border-left: 4px solid #1a4484;
+        padding: 12px 16px;
+        margin: 15px 0;
+        border-radius: 0 6px 6px 0;
+    }
+    .success-box {
+        background-color: #f0fdf4;
+        border-left: 4px solid #16a34a;
+        padding: 12px 16px;
+        margin: 15px 0;
+        border-radius: 0 6px 6px 0;
+    }
+    .code-block {
+        background-color: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 12px;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 10pt;
+        color: #0f172a;
+        white-space: pre-wrap;
+    }
+    .meta-table {
+        margin-bottom: 25px;
+    }
+    .meta-table td {
+        border: none;
+        padding: 4px 8px;
+    }
+</style>
+</head>
+<body>
+
+    <h1>DOCUMENTACIÓN TÉCNICA DEL SISTEMA</h1>
+    <h3 style="color: #64748b; margin-top: -5px; font-weight: normal;">Módulo de Administración de Integrantes (ABM) — GIS-LaCIS</h3>
+
+    <table class="meta-table">
+        <tr>
+            <td style="width: 150px; font-weight: bold; color: #1a4484;">Proyecto:</td>
+            <td>GIS-LACIS (Grupo de Ingeniería de Software & Laboratorio de Computación Inteligente y Sistemas)</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold; color: #1a4484;">Tecnologías:</td>
+            <td>Go (Golang 1.20+), Gin Web Framework, PostgreSQL 18, HTML5 / CSS3 / JavaScript</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold; color: #1a4484;">Base de Datos:</td>
+            <td>PostgreSQL (Puerto 5433 / Base de datos: <code>lacis</code>)</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold; color: #1a4484;">Fecha de Entrega:</td>
+            <td>29 de Agosto de 2026</td>
+        </tr>
+    </table>
+
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
+
+    <h2>1. Resumen Ejecutivo y Alcance</h2>
+    <p>
+        El presente documento detalla la implementación integral del <strong>Módulo ABM (Alta, Baja, Modificación y Consulta) de Integrantes</strong>. Este componente permite la gestión centralizada de los docentes, investigadores, directores, asesores externos y becarios vinculados al <strong>Grupo de Ingeniería de Software (GIS)</strong> y al <strong>Laboratorio de Computación Inteligente y Sistemas (LaCIS)</strong>.
+    </p>
+    <div class="info-box">
+        <strong>Objetivos alcanzados:</strong>
+        <ul>
+            <li>Desarrollo de interfaz de administración moderna y responsive siguiendo la paleta de colores institucional (azules institucionales, 0% color verde).</li>
+            <li>Implementación de backend estructurado en Go bajo arquitectura en capas limpia.</li>
+            <li>Migración y consolidación de <strong>36 integrantes</strong> desde archivos JSON a la base de datos PostgreSQL.</li>
+            <li>Buscador reactivo, filtros combinados por Rol y Pertenencia, ficha modal de detalle y paginación dinámica (10 registros por página).</li>
+        </ul>
+    </div>
+
+    <h2>2. Arquitectura de Software en Capas (Go)</h2>
+    <p>
+        Se respetó estrictamente la arquitectura en capas y el principio de responsabilidad única en el backend:
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">Capa / Nivel</th>
+                <th style="width: 35%;">Archivo Fuente</th>
+                <th style="width: 40%;">Responsabilidad Principal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1. Dominio (Domain)</strong></td>
+                <td><code>internal/integrante/domain.go</code></td>
+                <td>Define las entidades de negocio <code>Integrante</code> y <code>UpdateFields</code> con soporte para todos los atributos del modelo relacional.</td>
+            </tr>
+            <tr>
+                <td><strong>2. Persistencia (Storage)</strong></td>
+                <td><code>internal/integrante/storage.go</code></td>
+                <td>Implementa el acceso a datos en PostgreSQL con consultas preparadas, uso de <code>COALESCE</code> para prevención de valores nulos y operaciones CRUD completas.</td>
+            </tr>
+            <tr>
+                <td><strong>3. Lógica de Negocio (Service)</strong></td>
+                <td><code>internal/integrante/service.go</code></td>
+                <td>Aplica validaciones de negocio (campos obligatorios, validación de caracteres en nombres/apellidos) y logging estructurado con <code>zap.Logger</code>.</td>
+            </tr>
+            <tr>
+                <td><strong>4. Controladores (Handler)</strong></td>
+                <td><code>api/handler/integrantes.go</code></td>
+                <td>Recibe las peticiones HTTP, procesa formularios multipart, gestiona la subida de fotos y archivos PDF de CV, y renderiza las vistas HTML.</td>
+            </tr>
+            <tr>
+                <td><strong>5. Enrutador (Router)</strong></td>
+                <td><code>api/router.go</code></td>
+                <td>Registra las rutas públicas y de administración bajo Gin Gonic.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>3. Estructura de la Base de Datos PostgreSQL</h2>
+    <p>
+        El módulo interactúa con las tablas <code>integrante</code> y <code>rol</code> en PostgreSQL:
+    </p>
+
+    <h3>Tabla: <code>integrante</code></h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Columna</th>
+                <th>Tipo de Dato</th>
+                <th>Restricciones</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><code>id</code></td><td>SERIAL</td><td>PRIMARY KEY</td><td>Identificador único autoincremental.</td></tr>
+            <tr><td><code>nombre</code></td><td>VARCHAR(100)</td><td>NOT NULL</td><td>Nombre(s) del integrante.</td></tr>
+            <tr><td><code>apellido</code></td><td>VARCHAR(100)</td><td>NOT NULL</td><td>Apellido(s) del integrante.</td></tr>
+            <tr><td><code>titulo_especializacion</code></td><td>VARCHAR(255)</td><td>NULL</td><td>Título de mayor jerarquía / Especialidad.</td></tr>
+            <tr><td><code>descripcion</code></td><td>TEXT</td><td>NULL</td><td>Resumen biográfico o trayectoria.</td></tr>
+            <tr><td><code>contacto_mail</code></td><td>VARCHAR(255)</td><td>NULL</td><td>Email institucional de contacto.</td></tr>
+            <tr><td><code>contacto_linkedin</code></td><td>VARCHAR(255)</td><td>NULL</td><td>Enlace al perfil de LinkedIn.</td></tr>
+            <tr><td><code>imagen_url</code></td><td>VARCHAR(500)</td><td>NULL</td><td>Ruta relativa a la foto de perfil.</td></tr>
+            <tr><td><code>cv_url</code></td><td>VARCHAR(500)</td><td>NULL</td><td>Ruta relativa al archivo PDF del currículum.</td></tr>
+            <tr><td><code>pertenece_lacis</code></td><td>BOOLEAN</td><td>DEFAULT FALSE</td><td>Indica pertenencia al laboratorio LaCIS.</td></tr>
+            <tr><td><code>pertenece_grupo_software</code></td><td>BOOLEAN</td><td>DEFAULT FALSE</td><td>Indica pertenencia al Grupo Software.</td></tr>
+            <tr><td><code>activo</code></td><td>BOOLEAN</td><td>DEFAULT TRUE</td><td>Estado de actividad (baja lógica).</td></tr>
+            <tr><td><code>rol_id</code></td><td>INT</td><td>REFERENCES rol(id)</td><td>Clave foránea hacia la tabla de roles.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Tabla: <code>rol</code></h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">ID</th>
+                <th style="width: 80%;">Nombre del Rol</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>1</strong></td><td>DIRECTOR / CO-DIRECTOR</td></tr>
+            <tr><td><strong>2</strong></td><td>INVESTIGADOR</td></tr>
+            <tr><td><strong>3</strong></td><td>ASESOR EXTERNO</td></tr>
+            <tr><td><strong>4</strong></td><td>ESTUDIANTE / BECARIO</td></tr>
+        </tbody>
+    </table>
+
+    <h2>4. Proceso de Migración de Datos</h2>
+    <p>
+        Se realizó una migración automatizada consolidando los siguientes archivos JSON originales del proyecto:
+    </p>
+    <ul>
+        <li><code>ui/static/json-GIS/directores.json</code></li>
+        <li><code>ui/static/json-GIS/directoresLacis.json</code></li>
+        <li><code>ui/static/json-GIS/director.json</code></li>
+        <li><code>ui/static/json-GIS/directorLacis.json</code></li>
+        <li><code>ui/static/json-GIS/integrantes.json</code></li>
+        <li><code>ui/static/json-GIS/integrantesLacis.json</code></li>
+    </ul>
+
+    <div class="success-box">
+        <strong>Resultado de la migración:</strong>
+        <ul>
+            <li><strong>36 integrantes</strong> insertados exitosamente en PostgreSQL sin duplicados.</li>
+            <li>Las personas que participan en ambos grupos quedaron unificadas con <code>pertenece_lacis = true</code> y <code>pertenece_grupo_software = true</code>.</li>
+        </ul>
+    </div>
+
+    <h2>5. Frontend y Experiencia de Usuario (UI/UX)</h2>
+    
+    <h3>Archivos de Vistas y Estilos</h3>
+    <ul>
+        <li><strong><code>ui/html/admin/Lista.html</code>:</strong> Vista principal con tabla de integrantes, filtros, modal y paginador.</li>
+        <li><strong><code>ui/html/admin/Crear.html</code>:</strong> Formulario modular en 5 secciones para dar de alta integrantes.</li>
+        <li><strong><code>ui/html/admin/Editar.html</code>:</strong> Formulario de actualización de datos.</li>
+        <li><strong><code>ui/static/css-GIS/lista.css</code>, <code>admin.css</code>, <code>actualizar.css</code>:</strong> Hojas de estilo personalizadas con la paleta de colores institucional azul.</li>
+    </ul>
+
+    <h3>Funcionalidades Clave de la Interfaz</h3>
+    <ul>
+        <li><strong>Buscador en Tiempo Real:</strong> Filtra instantáneamente por nombre, apellido o título de especialización.</li>
+        <li><strong>Filtros Rápidos por Rol:</strong> Botones interactivos para filtrar por Directores, Investigadores, Asesores o Becarios.</li>
+        <li><strong>Filtros por Pertenencia:</strong> Filtrado cruzado (Todas, Solo LaCIS, Solo Grupo Software).</li>
+        <li><strong>Paginación Dinámica:</strong> Límite de <strong>10 integrantes por página</strong>, con botones <em>Anterior</em>, números de página activos y botón <em>Siguiente</em>, recalculado automáticamente al aplicar filtros.</li>
+        <li><strong>Modal "Ver Detalle":</strong> Ventana emergente con avatar grande, biografía completa, insignias de pertenencia y enlaces de contacto directo (Mail, LinkedIn y CV en PDF).</li>
+    </ul>
+
+    <h2>6. Incidencias Técnicas Resueltas</h2>
+    
+    <h3>A. Violación de Clave Foránea (<code>integrante_rol_id_fkey</code>)</h3>
+    <p>
+        <strong>Causa:</strong> La tabla <code>rol</code> en PostgreSQL se encontraba vacía en la base local, provocando error al intentar insertar registros con <code>rol_id</code>.
+        <br>
+        <strong>Solución:</strong> Se cargaron los 4 roles canónicos con sus respectivos IDs en PostgreSQL, asegurando la integridad referencial.
+    </p>
+
+    <h3>B. Solapamiento de la Barra de Navegación (<code>fixed-top</code>)</h3>
+    <p>
+        <strong>Causa:</strong> La barra de navegación superior poseía posición fija (<code>fixed-top</code>) y la clase <code>my-3</code> de Bootstrap reducía el margen superior, provocando que el encabezado y botones quedaran ocultos detrás de la barra.
+        <br>
+        <strong>Solución:</strong> Se eliminó <code>my-3</code>, se asignó la clase <code>admin-main</code> con <code>padding-top: 100px !important</code> y se desacopló el fondo degradado de <code>style.css</code> de las vistas administrativas.
+    </p>
+
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+
+    <div style="text-align: center; color: #64748b; font-size: 10pt;">
+        <p>Proyecto GIS-LACIS — Universidad Nacional de San Luis (UNSL)</p>
+    </div>
+
+</body>
+</html>
