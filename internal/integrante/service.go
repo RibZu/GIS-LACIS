@@ -8,17 +8,17 @@ import (
 	"go.uber.org/zap"
 )
 
-var regexSoloLetras = regexp.MustCompile(`^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$`)
+var regexSoloLetras = regexp.MustCompile(`^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\.\-']+$`)
 
 // Errores de validación de negocio
 var (
 	ErrNombreRequerido          = errors.New("el nombre es obligatorio")
 	ErrApellidoRequerido        = errors.New("el apellido es obligatorio")
-	ErrApellidoInvalido         = errors.New("el apellido solo debe contener letras")
-	ErrNombreInvalido           = errors.New("el nombre solo debe contener letras")
+	ErrApellidoInvalido         = errors.New("el apellido solo debe contener letras y caracteres válidos")
+	ErrNombreInvalido           = errors.New("el nombre solo debe contener letras y caracteres válidos")
 	ErrRolRequerido             = errors.New("el rol es obligatorio")
-	ErrEspecializacionRequerida = errors.New("la especialización es obligatoria")
-	ErrContactoRequerido        = errors.New("el contacto es obligatorio")
+	ErrEspecializacionRequerida = errors.New("la especialización o título es obligatorio")
+	ErrContactoRequerido        = errors.New("el contacto o email es obligatorio")
 	ErrDescripcionRequerida     = errors.New("la descripción es obligatoria")
 	ErrIDInvalido               = errors.New("el ID debe ser mayor a 0")
 )
@@ -48,7 +48,7 @@ func (s *Service) Create(integrante *Integrante) error {
 	if integrante.Apellido == "" {
 		return ErrApellidoRequerido
 	}
-	if integrante.RolID == 0 {
+	if integrante.RolID <= 0 {
 		return ErrRolRequerido
 	}
 	if integrante.Especializacion == "" {
@@ -63,7 +63,6 @@ func (s *Service) Create(integrante *Integrante) error {
 	if !esSoloLetras(integrante.Nombre) {
 		return ErrNombreInvalido
 	}
-
 	if !esSoloLetras(integrante.Apellido) {
 		return ErrApellidoInvalido
 	}

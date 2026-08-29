@@ -46,14 +46,21 @@ func (h *IntegranteHandler) Crear(c *gin.Context) {
 // Procesar el Formulario Crear (POST)
 func (h *IntegranteHandler) Insertar(c *gin.Context) {
 	rolID, _ := strconv.Atoi(c.PostForm("rol_id"))
+	perteneceLacis := c.PostForm("pertenece_lacis") == "true" || c.PostForm("pertenece_lacis") == "on"
+	perteneceSoftware := c.PostForm("pertenece_grupo_software") == "true" || c.PostForm("pertenece_grupo_software") == "on"
+	activo := c.PostForm("activo") == "true" || c.PostForm("activo") == "on" || c.PostForm("activo") == ""
 
 	req := integrante.Integrante{
-		Nombre:          c.PostForm("nombre"),
-		Apellido:        c.PostForm("apellido"),
-		Contacto:        c.PostForm("contacto"),
-		Especializacion: c.PostForm("especializacion"),
-		Descripcion:     c.PostForm("descripcion"),
-		RolID:           rolID,
+		Nombre:                 c.PostForm("nombre"),
+		Apellido:               c.PostForm("apellido"),
+		Contacto:               c.PostForm("contacto"),
+		ContactoLinkedin:       c.PostForm("contacto_linkedin"),
+		Especializacion:        c.PostForm("especializacion"),
+		Descripcion:            c.PostForm("descripcion"),
+		PerteneceLacis:         perteneceLacis,
+		PerteneceGrupoSoftware: perteneceSoftware,
+		Activo:                 activo,
+		RolID:                  rolID,
 	}
 
 	if fileImg, err := c.FormFile("imagen"); err == nil && fileImg != nil {
@@ -114,16 +121,24 @@ func (h *IntegranteHandler) Actualizar(c *gin.Context) {
 	nombre := c.PostForm("nombre")
 	apellido := c.PostForm("apellido")
 	contacto := c.PostForm("contacto")
+	contactoLinkedin := c.PostForm("contacto_linkedin")
 	especializacion := c.PostForm("especializacion")
 	descripcion := c.PostForm("descripcion")
+	perteneceLacis := c.PostForm("pertenece_lacis") == "true" || c.PostForm("pertenece_lacis") == "on"
+	perteneceSoftware := c.PostForm("pertenece_grupo_software") == "true" || c.PostForm("pertenece_grupo_software") == "on"
+	activo := c.PostForm("activo") == "true" || c.PostForm("activo") == "on"
 
 	fields := integrante.UpdateFields{
-		Nombre:          &nombre,
-		Apellido:        &apellido,
-		Contacto:        &contacto,
-		Especializacion: &especializacion,
-		Descripcion:     &descripcion,
-		RolID:           &rolID,
+		Nombre:                 &nombre,
+		Apellido:               &apellido,
+		Contacto:               &contacto,
+		ContactoLinkedin:       &contactoLinkedin,
+		Especializacion:        &especializacion,
+		Descripcion:            &descripcion,
+		PerteneceLacis:         &perteneceLacis,
+		PerteneceGrupoSoftware: &perteneceSoftware,
+		Activo:                 &activo,
+		RolID:                  &rolID,
 	}
 
 	if fileImg, err := c.FormFile("imagen"); err == nil && fileImg != nil {
