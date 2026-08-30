@@ -35,12 +35,13 @@ func (h *IntegranteHandler) Lista(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "Lista.html", gin.H{
 		"Integrantes": integrantes,
+		"LoggedIn":    true,
 	})
 }
 
 // 2. Mostrar Formulario de Crear
 func (h *IntegranteHandler) Crear(c *gin.Context) {
-	c.HTML(http.StatusOK, "Crear.html", nil)
+	c.HTML(http.StatusOK, "Crear.html", gin.H{"LoggedIn": true})
 }
 
 // Procesar el Formulario Crear (POST)
@@ -81,7 +82,8 @@ func (h *IntegranteHandler) Insertar(c *gin.Context) {
 	if err != nil {
 		h.logger.Error("Error al crear integrante desde formulario HTML", zap.Error(err))
 		c.HTML(http.StatusBadRequest, "Crear.html", gin.H{
-			"Error": err.Error(),
+			"Error":    err.Error(),
+			"LoggedIn": true,
 		})
 		return
 	}
@@ -106,6 +108,7 @@ func (h *IntegranteHandler) Editar(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "Editar.html", gin.H{
 		"Integrante": integranteObj,
+		"LoggedIn":   true,
 	})
 }
 
@@ -164,6 +167,7 @@ func (h *IntegranteHandler) Actualizar(c *gin.Context) {
 		c.HTML(http.StatusBadRequest, "Editar.html", gin.H{
 			"Error":      err.Error(),
 			"Integrante": integranteObj,
+			"LoggedIn":   true,
 		})
 		return
 	}

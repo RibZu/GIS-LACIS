@@ -203,6 +203,16 @@ CREATE INDEX idx_desarrollo_reconocimientos_rec ON desarrollo_reconocimientos(re
 -- -----------------------------------------------------------------------------
 -- DATOS POR DEFECTO
 -- -----------------------------------------------------------------------------
+-- Catálogo de roles de integrante: los IDs 1-4 están hardcodeados en el <select>
+-- del formulario "Crear Integrante" (ui/html/admin/Crear.html), así que deben
+-- coincidir exactamente.
+INSERT INTO rol (id, nombre) VALUES
+    (1, 'Director / Co-Director'),
+    (2, 'Investigador'),
+    (3, 'Asesor Externo'),
+    (4, 'Estudiante / Becario');
+SELECT setval('rol_id_seq', (SELECT MAX(id) FROM rol));
+
 -- Creamos el usuario administrador por defecto para poder iniciar sesión
 INSERT INTO usuario_gestor (username, password_hash, email, rol)
 VALUES ('admin', 'admin123', 'admin@lacis.com', 'ADMIN');
