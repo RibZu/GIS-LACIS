@@ -100,6 +100,7 @@ func InitRoutes(e *gin.Engine) {
 	usuarioStorage := usuario.NewPostgressStorage(db)
 	usuarioService := usuario.NewService(usuarioStorage, logger)
 	authHandler := handler.NewAuthHandler(usuarioService, logger)
+	usuarioHandler := handler.NewUsuarioHandler(usuarioService, logger)
 
 	e.GET("/login", authHandler.ShowLogin)
 	e.POST("/login", authHandler.ProcessLogin)
@@ -107,12 +108,26 @@ func InitRoutes(e *gin.Engine) {
 
 	v1Admin := e.Group("/admin")
 	v1Admin.GET("/dashboard", authHandler.ShowDashboard)
-	v1Admin.GET("/integrantes", integranteHandler.Lista)
-	v1Admin.GET("/crear-integrante", integranteHandler.Crear)
-	v1Admin.POST("/insertar-integrante", integranteHandler.Insertar)
-	v1Admin.GET("/editar-integrante", integranteHandler.Editar)
-	v1Admin.POST("/actualizar-integrante", integranteHandler.Actualizar)
-	v1Admin.GET("/borrar-integrante", integranteHandler.Borrar)
+
+	// Módulo "integrantes": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
+	integrantesAdmin := v1Admin.Group("")
+	integrantesAdmin.Use(handler.RequireModule(usuarioService, "integrantes"))
+	integrantesAdmin.GET("/integrantes", integranteHandler.Lista)
+	integrantesAdmin.GET("/crear-integrante", integranteHandler.Crear)
+	integrantesAdmin.POST("/insertar-integrante", integranteHandler.Insertar)
+	integrantesAdmin.GET("/editar-integrante", integranteHandler.Editar)
+	integrantesAdmin.POST("/actualizar-integrante", integranteHandler.Actualizar)
+	integrantesAdmin.GET("/borrar-integrante", integranteHandler.Borrar)
+
+	// Módulo "administradores": reservado a rol ADMIN, nunca asignable como módulo suelto
+	usuariosAdmin := v1Admin.Group("")
+	usuariosAdmin.Use(handler.RequireAdmin(usuarioService))
+	usuariosAdmin.GET("/usuarios", usuarioHandler.Lista)
+	usuariosAdmin.GET("/crear-usuario", usuarioHandler.Crear)
+	usuariosAdmin.POST("/insertar-usuario", usuarioHandler.Insertar)
+	usuariosAdmin.GET("/editar-usuario", usuarioHandler.Editar)
+	usuariosAdmin.POST("/actualizar-usuario", usuarioHandler.Actualizar)
+	usuariosAdmin.GET("/borrar-usuario", usuarioHandler.Borrar)
 
 	// RUTAS PARA LA API REST JSON (OPCIONALES PARA POSTMAN),
 

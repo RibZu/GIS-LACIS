@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propuestas de Rediseño — Panel Admin GIS-LACIS</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Manrope:wght@400;500;700;800&family=Spectral:wght@500;600;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/ui/static/css-GIS/Styleheader.css">
+<link rel="stylesheet" href="/ui/static/css-GIS/style.css">
+
+<style>
+/* ============ CHROME (barra de control, fuera de los mockups) ============ */
+:root{
+  --chrome-bg:#14181F;
+  --chrome-panel:#1B212B;
+  --chrome-ink:#E7EAEF;
+  --chrome-ink-soft:#9AA4B2;
+  --chrome-accent:#6C8EF5;
+  --chrome-rule:#2A313D;
+}
+html,body{margin:0;}
+body{
+  background:var(--chrome-bg);
+  font-family:'Manrope',sans-serif;
+}
+.chrome-header{
+  padding:1.75rem 1.25rem 1.25rem;
+  text-align:center;
+  color:var(--chrome-ink);
+}
+.chrome-header .eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--chrome-accent);
+  font-weight:700;
+}
+.chrome-header h1{
+  font-weight:800;
+  font-size:clamp(1.4rem,3.5vw,1.9rem);
+  margin:.4rem 0 .3rem;
+}
+.chrome-header p{
+  color:var(--chrome-ink-soft);
+  font-size:.95rem;
+  max-width:56ch;
+  margin:0 auto;
+}
+.switcher-bar{
+  position:sticky; top:0; z-index:50;
+  background:rgba(20,24,31,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--chrome-rule);
+  padding:.85rem 1rem;
+}
+.switcher-row{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.5rem; max-width:1100px; margin:0 auto;
+}
+.switcher-group{display:flex; flex-wrap:wrap; gap:.4rem; align-items:center;}
+.switcher-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--chrome-ink-soft); margin-right:.3rem;
+}
+.chip-btn{
+  font-family:'Manrope',sans-serif;
+  font-size:.84rem; font-weight:600;
+  padding:.4rem .9rem;
+  border-radius:999px;
+  border:1px solid var(--chrome-rule);
+  background:var(--chrome-panel);
+  color:var(--chrome-ink-soft);
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.chip-btn:hover{color:var(--chrome-ink); border-color:var(--chrome-accent);}
+.chip-btn.active{
+  background:var(--chrome-accent);
+  border-color:var(--chrome-accent);
+  color:#0C1220;
+}
+.stage-wrap{
+  max-width:1160px; margin:1.5rem auto 3rem; padding:0 1rem;
+}
+.browser-frame{
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.55);
+  border:1px solid var(--chrome-rule);
+}
+.browser-toolbar{
+  background:#0F1319;
+  padding:.55rem .9rem;
+  display:flex; align-items:center; gap:.6rem;
+}
+.browser-dots{display:flex; gap:5px;}
+.browser-dots span{width:9px; height:9px; border-radius:50%; background:#3A4250;}
+.browser-url{
+  flex:1;
+  background:#1B212B;
+  color:var(--chrome-ink-soft);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;
+  padding:.3rem .7rem;
+  border-radius:6px;
+  text-align:center;
+}
+.panel{ display:block; }
+.d-none-panel{ display:none !important; }
+.chrome-footer{
+  text-align:center; color:var(--chrome-ink-soft);
+  font-family:'JetBrains Mono',monospace; font-size:.72rem;
+  padding-bottom:2rem;
+}
+
+/* ============ VARIANTE 1 — Refinado ============ */
+.v1{
+  --bs-primary:#1A4484; --bs-primary-rgb:26,68,132;
+  --bs-border-radius:.9rem; --bs-border-radius-lg:1.1rem; --bs-border-radius-sm:.6rem;
+  --bs-body-font-family:'Montserrat',sans-serif;
+  background:#F3F5FA; color:#14213D; font-family:'Montserrat',sans-serif;
+  --v-accent2:#2E9E6C; --v-warm:#C9821F; --v-shadow:0 12px 28px -14px rgba(20,33,61,.22);
+}
+.v1 .v-card{background:#fff; border:1px solid #E2E6ED; border-radius:var(--bs-border-radius-lg); box-shadow:var(--v-shadow);}
+.v1 .v-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:#E7EEFA; color:var(--bs-primary); font-weight:700;
+  display:flex;align-items:center;justify-content:center;font-size:.85rem;
+}
+.v1 .v-modtile{width:52px;height:52px;border-radius:1rem;display:flex;align-items:center;justify-content:center;font-size:1.35rem;}
+.v1 .v-chip{display:inline-flex;align-items:center;padding:.25rem .65rem;border-radius:999px;font-size:.72rem;font-weight:600;background:#EEF2F9;color:var(--bs-primary);}
+.v1 .v-chip.gold{background:#FCEFDA;color:var(--v-warm);}
+
+/* ============ VARIANTE 2 — Panel Moderno ============ */
+.v2{
+  --bs-primary:#2F5FDB; --bs-primary-rgb:47,95,219;
+  --bs-border-radius:.55rem; --bs-border-radius-lg:.75rem; --bs-border-radius-sm:.4rem;
+  --bs-body-font-family:'Manrope',sans-serif;
+  background:#F7F8FA; color:#101828; font-family:'Manrope',sans-serif;
+  --v-shadow:0 1px 2px rgba(16,24,40,.07);
+}
+.v2 .v-card{background:#fff;border:1px solid #E7E9EE;border-radius:var(--bs-border-radius-lg);box-shadow:var(--v-shadow);}
+.v2 .v-stat{background:#fff;border:1px solid #E7E9EE;border-radius:var(--bs-border-radius);padding:1rem 1.1rem;}
+.v2 .v-stat .num{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.5rem;}
+.v2 .v-modtile{width:46px;height:46px;border-radius:.65rem;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#fff;}
+.v2 .v-chip{display:inline-flex;align-items:center;padding:.22rem .6rem;border-radius:.4rem;font-size:.72rem;font-weight:700;letter-spacing:.02em;}
+
+/* ============ VARIANTE 3 — Institucional ============ */
+.v3{
+  --bs-primary:#16294F; --bs-primary-rgb:22,41,79;
+  --bs-border-radius:.3rem; --bs-border-radius-lg:.3rem; --bs-border-radius-sm:.25rem;
+  --bs-body-font-family:'Source Sans 3',sans-serif;
+  background:#EEF1F7; color:#16294F; font-family:'Source Sans 3',sans-serif;
+  --v-accent2:#3E6FC4; --v-shadow:0 1px 0 rgba(0,0,0,.05);
+}
+.v3 h1,.v3 h2,.v3 h3,.v3 .v-heading{font-family:'Spectral',serif;}
+.v3 .v-card{background:#fff;border:1px solid #DEE3EC;border-top:3px solid var(--v-accent2);border-radius:var(--bs-border-radius);box-shadow:var(--v-shadow);}
+.v3 .v-chip{display:inline-flex;align-items:center;padding:.22rem .65rem;border:1px solid var(--v-accent2);border-radius:0;font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:var(--v-accent2);font-weight:600;}
+
+@media (max-width:575.98px){
+  .chrome-header{padding:1.25rem 1rem 1rem;}
+}
+</style>
+</head>
+<body>
+
+  <div class="chrome-header">
+    <p class="eyebrow">GIS-LACIS &middot; Panel Admin</p>
+    <h1>Propuestas de Rediseño</h1>
+    <p>Tres direcciones visuales distintas para el Dashboard y el módulo de Usuarios, todas construidas con Bootstrap 5 + Bootstrap Icons (las mismas librerías que ya usa el sitio). Elegí un estilo y una pantalla para comparar.</p>
+  </div>
+
+  <div class="switcher-bar">
+    <div class="switcher-row">
+      <div class="switcher-group">
+        <span class="switcher-label">Estilo</span>
+        <button class="chip-btn" data-style-btn="1">1 · Refinado</button>
+        <button class="chip-btn" data-style-btn="2">2 · Panel Moderno</button>
+        <button class="chip-btn" data-style-btn="3">3 · Institucional</button>
+      </div>
+      <div class="switcher-group">
+        <span class="switcher-label">Pantalla</span>
+        <button class="chip-btn" data-screen-btn="dashboard">Dashboard</button>
+        <button class="chip-btn" data-screen-btn="lista">Usuarios — Lista</button>
+        <button class="chip-btn" data-screen-btn="alta">Usuarios — Alta</button>
+        <button class="chip-btn" data-screen-btn="login">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage-wrap">
+    <div class="browser-frame">
+      <div class="browser-toolbar">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url" id="fake-url">gis-lacis.unsl.edu.ar/admin/dashboard</div>
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- ESTILO 1 · REFINADO                                      -->
+      <!-- ======================================================= -->
+
+      <div class="panel v1" data-style="1" data-screen="dashboard">
+        <div class="p-3 p-md-4">
+          <h2 class="fw-bold mb-1" style="color:var(--bs-primary)">Panel de Administración</h2>
+          <p class="text-secondary mb-4">Bienvenido de nuevo. Elegí un módulo para empezar.</p>
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+            <div class="col"><div class="v-card p-3 h-100">
+              <div class="v-modtile mb-3" style="background:#E7EEFA;color:var(--bs-primary)"><i class="bi bi-people-fill"></i></div>
+              <h6 class="fw-bold mb-1">Integrantes</h6>
+              <p class="small text-secondary mb-3">Alta, baja y modificación de integrantes y sus roles.</p>
+              <a class="btn btn-sm btn-primary" href="#">Ir al módulo</a>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100">
+              <div class="v-modtile mb-3" style="background:#E5F5EE;color:var(--v-accent2)"><i class="bi bi-kanban-fill"></i></div>
+              <h6 class="fw-bold mb-1">Proyectos I+D+i</h6>
+              <p class="small text-secondary mb-3">Cargar y actualizar los proyectos del laboratorio.</p>
+              <span class="badge rounded-pill text-bg-light border">Próximamente</span>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100">
+              <div class="v-modtile mb-3" style="background:#FCEFDA;color:var(--v-warm)"><i class="bi bi-trophy-fill"></i></div>
+              <h6 class="fw-bold mb-1">Reconocimientos</h6>
+              <p class="small text-secondary mb-3">Premios institucionales, premisa y descripción.</p>
+              <span class="badge rounded-pill text-bg-light border">Próximamente</span>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100">
+              <div class="v-modtile mb-3" style="background:#EAE6FB;color:#6C4FD1"><i class="bi bi-building-fill"></i></div>
+              <h6 class="fw-bold mb-1">Empresas Colaboradoras</h6>
+              <p class="small text-secondary mb-3">Instituciones y empresas colaboradoras.</p>
+              <span class="badge rounded-pill text-bg-light border">Próximamente</span>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100">
+              <div class="v-modtile mb-3" style="background:#FBE7E7;color:#C0392B"><i class="bi bi-shield-lock-fill"></i></div>
+              <h6 class="fw-bold mb-1">Administradores</h6>
+              <p class="small text-secondary mb-3">Usuarios con acceso al panel y sus módulos.</p>
+              <a class="btn btn-sm btn-primary" href="#">Ir al módulo</a>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel v1 d-none-panel" data-style="1" data-screen="lista">
+        <div class="p-3 p-md-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div class="d-flex align-items-center gap-3">
+              <a class="btn btn-sm btn-outline-secondary" href="#"><i class="bi bi-arrow-left"></i> Panel</a>
+              <h5 class="fw-bold mb-0">Administración de Usuarios</h5>
+            </div>
+            <a class="btn btn-sm btn-primary" href="#"><i class="bi bi-person-plus-fill me-1"></i>Nuevo Usuario</a>
+          </div>
+          <div class="v-card p-3">
+            <div class="table-responsive">
+              <table class="table align-middle mb-0">
+                <thead><tr class="text-secondary small text-uppercase">
+                  <th>Usuario</th><th>Rol</th><th>Módulos</th><th>Email</th><th>Último acceso</th><th class="text-end">Acciones</th>
+                </tr></thead>
+                <tbody>
+                  <tr>
+                    <td><div class="d-flex align-items-center gap-2"><span class="v-avatar">AD</span><span class="fw-semibold">admin</span></div></td>
+                    <td><span class="v-chip gold">ADMIN</span></td>
+                    <td class="text-secondary small">Todos</td>
+                    <td class="text-secondary small">admin@lacis.com</td>
+                    <td class="text-secondary small">Nunca</td>
+                    <td class="text-end"><button class="btn btn-sm btn-light border me-1"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-light border text-muted" disabled title="No podés eliminar tu propio usuario"><i class="bi bi-trash-fill"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="d-flex align-items-center gap-2"><span class="v-avatar">JP</span><span class="fw-semibold">jperez</span></div></td>
+                    <td><span class="v-chip">INTEGRANTES</span></td>
+                    <td class="text-secondary small">Integrantes</td>
+                    <td class="text-secondary small">jperez@unsl.edu.ar</td>
+                    <td class="text-secondary small">28 ago, 14:10</td>
+                    <td class="text-end"><button class="btn btn-sm btn-light border me-1"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash-fill"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="d-flex align-items-center gap-2"><span class="v-avatar">MG</span><span class="fw-semibold">mgomez</span></div></td>
+                    <td><span class="v-chip">GESTOR</span></td>
+                    <td class="text-secondary small">Integrantes, Proyectos I+D+i</td>
+                    <td class="text-secondary small">mgomez@unsl.edu.ar</td>
+                    <td class="text-secondary small">Nunca</td>
+                    <td class="text-end"><button class="btn btn-sm btn-light border me-1"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash-fill"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel v1 d-none-panel" data-style="1" data-screen="alta">
+        <div class="p-3 p-md-4 d-flex justify-content-center">
+          <div class="v-card p-4" style="max-width:640px;width:100%;">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+              <h5 class="fw-bold mb-0">Nuevo Usuario Gestor</h5>
+              <a class="btn btn-sm btn-outline-secondary" href="#"><i class="bi bi-arrow-left"></i> Lista</a>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6"><label class="form-label small fw-semibold">Usuario</label><input class="form-control" placeholder="Ej: jperez"></div>
+              <div class="col-md-6"><label class="form-label small fw-semibold">Email</label><input class="form-control" placeholder="jperez@unsl.edu.ar"></div>
+              <div class="col-md-6"><label class="form-label small fw-semibold">Contraseña</label><input type="password" class="form-control"></div>
+              <div class="col-12">
+                <label class="form-label small fw-semibold d-block">Módulos de acceso</label>
+                <p class="text-secondary small mb-2">Un módulo → ese rol. Dos o más → GESTOR.</p>
+                <div class="d-flex flex-wrap gap-3">
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="r1m1" checked><label class="form-check-label small" for="r1m1">Integrantes</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="r1m2"><label class="form-check-label small" for="r1m2">Proyectos I+D+i</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="r1m3"><label class="form-check-label small" for="r1m3">Reconocimientos</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="r1m4"><label class="form-check-label small" for="r1m4">Empresas Colaboradoras</label></div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+              <button class="btn btn-light border">Cancelar</button>
+              <button class="btn btn-primary"><i class="bi bi-check-circle-fill me-1"></i>Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel v1 d-none-panel" data-style="1" data-screen="login">
+        <div class="p-3 p-md-4 d-flex justify-content-center align-items-center" style="min-height:440px;">
+          <div class="v-card p-4" style="max-width:380px;width:100%;">
+            <div class="text-center mb-4">
+              <div class="v-modtile mx-auto mb-3" style="background:#E7EEFA;color:var(--bs-primary);width:56px;height:56px;font-size:1.5rem;">
+                <i class="bi bi-shield-lock-fill"></i>
+              </div>
+              <h5 class="fw-bold mb-1">Acceso Administrador</h5>
+              <p class="text-secondary small mb-0">GIS&#8209;LACIS &middot; Panel interno</p>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Usuario</label>
+              <input class="form-control" placeholder="admin">
+            </div>
+            <div class="mb-4">
+              <label class="form-label small fw-semibold">Contraseña</label>
+              <input type="password" class="form-control" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+            </div>
+            <button class="btn btn-primary w-100"><i class="bi bi-box-arrow-in-right me-1"></i>Ingresar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- ESTILO 2 · PANEL MODERNO                                 -->
+      <!-- ======================================================= -->
+
+      <div class="panel v2 d-none-panel" data-style="2" data-screen="dashboard">
+        <div class="p-3 p-md-4">
+          <h2 class="fw-bold mb-1" style="font-weight:800">Panel de Administración</h2>
+          <p class="text-secondary mb-4">Vista general del sitio y sus módulos.</p>
+          <div class="row row-cols-2 row-cols-md-4 g-2 mb-4">
+            <div class="col"><div class="v-stat"><div class="text-secondary small">Usuarios</div><div class="num">3</div></div></div>
+            <div class="col"><div class="v-stat"><div class="text-secondary small">Admins</div><div class="num">1</div></div></div>
+            <div class="col"><div class="v-stat"><div class="text-secondary small">Módulos activos</div><div class="num">2</div></div></div>
+            <div class="col"><div class="v-stat"><div class="text-secondary small">Integrantes</div><div class="num">12</div></div></div>
+          </div>
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+            <div class="col"><div class="v-card p-3 h-100 d-flex gap-3">
+              <div class="v-modtile" style="background:#2F5FDB"><i class="bi bi-people-fill"></i></div>
+              <div><h6 class="fw-bold mb-1">Integrantes</h6><p class="small text-secondary mb-0">Gestión de integrantes y roles.</p></div>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100 d-flex gap-3">
+              <div class="v-modtile" style="background:#0EA5A0"><i class="bi bi-kanban-fill"></i></div>
+              <div><h6 class="fw-bold mb-1">Proyectos I+D+i</h6><p class="small text-secondary mb-0">Próximamente</p></div>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100 d-flex gap-3">
+              <div class="v-modtile" style="background:#E08A2C"><i class="bi bi-trophy-fill"></i></div>
+              <div><h6 class="fw-bold mb-1">Reconocimientos</h6><p class="small text-secondary mb-0">Próximamente</p></div>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100 d-flex gap-3">
+              <div class="v-modtile" style="background:#8B5CF6"><i class="bi bi-building-fill"></i></div>
+              <div><h6 class="fw-bold mb-1">Empresas</h6><p class="small text-secondary mb-0">Próximamente</p></div>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100 d-flex gap-3">
+              <div class="v-modtile" style="background:#E14C6D"><i class="bi bi-shield-lock-fill"></i></div>
+              <div><h6 class="fw-bold mb-1">Administradores</h6><p class="small text-secondary mb-0">Usuarios y módulos.</p></div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel v2 d-none-panel" data-style="2" data-screen="lista">
+        <div class="p-3 p-md-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div>
+              <a class="btn btn-sm btn-outline-secondary mb-2" href="#"><i class="bi bi-arrow-left"></i> Panel</a>
+              <h5 class="fw-bold mb-0">Usuarios</h5>
+            </div>
+            <button class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Nuevo</button>
+          </div>
+          <div class="v-card">
+            <div class="table-responsive">
+              <table class="table align-middle mb-0">
+                <thead><tr class="text-secondary small text-uppercase"><th>Usuario</th><th>Rol</th><th>Módulos</th><th>Email</th><th>Último acceso</th><th class="text-end">Acciones</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td class="fw-semibold">admin</td>
+                    <td><span class="v-chip" style="background:#FDE9EF;color:#E14C6D">ADMIN</span></td>
+                    <td class="text-secondary small">Todos</td>
+                    <td class="text-secondary small">admin@lacis.com</td>
+                    <td class="text-secondary small">Nunca</td>
+                    <td class="text-end"><button class="btn btn-sm btn-outline-secondary me-1"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-outline-secondary" disabled><i class="bi bi-trash-fill"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">jperez</td>
+                    <td><span class="v-chip" style="background:#E7EDFC;color:#2F5FDB">INTEGRANTES</span></td>
+                    <td class="text-secondary small">Integrantes</td>
+                    <td class="text-secondary small">jperez@unsl.edu.ar</td>
+                    <td class="text-secondary small">28 ago, 14:10</td>
+                    <td class="text-end"><button class="btn btn-sm btn-outline-secondary me-1"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash-fill"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">mgomez</td>
+                    <td><span class="v-chip" style="background:#EAE5FB;color:#8B5CF6">GESTOR</span></td>
+                    <td class="text-secondary small">Integrantes, Proyectos</td>
+                    <td class="text-secondary small">mgomez@unsl.edu.ar</td>
+                    <td class="text-secondary small">Nunca</td>
+                    <td class="text-end"><button class="btn btn-sm btn-outline-secondary me-1"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash-fill"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel v2 d-none-panel" data-style="2" data-screen="alta">
+        <div class="p-3 p-md-4 d-flex justify-content-center">
+          <div class="v-card p-4" style="max-width:640px;width:100%;">
+            <h5 class="fw-bold mb-3">Nuevo usuario</h5>
+            <div class="row g-3">
+              <div class="col-md-6"><label class="form-label small fw-semibold">Usuario</label><input class="form-control" placeholder="jperez"></div>
+              <div class="col-md-6"><label class="form-label small fw-semibold">Email</label><input class="form-control" placeholder="jperez@unsl.edu.ar"></div>
+              <div class="col-md-6"><label class="form-label small fw-semibold">Contraseña</label><input type="password" class="form-control"></div>
+              <div class="col-12">
+                <label class="form-label small fw-semibold d-block">Módulos</label>
+                <div class="d-flex flex-wrap gap-2">
+                  <span class="v-chip" style="background:#E7EDFC;color:#2F5FDB;cursor:pointer">✓ Integrantes</span>
+                  <span class="v-chip" style="background:#F1F2F5;color:#667085;cursor:pointer">Proyectos I+D+i</span>
+                  <span class="v-chip" style="background:#F1F2F5;color:#667085;cursor:pointer">Reconocimientos</span>
+                  <span class="v-chip" style="background:#F1F2F5;color:#667085;cursor:pointer">Empresas</span>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button class="btn btn-light border">Cancelar</button>
+              <button class="btn btn-primary">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel v2 d-none-panel" data-style="2" data-screen="login">
+        <div class="p-3 p-md-4 d-flex justify-content-center align-items-center" style="min-height:440px;">
+          <div class="v-card p-4" style="max-width:360px;width:100%;">
+            <h5 class="fw-bold mb-1">Iniciar sesión</h5>
+            <p class="text-secondary small mb-4">Acceso administrador &middot; GIS&#8209;LACIS</p>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Usuario</label>
+              <input class="form-control" placeholder="admin">
+            </div>
+            <div class="mb-4">
+              <label class="form-label small fw-semibold">Contraseña</label>
+              <input type="password" class="form-control" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+            </div>
+            <button class="btn btn-primary w-100 fw-semibold">Ingresar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- ESTILO 3 · INSTITUCIONAL                                 -->
+      <!-- ======================================================= -->
+
+      <div class="panel v3 d-none-panel" data-style="3" data-screen="dashboard">
+        <div class="p-3 p-md-4">
+          <h2 class="v-heading fw-bold mb-1">Panel de Administración</h2>
+          <p class="text-secondary mb-4">Vista general del sitio y sus módulos.</p>
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+            <div class="col"><div class="v-card p-3 h-100">
+              <i class="bi bi-people-fill fs-4" style="color:var(--v-accent2)"></i>
+              <h6 class="v-heading fw-bold mt-2 mb-1">Integrantes</h6>
+              <p class="small text-secondary mb-3">Alta, baja y modificación de integrantes.</p>
+              <a class="btn btn-sm btn-primary" href="#" style="border-radius:0">Ingresar</a>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100">
+              <i class="bi bi-kanban-fill fs-4 text-secondary"></i>
+              <h6 class="v-heading fw-bold mt-2 mb-1">Proyectos I+D+i</h6>
+              <p class="small text-secondary mb-0">Próximamente</p>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100">
+              <i class="bi bi-trophy-fill fs-4 text-secondary"></i>
+              <h6 class="v-heading fw-bold mt-2 mb-1">Reconocimientos</h6>
+              <p class="small text-secondary mb-0">Próximamente</p>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100">
+              <i class="bi bi-building-fill fs-4 text-secondary"></i>
+              <h6 class="v-heading fw-bold mt-2 mb-1">Empresas Colaboradoras</h6>
+              <p class="small text-secondary mb-0">Próximamente</p>
+            </div></div>
+            <div class="col"><div class="v-card p-3 h-100">
+              <i class="bi bi-shield-lock-fill fs-4" style="color:var(--v-accent2)"></i>
+              <h6 class="v-heading fw-bold mt-2 mb-1">Administradores</h6>
+              <p class="small text-secondary mb-3">Usuarios con acceso al panel.</p>
+              <a class="btn btn-sm btn-primary" href="#" style="border-radius:0">Ingresar</a>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel v3 d-none-panel" data-style="3" data-screen="lista">
+        <div class="p-3 p-md-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div class="d-flex align-items-center gap-3">
+              <a class="btn btn-sm btn-outline-secondary" href="#" style="border-radius:0"><i class="bi bi-arrow-left"></i> Panel</a>
+              <h5 class="v-heading fw-bold mb-0">Administración de Usuarios</h5>
+            </div>
+            <button class="btn btn-sm btn-primary" style="border-radius:0"><i class="bi bi-person-plus-fill me-1"></i>Nuevo Usuario</button>
+          </div>
+          <div class="v-card">
+            <div class="table-responsive">
+              <table class="table table-striped align-middle mb-0">
+                <thead><tr class="small text-uppercase"><th>Usuario</th><th>Rol</th><th>Módulos</th><th>Email</th><th>Último acceso</th><th class="text-end">Acciones</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td class="fw-semibold">admin</td>
+                    <td><span class="v-chip">ADMIN</span></td>
+                    <td class="text-secondary small">Todos</td>
+                    <td class="text-secondary small">admin@lacis.com</td>
+                    <td class="text-secondary small">Nunca</td>
+                    <td class="text-end"><button class="btn btn-sm btn-outline-secondary me-1" style="border-radius:0"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-outline-secondary" style="border-radius:0" disabled><i class="bi bi-trash-fill"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">jperez</td>
+                    <td><span class="v-chip">INTEGRANTES</span></td>
+                    <td class="text-secondary small">Integrantes</td>
+                    <td class="text-secondary small">jperez@unsl.edu.ar</td>
+                    <td class="text-secondary small">28 ago, 14:10</td>
+                    <td class="text-end"><button class="btn btn-sm btn-outline-secondary me-1" style="border-radius:0"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-outline-danger" style="border-radius:0"><i class="bi bi-trash-fill"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">mgomez</td>
+                    <td><span class="v-chip">GESTOR</span></td>
+                    <td class="text-secondary small">Integrantes, Proyectos</td>
+                    <td class="text-secondary small">mgomez@unsl.edu.ar</td>
+                    <td class="text-secondary small">Nunca</td>
+                    <td class="text-end"><button class="btn btn-sm btn-outline-secondary me-1" style="border-radius:0"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-outline-danger" style="border-radius:0"><i class="bi bi-trash-fill"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel v3 d-none-panel" data-style="3" data-screen="alta">
+        <div class="p-3 p-md-4 d-flex justify-content-center">
+          <div class="v-card p-4" style="max-width:640px;width:100%;">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+              <h5 class="v-heading fw-bold mb-0">Nuevo Usuario Gestor</h5>
+              <a class="btn btn-sm btn-outline-secondary" href="#" style="border-radius:0"><i class="bi bi-arrow-left"></i> Lista</a>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6"><label class="form-label small fw-semibold">Usuario</label><input class="form-control" style="border-radius:0" placeholder="jperez"></div>
+              <div class="col-md-6"><label class="form-label small fw-semibold">Email</label><input class="form-control" style="border-radius:0" placeholder="jperez@unsl.edu.ar"></div>
+              <div class="col-md-6"><label class="form-label small fw-semibold">Contraseña</label><input type="password" class="form-control" style="border-radius:0"></div>
+              <div class="col-12">
+                <label class="form-label small fw-semibold d-block">Módulos de acceso</label>
+                <div class="d-flex flex-wrap gap-3">
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="r3m1" checked><label class="form-check-label small" for="r3m1">Integrantes</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="r3m2"><label class="form-check-label small" for="r3m2">Proyectos I+D+i</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="r3m3"><label class="form-check-label small" for="r3m3">Reconocimientos</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="r3m4"><label class="form-check-label small" for="r3m4">Empresas Colaboradoras</label></div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+              <button class="btn btn-light border" style="border-radius:0">Cancelar</button>
+              <button class="btn btn-primary" style="border-radius:0">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel v3 d-none-panel" data-style="3" data-screen="login">
+        <div class="p-3 p-md-4 d-flex justify-content-center align-items-center" style="min-height:440px;">
+          <div class="v-card p-4" style="max-width:380px;width:100%;">
+            <h5 class="v-heading fw-bold mb-1 text-center">Acceso Administrador</h5>
+            <p class="text-secondary small mb-4 text-center">GIS&#8209;LACIS &middot; Universidad Nacional de San Luis</p>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Usuario</label>
+              <input class="form-control" style="border-radius:0" placeholder="admin">
+            </div>
+            <div class="mb-4">
+              <label class="form-label small fw-semibold">Contraseña</label>
+              <input type="password" class="form-control" style="border-radius:0" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+            </div>
+            <button class="btn btn-primary w-100" style="border-radius:0">Ingresar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="chrome-footer">Mockup de presentación &middot; no está conectado a la app en vivo &middot; Bootstrap 5.3 + Bootstrap Icons</div>
+
+<script>
+(function(){
+  var currentStyle = '1';
+  var currentScreen = 'dashboard';
+  var urls = {
+    dashboard: 'gis-lacis.unsl.edu.ar/admin/dashboard',
+    lista: 'gis-lacis.unsl.edu.ar/admin/usuarios',
+    alta: 'gis-lacis.unsl.edu.ar/admin/crear-usuario',
+    login: 'gis-lacis.unsl.edu.ar/login'
+  };
+
+  function render(){
+    document.querySelectorAll('.panel').forEach(function(p){
+      var show = p.dataset.style === currentStyle && p.dataset.screen === currentScreen;
+      p.classList.toggle('d-none-panel', !show);
+    });
+    document.querySelectorAll('[data-style-btn]').forEach(function(b){
+      b.classList.toggle('active', b.dataset.styleBtn === currentStyle);
+    });
+    document.querySelectorAll('[data-screen-btn]').forEach(function(b){
+      b.classList.toggle('active', b.dataset.screenBtn === currentScreen);
+    });
+    document.getElementById('fake-url').textContent = urls[currentScreen];
+  }
+
+  document.querySelectorAll('[data-style-btn]').forEach(function(b){
+    b.addEventListener('click', function(){ currentStyle = b.dataset.styleBtn; render(); });
+  });
+  document.querySelectorAll('[data-screen-btn]').forEach(function(b){
+    b.addEventListener('click', function(){ currentScreen = b.dataset.screenBtn; render(); });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

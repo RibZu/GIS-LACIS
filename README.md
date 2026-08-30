@@ -32,6 +32,13 @@ Para sincronizar la base de datos local con los últimos cambios estructurales d
 3. Inmediatamente después, creará una nueva base de datos basada en el archivo `.sql` más reciente.
 4. El proyecto se iniciará automáticamente de forma habitual.
 
+#### Últimos cambios en el esquema (`usuario_gestor`)
+
+- Se agregó la columna `modulos VARCHAR(255) NOT NULL DEFAULT ''`: lista de módulos separados por coma (ej. `"integrantes,proyectos"`) que el usuario puede gestionar. El campo `rol` ahora se **calcula** a partir de `modulos` (un solo módulo → `"GESTOR <MODULO>"`, dos o más → `"GESTOR"`), no se carga a mano desde el formulario.
+- El usuario `admin` sembrado por defecto ahora se crea con `rol = 'ADMIN'` (antes `'GESTOR'`) — es el único rol reservado que nunca se calcula desde módulos.
+
+Si tu base local es de antes de este cambio, corré `resetear_db.bat` para traerla al día.
+
 ---
 
 ## Guía de Arquitectura y Estructura de Carpetas
@@ -72,4 +79,5 @@ Cada dominio principal de la base de datos tiene su propio espacio. Aquí es don
 - **`cmd/`**: Punto de entrada de la aplicación. `cmd/api/main.go` es el archivo principal.
 - **`Modelo Base de datos/`**: Scripts de SQL (DDL) para la estructura relacional.
 - **`ui/static/`**: Archivos estáticos públicos (CSS, JS, Imágenes, CVs).
+  - **`ui/static/mockups/`**: Prototipos visuales de rediseño (HTML standalone, con estilos embebidos) — para comparar propuestas de estilo lado a lado antes de aplicarlas a las plantillas reales. No están conectados a la app en vivo ni a datos reales.
 - **`test/`**: Pruebas unitarias y de integración en Go.

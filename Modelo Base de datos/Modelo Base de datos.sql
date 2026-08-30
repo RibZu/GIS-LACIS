@@ -42,7 +42,8 @@ CREATE TABLE usuario_gestor (
     password_hash VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     ultimo_acceso TIMESTAMP WITH TIME ZONE,
-    rol VARCHAR(50) NOT NULL DEFAULT 'GESTOR'
+    rol VARCHAR(50) NOT NULL DEFAULT 'GESTOR', -- Calculado: ADMIN, nombre de módulo, o GESTOR si tiene 2+ módulos
+    modulos VARCHAR(255) NOT NULL DEFAULT '' -- Lista de módulos separados por coma, ej: "integrantes,proyectos"
 );
 
 CREATE TABLE configuracion_sitio (
@@ -202,8 +203,18 @@ CREATE INDEX idx_desarrollo_reconocimientos_rec ON desarrollo_reconocimientos(re
 -- -----------------------------------------------------------------------------
 -- DATOS POR DEFECTO
 -- -----------------------------------------------------------------------------
+-- Catálogo de roles de integrante: los IDs 1-4 están hardcodeados en el <select>
+-- del formulario "Crear Integrante" (ui/html/admin/Crear.html), así que deben
+-- coincidir exactamente.
+INSERT INTO rol (id, nombre) VALUES
+    (1, 'Director / Co-Director'),
+    (2, 'Investigador'),
+    (3, 'Asesor Externo'),
+    (4, 'Estudiante / Becario');
+SELECT setval('rol_id_seq', (SELECT MAX(id) FROM rol));
+
 -- Creamos el usuario administrador por defecto para poder iniciar sesión
-INSERT INTO usuario_gestor (username, password_hash, email, rol) 
-VALUES ('admin', 'admin123', 'admin@lacis.com', 'GESTOR');
+INSERT INTO usuario_gestor (username, password_hash, email, rol)
+VALUES ('admin', 'admin123', 'admin@lacis.com', 'ADMIN');
 
 COMMIT;
