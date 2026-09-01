@@ -214,7 +214,9 @@ INSERT INTO rol (id, nombre) VALUES
 SELECT setval('rol_id_seq', (SELECT MAX(id) FROM rol));
 
 -- Creamos el usuario administrador por defecto para poder iniciar sesión
+-- password_hash es el hash bcrypt de "admin123" (generado con golang.org/x/crypto/bcrypt,
+-- la misma librería que usa auth.go para validar el login). Nunca guardar la contraseña en texto plano.
 INSERT INTO usuario_gestor (username, password_hash, email, rol)
-VALUES ('admin', 'admin123', 'admin@lacis.com', 'ADMIN');
+VALUES ('admin', '$2a$10$0GSeTb6bSZBT1/kZbrf41.giDbz3GaU2ABeL20lew0NdX5dDw2cSK', 'admin@lacis.com', 'ADMIN');
 
 COMMIT;
