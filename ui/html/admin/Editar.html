@@ -50,135 +50,172 @@
                 </div>
                 {{ end }}
 
+                <!-- Banner Informativo de Edición Restringida -->
+                <div class="alert alert-primary d-flex align-items-center gap-2 mb-4" role="alert">
+                    <i class="bi bi-shield-lock-fill fs-5"></i>
+                    <div class="small">
+                        <strong>Edición Restringida:</strong> Solo está permitido modificar el <strong>Título / Especialización</strong>, el <strong>Archivo de CV</strong>, el <strong>Resumen Biográfico</strong> y los <strong>Roles / Pertenencia</strong> (LaCIS y Grupo Software). Los datos de identidad están protegidos.
+                    </div>
+                </div>
+
                 <!-- Formulario -->
                 <form action="/admin/actualizar-integrante" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="{{ if .Integrante }}{{ .Integrante.ID }}{{ else }}1{{ end }}">
 
-                    <!-- SECCIÓN 1: DATOS PERSONALES Y ACADÉMICOS -->
-                    <div class="form-section-subtitle">
-                        <i class="bi bi-person-lines-fill me-2" style="color: var(--azul-logo);"></i>1. Información Personal y Académica
+                    <!-- SECCIÓN 1: DATOS DE IDENTIDAD (SOLO LECTURA) -->
+                    <div class="form-section-subtitle text-muted">
+                        <i class="bi bi-lock-fill me-2"></i>1. Información de Identidad (Protegida)
                     </div>
 
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="nombre" class="form-label">Nombre(s) <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ if .Integrante }}{{ .Integrante.Nombre }}{{ else }}Corina{{ end }}" required>
+                        <div class="col-md-4">
+                            <label class="form-label small text-muted">Nombre(s)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
+                                <input type="text" class="form-control bg-light" value="{{ if .Integrante }}{{ .Integrante.Nombre }}{{ end }}" readonly disabled>
+                            </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <label for="apellido" class="form-label">Apellido(s) <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="apellido" name="apellido" value="{{ if .Integrante }}{{ .Integrante.Apellido }}{{ else }}Abdelahad{{ end }}" required>
+                        <div class="col-md-4">
+                            <label class="form-label small text-muted">Apellido(s)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
+                                <input type="text" class="form-control bg-light" value="{{ if .Integrante }}{{ .Integrante.Apellido }}{{ end }}" readonly disabled>
+                            </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <label for="titulo_especializacion" class="form-label">Título de Mayor Jerarquía / Especialización <span class="text-danger">*</span></label>
+                        <div class="col-md-4">
+                            <label class="form-label small text-muted">Email Institucional</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control bg-light" value="{{ if .Integrante }}{{ .Integrante.Contacto }}{{ end }}" readonly disabled>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 2: TÍTULO ACADÉMICO (EDITABLE) -->
+                    <div class="form-section-subtitle mt-4">
+                        <i class="bi bi-mortarboard-fill me-2" style="color: var(--azul-logo);"></i>2. Título Académico y Especialización
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="titulo_especializacion" class="form-label fw-semibold">Título de Mayor Jerarquía / Especialización <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="titulo_especializacion" name="especializacion" value="{{ if .Integrante }}{{ .Integrante.Especializacion }}{{ else }}Dra. en Ciencias de la Computación{{ end }}" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="rol_id" class="form-label">Rol / Cargo en el Laboratorio <span class="text-danger">*</span></label>
-                            <select class="form-select" id="rol_id" name="rol_id" required>
-                                <option value="1" {{ if .Integrante }}{{ if eq .Integrante.RolID 1 }}selected{{ end }}{{ else }}selected{{ end }}>1 - DIRECTOR / CO-DIRECTOR</option>
-                                <option value="2" {{ if .Integrante }}{{ if eq .Integrante.RolID 2 }}selected{{ end }}{{ end }}>2 - INVESTIGADOR</option>
-                                <option value="3" {{ if .Integrante }}{{ if eq .Integrante.RolID 3 }}selected{{ end }}{{ end }}>3 - ASESOR EXTERNO</option>
-                                <option value="4" {{ if .Integrante }}{{ if eq .Integrante.RolID 4 }}selected{{ end }}{{ end }}>4 - ESTUDIANTE / BECARIO</option>
-                            </select>
+                            <small class="text-muted">Título académico más alto o área de especialización principal.</small>
                         </div>
                     </div>
 
-                    <!-- SECCIÓN 2: PERTENENCIA INSTITUCIONAL Y ESTADO -->
+                    <!-- SECCIÓN 3: PERTENENCIA INSTITUCIONAL Y ROLES POR GRUPO (EDITABLE) -->
                     <div class="form-section-subtitle mt-4">
-                        <i class="bi bi-diagram-3-fill me-2" style="color: var(--azul-logo);"></i>2. Pertenencia Institucional y Estado
+                        <i class="bi bi-diagram-3-fill me-2" style="color: var(--azul-logo);"></i>3. Pertenencia Institucional y Roles por Grupo
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <!-- Tarjeta LaCIS -->
+                        <div class="col-md-6">
+                            <div class="group-card {{ if .Integrante }}{{ if .Integrante.PerteneceLacis }}active-group{{ end }}{{ else }}active-group{{ end }}" id="card_lacis">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="group-icon-badge badge-lacis-icon">
+                                            <i class="bi bi-building"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0 text-dark">Pertenece a LaCIS</h6>
+                                            <small class="text-muted">Laboratorio de Computación e Inf. y Sistemas</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-check form-switch m-0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="pertenece_lacis" name="pertenece_lacis" value="true" {{ if .Integrante }}{{ if .Integrante.PerteneceLacis }}checked{{ end }}{{ end }}>
+                                    </div>
+                                </div>
+
+                                <div id="contenedor_rol_lacis">
+                                    <label for="rol_lacis_id" class="form-label small text-secondary fw-semibold mb-1">
+                                        <i class="bi bi-person-badge me-1 text-primary"></i>Rol asignado en LaCIS <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted"><i class="bi bi-person-gear"></i></span>
+                                        <select class="form-select" id="rol_lacis_id" name="rol_lacis_id">
+                                            <option value="" disabled>Seleccionar Rol en LaCIS...</option>
+                                            <option value="1" {{ if .Integrante }}{{ if eq .Integrante.GetRolLacisID 1 }}selected{{ end }}{{ end }}>Director / Co-Director</option>
+                                            <option value="2" {{ if .Integrante }}{{ if eq .Integrante.GetRolLacisID 2 }}selected{{ end }}{{ else }}selected{{ end }}>Investigador</option>
+                                            <option value="3" {{ if .Integrante }}{{ if eq .Integrante.GetRolLacisID 3 }}selected{{ end }}{{ end }}>Asesor Externo</option>
+                                            <option value="4" {{ if .Integrante }}{{ if eq .Integrante.GetRolLacisID 4 }}selected{{ end }}{{ end }}>Estudiante / Becario</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Grupo Software (GIS) -->
+                        <div class="col-md-6">
+                            <div class="group-card {{ if .Integrante }}{{ if .Integrante.PerteneceGrupoSoftware }}active-group{{ end }}{{ else }}active-group{{ end }}" id="card_software">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="group-icon-badge badge-gis-icon">
+                                            <i class="bi bi-code-slash"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0 text-dark">Pertenece a Grupo Software</h6>
+                                            <small class="text-muted">Grupo de Ingeniería de Software (GIS)</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-check form-switch m-0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="pertenece_grupo_software" name="pertenece_grupo_software" value="true" {{ if .Integrante }}{{ if .Integrante.PerteneceGrupoSoftware }}checked{{ end }}{{ end }}>
+                                    </div>
+                                </div>
+
+                                <div id="contenedor_rol_software">
+                                    <label for="rol_software_id" class="form-label small text-secondary fw-semibold mb-1">
+                                        <i class="bi bi-person-badge me-1 text-primary"></i>Rol asignado en Grupo Software <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted"><i class="bi bi-person-gear"></i></span>
+                                        <select class="form-select" id="rol_software_id" name="rol_software_id">
+                                            <option value="" disabled>Seleccionar Rol en GIS...</option>
+                                            <option value="1" {{ if .Integrante }}{{ if eq .Integrante.GetRolSoftwareID 1 }}selected{{ end }}{{ end }}>Director / Co-Director</option>
+                                            <option value="2" {{ if .Integrante }}{{ if eq .Integrante.GetRolSoftwareID 2 }}selected{{ end }}{{ else }}selected{{ end }}>Investigador</option>
+                                            <option value="3" {{ if .Integrante }}{{ if eq .Integrante.GetRolSoftwareID 3 }}selected{{ end }}{{ end }}>Asesor Externo</option>
+                                            <option value="4" {{ if .Integrante }}{{ if eq .Integrante.GetRolSoftwareID 4 }}selected{{ end }}{{ end }}>Estudiante / Becario</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 4: DOCUMENTOS Y CURRÍCULUM VITAE (EDITABLE) -->
+                    <div class="form-section-subtitle mt-4">
+                        <i class="bi bi-file-earmark-pdf-fill me-2" style="color: var(--azul-logo);"></i>4. Currículum Vitae (CV)
                     </div>
 
                     <div class="row g-3">
-                        <div class="col-md-4">
-                            <div class="form-check form-switch p-3 border rounded bg-light">
-                                <input class="form-check-input ms-0 me-2" type="checkbox" role="switch" id="pertenece_lacis" name="pertenece_lacis" value="true" {{ if .Integrante }}{{ if .Integrante.PerteneceLacis }}checked{{ end }}{{ end }}>
-                                <label class="form-check-label fw-semibold" for="pertenece_lacis">
-                                    Pertenece a LaCIS
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-check form-switch p-3 border rounded bg-light">
-                                <input class="form-check-input ms-0 me-2" type="checkbox" role="switch" id="pertenece_grupo_software" name="pertenece_grupo_software" value="true" {{ if .Integrante }}{{ if .Integrante.PerteneceGrupoSoftware }}checked{{ end }}{{ end }}>
-                                <label class="form-check-label fw-semibold" for="pertenece_grupo_software">
-                                    Pertenece a Grupo Software
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-check form-switch p-3 border rounded bg-light">
-                                <input class="form-check-input ms-0 me-2" type="checkbox" role="switch" id="activo" name="activo" value="true" {{ if .Integrante }}{{ if .Integrante.Activo }}checked{{ end }}{{ else }}checked{{ end }}>
-                                <label class="form-check-label fw-semibold" for="activo">
-                                    Estado Activo
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SECCIÓN 3: CONTACTO Y REDES -->
-                    <div class="form-section-subtitle mt-4">
-                        <i class="bi bi-envelope-at-fill me-2" style="color: var(--azul-logo);"></i>3. Información de Contacto y Redes
-                    </div>
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="contacto" class="form-label">Email Institucional / Contacto <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                <input type="email" class="form-control" id="contacto" name="contacto" value="{{ if .Integrante }}{{ .Integrante.Contacto }}{{ end }}" required>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="contacto_linkedin" class="form-label">Perfil de LinkedIn (Opcional)</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-linkedin" style="color: #0077b5;"></i></span>
-                                <input type="url" class="form-control" id="contacto_linkedin" name="contacto_linkedin" placeholder="https://www.linkedin.com/in/usuario" value="{{ if .Integrante }}{{ .Integrante.ContactoLinkedin }}{{ end }}">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SECCIÓN 4: FOTO DE PERFIL Y CURRÍCULUM VITAE -->
-                    <div class="form-section-subtitle mt-4">
-                        <i class="bi bi-image-fill me-2" style="color: var(--azul-logo);"></i>4. Fotografía y Documentos
-                    </div>
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="imagen" class="form-label">Cambiar Foto de Perfil (Opcional)</label>
-                            <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
-                            {{ if .Integrante }}
-                            {{ if .Integrante.Imagen }}
-                            <small class="text-muted d-block mt-1">Archivo actual: <span class="fw-semibold">{{ .Integrante.Imagen }}</span></small>
-                            {{ end }}
-                            {{ end }}
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="cv" class="form-label">Cambiar Archivo de CV PDF (Opcional)</label>
+                        <div class="col-12">
+                            <label for="cv" class="form-label fw-semibold">Actualizar Archivo de CV (PDF)</label>
                             <input type="file" class="form-control" id="cv" name="cv" accept=".pdf">
                             {{ if .Integrante }}
                             {{ if .Integrante.CV }}
-                            <small class="text-muted d-block mt-1">Archivo actual: <span class="fw-semibold">{{ .Integrante.CV }}</span></small>
+                            <div class="mt-2 small text-muted d-flex align-items-center gap-2">
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                                <span>Archivo actual cargado: <strong>{{ .Integrante.CV }}</strong></span>
+                                <a href="{{ .Integrante.CV }}" target="_blank" class="btn btn-sm btn-outline-primary py-0 px-2 rounded-pill"><i class="bi bi-eye"></i> Ver PDF</a>
+                            </div>
                             {{ end }}
                             {{ end }}
+                            <small class="text-muted d-block mt-1">Formato admitido: PDF (Máximo 10 MB). Si no seleccionas un archivo nuevo, se mantendrá el actual.</small>
                         </div>
                     </div>
 
-                    <!-- SECCIÓN 5: DESCRIPCIÓN Y BIOGRAFÍA -->
+                    <!-- SECCIÓN 5: DESCRIPCIÓN Y BIOGRAFÍA (EDITABLE) -->
                     <div class="form-section-subtitle mt-4">
                         <i class="bi bi-card-text me-2" style="color: var(--azul-logo);"></i>5. Resumen Biográfico / Trayectoria
                     </div>
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <label for="descripcion" class="form-label">Descripción / Biografía <span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required>{{ if .Integrante }}{{ .Integrante.Descripcion }}{{ else }}Investigadora y docente titular en el Departamento de Informática. Directora del Grupo de Ingeniería de Software (GIS) y co-directora del LaCIS.{{ end }}</textarea>
+                            <label for="descripcion" class="form-label fw-semibold">Descripción / Biografía <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required placeholder="Describe la trayectoria académica, líneas de investigación o funciones dentro del laboratorio...">{{ if .Integrante }}{{ .Integrante.Descripcion }}{{ end }}</textarea>
                         </div>
                     </div>
 
@@ -203,6 +240,8 @@
         {{ template "footer" . }}
     </footer>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/ui/static/js-GIS/formularioIntegrante.js"></script>
 </body>
 </html>

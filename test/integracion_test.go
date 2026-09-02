@@ -36,10 +36,12 @@ func TestIntegration_InsertarIntegrante(t *testing.T) {
 	formData.Set("contacto", "test@unsl.edu.ar")
 	formData.Set("especializacion", "Testing")
 	formData.Set("descripcion", "Prueba E2E")
-	formData.Set("rol_id", "1")
+	formData.Set("pertenece_lacis", "true")
+	formData.Set("rol_lacis_id", "1")
 
 	req, _ := http.NewRequest("POST", "/admin/insertar-integrante", strings.NewReader(formData.Encode()))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.AddCookie(&http.Cookie{Name: "session", Value: "1"})
 
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)

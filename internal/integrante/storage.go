@@ -1,6 +1,7 @@
 package integrante
 
 import (
+	"PaginaSEG/internal/rol"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -31,6 +32,15 @@ func NewPostgresStorage(db *sql.DB) *PostgresStorage {
 }
 
 func (c *PostgresStorage) Create(integrante *Integrante) error {
+	// Mantener rol_id con el primer rol disponible para retrocompatibilidad
+	if integrante.RolID <= 0 {
+		if integrante.RolLacisID != nil && *integrante.RolLacisID > 0 {
+			integrante.RolID = *integrante.RolLacisID
+		} else if integrante.RolSoftwareID != nil && *integrante.RolSoftwareID > 0 {
+			integrante.RolID = *integrante.RolSoftwareID
+		}
+	}
+
 	query := `INSERT INTO integrante (
 				nombre, 
 				apellido, 
@@ -43,9 +53,11 @@ func (c *PostgresStorage) Create(integrante *Integrante) error {
 				pertenece_lacis, 
 				pertenece_grupo_software, 
 				activo, 
-				rol_id
+				rol_id,
+				rol_lacis_id,
+				rol_software_id
 			  )
-	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
 	          RETURNING id`
 
 	err := c.db.QueryRow(
@@ -62,6 +74,8 @@ func (c *PostgresStorage) Create(integrante *Integrante) error {
 		integrante.PerteneceGrupoSoftware,
 		integrante.Activo,
 		integrante.RolID,
+		integrante.RolLacisID,
+		integrante.RolSoftwareID,
 	).Scan(&integrante.ID)
 
 	if err != nil {
@@ -86,12 +100,20 @@ func (s *PostgresStorage) Read(id int) (*Integrante, error) {
 		       COALESCE(i.pertenece_grupo_software, false), 
 		       COALESCE(i.activo, true), 
 		       COALESCE(i.rol_id, 0), 
-		       COALESCE(r.nombre, '')
+		       COALESCE(r.nombre, ''),
+		       i.rol_lacis_id,
+		       COALESCE(r_lacis.nombre, ''),
+		       i.rol_software_id,
+		       COALESCE(r_soft.nombre, '')
 		FROM integrante i
 		LEFT JOIN rol r ON i.rol_id = r.id
+		LEFT JOIN rol r_lacis ON i.rol_lacis_id = r_lacis.id
+		LEFT JOIN rol r_soft ON i.rol_software_id = r_soft.id
 		WHERE i.id = $1`
 	row := s.db.QueryRow(query, id)
 	var u Integrante
+	var rolLacisID, rolSoftwareID sql.NullInt64
+	var rolLacisNombre, rolSoftwareNombre string
 
 	err := row.Scan(
 		&u.ID,
@@ -108,6 +130,10 @@ func (s *PostgresStorage) Read(id int) (*Integrante, error) {
 		&u.Activo,
 		&u.RolID,
 		&u.Rol.Nombre,
+		&rolLacisID,
+		&rolLacisNombre,
+		&rolSoftwareID,
+		&rolSoftwareNombre,
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -116,6 +142,22 @@ func (s *PostgresStorage) Read(id int) (*Integrante, error) {
 		return nil, fmt.Errorf("error al leer integrante en PostgreSQL: %w", err)
 	}
 	u.Rol.ID = u.RolID
+	if rolLacisID.Valid {
+		idVal := int(rolLacisID.Int64)
+		u.RolLacisID = &idVal
+		u.RolLacis = &rol.Rol{
+			ID:     idVal,
+			Nombre: rolLacisNombre,
+		}
+	}
+	if rolSoftwareID.Valid {
+		idVal := int(rolSoftwareID.Int64)
+		u.RolSoftwareID = &idVal
+		u.RolSoftware = &rol.Rol{
+			ID:     idVal,
+			Nombre: rolSoftwareNombre,
+		}
+	}
 	return &u, nil
 }
 
@@ -134,9 +176,15 @@ func (s *PostgresStorage) GetAll() ([]Integrante, error) {
 		       COALESCE(i.pertenece_grupo_software, false), 
 		       COALESCE(i.activo, true), 
 		       COALESCE(i.rol_id, 0), 
-		       COALESCE(r.nombre, '')
+		       COALESCE(r.nombre, ''),
+		       i.rol_lacis_id,
+		       COALESCE(r_lacis.nombre, ''),
+		       i.rol_software_id,
+		       COALESCE(r_soft.nombre, '')
 		FROM integrante i
 		LEFT JOIN rol r ON i.rol_id = r.id
+		LEFT JOIN rol r_lacis ON i.rol_lacis_id = r_lacis.id
+		LEFT JOIN rol r_soft ON i.rol_software_id = r_soft.id
 		ORDER BY i.id ASC`
 	rows, err := s.db.Query(query)
 	if err != nil {
@@ -146,6 +194,8 @@ func (s *PostgresStorage) GetAll() ([]Integrante, error) {
 	var integrantes []Integrante
 	for rows.Next() {
 		var u Integrante
+		var rolLacisID, rolSoftwareID sql.NullInt64
+		var rolLacisNombre, rolSoftwareNombre string
 		err := rows.Scan(
 			&u.ID,
 			&u.Nombre,
@@ -161,11 +211,31 @@ func (s *PostgresStorage) GetAll() ([]Integrante, error) {
 			&u.Activo,
 			&u.RolID,
 			&u.Rol.Nombre,
+			&rolLacisID,
+			&rolLacisNombre,
+			&rolSoftwareID,
+			&rolSoftwareNombre,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("error al escanear integrante: %w", err)
 		}
 		u.Rol.ID = u.RolID
+		if rolLacisID.Valid {
+			idVal := int(rolLacisID.Int64)
+			u.RolLacisID = &idVal
+			u.RolLacis = &rol.Rol{
+				ID:     idVal,
+				Nombre: rolLacisNombre,
+			}
+		}
+		if rolSoftwareID.Valid {
+			idVal := int(rolSoftwareID.Int64)
+			u.RolSoftwareID = &idVal
+			u.RolSoftware = &rol.Rol{
+				ID:     idVal,
+				Nombre: rolSoftwareNombre,
+			}
+		}
 		integrantes = append(integrantes, u)
 	}
 	if err = rows.Err(); err != nil {
@@ -255,8 +325,26 @@ func (s *PostgresStorage) Update(id int, fields UpdateFields) error {
 		args = append(args, *fields.RolID)
 		argID++
 	}
+	if fields.RolLacisID != nil {
+		if *fields.RolLacisID > 0 {
+			query += fmt.Sprintf("rol_lacis_id = $%d, ", argID)
+			args = append(args, *fields.RolLacisID)
+			argID++
+		} else {
+			query += "rol_lacis_id = NULL, "
+		}
+	}
+	if fields.RolSoftwareID != nil {
+		if *fields.RolSoftwareID > 0 {
+			query += fmt.Sprintf("rol_software_id = $%d, ", argID)
+			args = append(args, *fields.RolSoftwareID)
+			argID++
+		} else {
+			query += "rol_software_id = NULL, "
+		}
+	}
 
-	if len(args) == 0 {
+	if len(args) == 0 && !stringsContainsNull(query) {
 		return nil
 	}
 
@@ -274,4 +362,8 @@ func (s *PostgresStorage) Update(id int, fields UpdateFields) error {
 		return ErrNotFound
 	}
 	return nil
+}
+
+func stringsContainsNull(q string) bool {
+	return len(q) > len("UPDATE integrante SET ")
 }

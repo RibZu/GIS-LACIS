@@ -69,58 +69,103 @@
                             <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ej: Abdelahad" required>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <label for="titulo_especializacion" class="form-label">Título de Mayor Jerarquía / Especialización <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="titulo_especializacion" name="especializacion" placeholder="Ej: Dra. en Ciencias de la Computación" required>
                             <small class="text-muted">Título académico más alto o área de especialización principal.</small>
                         </div>
-
-                        <div class="col-md-6">
-                            <label for="rol_id" class="form-label">Rol / Cargo en el Laboratorio <span class="text-danger">*</span></label>
-                            <select class="form-select" id="rol_id" name="rol_id" required>
-                                <option value="" selected disabled>Seleccionar Rol...</option>
-                                <option value="1">1 - DIRECTOR / CO-DIRECTOR</option>
-                                <option value="2">2 - INVESTIGADOR</option>
-                                <option value="3">3 - ASESOR EXTERNO</option>
-                                <option value="4">4 - ESTUDIANTE / BECARIO</option>
-                            </select>
-                        </div>
                     </div>
 
-                    <!-- SECCIÓN 2: PERTENENCIA INSTITUCIONAL Y ESTADO -->
+                    <!-- SECCIÓN 2: PERTENENCIA INSTITUCIONAL Y ROLES POR GRUPO -->
                     <div class="form-section-subtitle mt-4">
-                        <i class="bi bi-diagram-3-fill me-2" style="color: var(--azul-logo);"></i>2. Pertenencia Institucional y Estado
+                        <i class="bi bi-diagram-3-fill me-2" style="color: var(--azul-logo);"></i>2. Pertenencia Institucional y Roles por Grupo
                     </div>
 
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <div class="form-check form-switch p-3 border rounded bg-light">
-                                <input class="form-check-input ms-0 me-2" type="checkbox" role="switch" id="pertenece_lacis" name="pertenece_lacis" value="true" checked>
-                                <label class="form-check-label fw-semibold" for="pertenece_lacis">
-                                    Pertenece a LaCIS
-                                </label>
-                                <small class="text-muted d-block mt-1">Laboratorio de Computación e Informática y Sistemas</small>
+                    <div class="row g-3 mb-3">
+                        <!-- Tarjeta LaCIS -->
+                        <div class="col-md-6">
+                            <div class="group-card active-group" id="card_lacis">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="group-icon-badge badge-lacis-icon">
+                                            <i class="bi bi-building"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0 text-dark">Pertenece a LaCIS</h6>
+                                            <small class="text-muted">Laboratorio de Computación e Inf. y Sistemas</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-check form-switch m-0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="pertenece_lacis" name="pertenece_lacis" value="true" checked>
+                                    </div>
+                                </div>
+
+                                <div id="contenedor_rol_lacis">
+                                    <label for="rol_lacis_id" class="form-label small text-secondary fw-semibold mb-1">
+                                        <i class="bi bi-person-badge me-1 text-primary"></i>Rol asignado en LaCIS <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted"><i class="bi bi-person-gear"></i></span>
+                                        <select class="form-select" id="rol_lacis_id" name="rol_lacis_id" required>
+                                            <option value="" disabled>Seleccionar Rol en LaCIS...</option>
+                                            <option value="1">Director / Co-Director</option>
+                                            <option value="2" selected>Investigador</option>
+                                            <option value="3">Asesor Externo</option>
+                                            <option value="4">Estudiante / Becario</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="form-check form-switch p-3 border rounded bg-light">
-                                <input class="form-check-input ms-0 me-2" type="checkbox" role="switch" id="pertenece_grupo_software" name="pertenece_grupo_software" value="true" checked>
-                                <label class="form-check-label fw-semibold" for="pertenece_grupo_software">
-                                    Pertenece a Grupo Software
-                                </label>
-                                <small class="text-muted d-block mt-1">Grupo de Ingeniería de Software (GIS)</small>
+                        <!-- Tarjeta Grupo Software (GIS) -->
+                        <div class="col-md-6">
+                            <div class="group-card active-group" id="card_software">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="group-icon-badge badge-gis-icon">
+                                            <i class="bi bi-code-slash"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0 text-dark">Pertenece a Grupo Software</h6>
+                                            <small class="text-muted">Grupo de Ingeniería de Software (GIS)</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-check form-switch m-0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="pertenece_grupo_software" name="pertenece_grupo_software" value="true" checked>
+                                    </div>
+                                </div>
+
+                                <div id="contenedor_rol_software">
+                                    <label for="rol_software_id" class="form-label small text-secondary fw-semibold mb-1">
+                                        <i class="bi bi-person-badge me-1 text-primary"></i>Rol asignado en Grupo Software <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted"><i class="bi bi-person-gear"></i></span>
+                                        <select class="form-select" id="rol_software_id" name="rol_software_id" required>
+                                            <option value="" disabled>Seleccionar Rol en GIS...</option>
+                                            <option value="1">Director / Co-Director</option>
+                                            <option value="2" selected>Investigador</option>
+                                            <option value="3">Asesor Externo</option>
+                                            <option value="4">Estudiante / Becario</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-md-4">
-                            <div class="form-check form-switch p-3 border rounded bg-light">
-                                <input class="form-check-input ms-0 me-2" type="checkbox" role="switch" id="activo" name="activo" value="true" checked>
-                                <label class="form-check-label fw-semibold" for="activo">
-                                    Estado Activo
-                                </label>
-                                <small class="text-muted d-block mt-1">Habilitado para mostrarse en el sitio web público</small>
+                    <!-- Estado Activo -->
+                    <div class="active-status-bar d-flex justify-content-between align-items-center mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="text-primary fs-4"><i class="bi bi-globe-americas"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">Visibilidad y Estado en el Sitio Web</h6>
+                                <small class="text-muted">Habilitado para mostrarse en el portal público de integrantes</small>
                             </div>
+                        </div>
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" role="switch" id="activo" name="activo" value="true" checked>
                         </div>
                     </div>
 
@@ -199,7 +244,9 @@
         {{ template "footer" . }}
     </footer>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/ui/static/js-GIS/formularioIntegrante.js"></script>
 </body>
 </html>
 

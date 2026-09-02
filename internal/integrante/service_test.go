@@ -27,12 +27,13 @@ func TestCreate_SinNombre_DebeDevolverError(t *testing.T) {
 	service := NewService(mockStorage, logger)
 
 	nuevo := &Integrante{
-		Nombre:          "",
-		Apellido:        "Abdelahad",
-		RolID:           1,
-		Especializacion: "Modelos",
-		Contacto:        "corina@email.unsl.edu.ar",
-		Descripcion:     "Docente",
+		Nombre:                 "",
+		Apellido:               "Abdelahad",
+		RolID:                  1,
+		PerteneceLacis:         true,
+		Especializacion:        "Modelos",
+		Contacto:               "corina@email.unsl.edu.ar",
+		Descripcion:            "Docente",
 	}
 
 	err := service.Create(nuevo)
@@ -44,13 +45,18 @@ func TestCreate_Exitoso(t *testing.T) {
 	mockStorage := &MockStorage{}
 	logger := zap.NewNop()
 	service := NewService(mockStorage, logger)
+	rolLacis := 1
+	rolGIS := 2
 	nuevo := &Integrante{
-		Nombre:          "Corina",
-		Apellido:        "Abdelahad",
-		RolID:           1,
-		Especializacion: "Modelos",
-		Contacto:        "corina@email.unsl.edu.ar",
-		Descripcion:     "Docente",
+		Nombre:                 "Corina",
+		Apellido:               "Abdelahad",
+		PerteneceLacis:         true,
+		RolLacisID:             &rolLacis,
+		PerteneceGrupoSoftware: true,
+		RolSoftwareID:          &rolGIS,
+		Especializacion:        "Modelos",
+		Contacto:               "corina@email.unsl.edu.ar",
+		Descripcion:            "Docente",
 	}
 	err := service.Create(nuevo)
 	// Esperamos que NO devuelva ningún error (nil)
@@ -64,12 +70,13 @@ func TestCreate_NombreConNumeros_DebeDevolverError(t *testing.T) {
 	service := NewService(mockStorage, logger)
 
 	nuevo := &Integrante{
-		Nombre:          "Corina123",
-		Apellido:        "Abdelahad",
-		RolID:           1,
-		Especializacion: "Modelos",
-		Contacto:        "docenne@gmail.com",
-		Descripcion:     "Docente",
+		Nombre:                 "Corina123",
+		Apellido:               "Abdelahad",
+		RolID:                  1,
+		PerteneceLacis:         true,
+		Especializacion:        "Modelos",
+		Contacto:               "docenne@gmail.com",
+		Descripcion:            "Docente",
 	}
 	err := service.Create(nuevo)
 
@@ -90,23 +97,45 @@ func TestRead_IDInvalido_DebeDevolverError(t *testing.T) {
 
 }
 
-func TestCreate_SinRol_DebeDevolverError(t *testing.T) {
+func TestCreate_SinPertenencia_DebeDevolverError(t *testing.T) {
 
 	mockStorage := &MockStorage{}
 	service := NewService(mockStorage, zap.NewNop())
 
 	nuevo := &Integrante{
-		Nombre:          "Corina",
-		Apellido:        "Abdelahad",
-		RolID:           0,
-		Especializacion: "Modelos",
-		Contacto:        "ismae@gmail.com",
-		Descripcion:     "Docente",
+		Nombre:                 "Corina",
+		Apellido:               "Abdelahad",
+		PerteneceLacis:         false,
+		PerteneceGrupoSoftware: false,
+		Especializacion:        "Modelos",
+		Contacto:               "ismae@gmail.com",
+		Descripcion:            "Docente",
 	}
 	err := service.Create(nuevo)
 
 	assert.Error(t, err)
-	assert.Equal(t, ErrRolRequerido, err)
+	assert.Equal(t, ErrPertenenciaRequerida, err)
+
+}
+
+func TestCreate_PerteneceLacisSinRol_DebeDevolverError(t *testing.T) {
+
+	mockStorage := &MockStorage{}
+	service := NewService(mockStorage, zap.NewNop())
+
+	nuevo := &Integrante{
+		Nombre:                 "Corina",
+		Apellido:               "Abdelahad",
+		PerteneceLacis:         true,
+		RolLacisID:             nil,
+		Especializacion:        "Modelos",
+		Contacto:               "ismae@gmail.com",
+		Descripcion:            "Docente",
+	}
+	err := service.Create(nuevo)
+
+	assert.Error(t, err)
+	assert.Equal(t, ErrRolLacisRequerido, err)
 
 }
 
@@ -189,6 +218,47 @@ func TestUpdate_Exitoso(t *testing.T) {
 	fields := UpdateFields{Contacto: &nuevoContacto}
 	err := service.Update(1, fields)
 	assert.NoError(t, err)
+}
+
+func TestUpdate_Restringido_Exitoso(t *testing.T) {
+	mockStorage := &MockStorage{}
+	service := NewService(mockStorage, zap.NewNop())
+	
+	esp := "Dra. en Computación Avanzada"
+	desc := "Nueva trayectoria y proyectos de investigación"
+	lacisTrue := true
+	rolLacis := 1
+	softTrue := true
+	rolSoft := 2
+
+	fields := UpdateFields{
+		Especializacion:        &esp,
+		Descripcion:            &desc,
+		PerteneceLacis:         &lacisTrue,
+		RolLacisID:             &rolLacis,
+		PerteneceGrupoSoftware: &softTrue,
+		RolSoftwareID:          &rolSoft,
+	}
+
+	err := service.Update(1, fields)
+	assert.NoError(t, err)
+}
+
+func TestUpdate_RolLacisInvalido_DebeDevolverError(t *testing.T) {
+	mockStorage := &MockStorage{}
+	service := NewService(mockStorage, zap.NewNop())
+	
+	lacisTrue := true
+	rolInvalido := 0
+
+	fields := UpdateFields{
+		PerteneceLacis: &lacisTrue,
+		RolLacisID:     &rolInvalido,
+	}
+
+	err := service.Update(1, fields)
+	assert.Error(t, err)
+	assert.Equal(t, ErrRolLacisRequerido, err)
 }
 
 func TestDelete_IDInvalido_DebeDevolverError(t *testing.T) {

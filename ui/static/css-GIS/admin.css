@@ -90,3 +90,75 @@ main.admin-main, main {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(26, 68, 132, 0.35);
 }
+
+/* ==================== TARJETAS DE PERTENENCIA Y ROLES ==================== */
+.group-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.group-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 18px rgba(10, 30, 46, 0.05);
+}
+
+.group-card.active-group {
+    background: #f8fafc;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.08);
+}
+
+.group-icon-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.badge-lacis-icon {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #dbeafe;
+}
+
+.badge-gis-icon {
+    background-color: #f5f3ff;
+    color: #6d28d9;
+    border: 1px solid #ede9fe;
+}
+
+.group-card .form-check-input {
+    width: 2.7em;
+    height: 1.45em;
+    cursor: pointer;
+}
+
+.role-select-box {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.role-select-box select.form-select {
+    font-weight: 500;
+    color: #1e293b;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.active-status-bar {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 20px;
+}
