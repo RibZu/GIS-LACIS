@@ -1,14 +1,14 @@
 :root {
-    --azul-logo: #1a4484;
-    --azul-profundo: #0A1E2E;
-    --azul-hover: #133363;
-    --azul-pastel-fondo: #E0F2F7;
-    --borde-tarjeta: #e2e8f0;
+    --azul-logo: #1A4484;
+    --azul-profundo: #101828;
+    --azul-hover: #123568;
+    --azul-pastel-fondo: #F7F8FA;
+    --borde-tarjeta: #E7E9EE;
 }
 
 body {
     background-color: var(--azul-pastel-fondo) !important;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Manrope', sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -20,12 +20,15 @@ main.admin-main, main {
     margin: 0 !important;
 }
 
+h1, h2, h3, h4, h5, .form-header-title {
+    font-family: 'Montserrat', sans-serif;
+}
+
 .form-card {
     background: #ffffff;
-    border-radius: 16px;
+    border-radius: .75rem;
     border: 1px solid var(--borde-tarjeta);
-    border-left: 5px solid var(--azul-logo);
-    box-shadow: 0 4px 20px rgba(10, 30, 46, 0.08);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .07);
     padding: 36px;
     max-width: 900px;
     margin: 0 auto;
@@ -43,7 +46,7 @@ main.admin-main, main {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 1px solid var(--borde-tarjeta);
     padding-bottom: 8px;
     margin-top: 20px;
     margin-bottom: 16px;
@@ -51,21 +54,21 @@ main.admin-main, main {
 
 .form-label {
     font-weight: 600;
-    color: #334155;
+    color: #344054;
     font-size: 0.88rem;
     margin-bottom: 6px;
 }
 
 .form-control, .form-select {
-    border-radius: 8px;
-    border: 1px solid #cbd5e1;
+    border-radius: .55rem;
+    border: 1px solid var(--borde-tarjeta);
     padding: 10px 14px;
     font-size: 0.95rem;
 }
 
 .form-control:focus, .form-select:focus {
     border-color: var(--azul-logo);
-    box-shadow: 0 0 0 3px rgba(26, 68, 132, 0.15);
+    box-shadow: 0 0 0 3px rgba(26, 68, 132, .15);
 }
 
 .form-check-input:checked {
@@ -77,16 +80,15 @@ main.admin-main, main {
     background-color: var(--azul-logo);
     color: #ffffff;
     font-weight: 600;
-    border-radius: 10px;
+    border-radius: .55rem;
     padding: 11px 28px;
     border: none;
-    box-shadow: 0 4px 12px rgba(26, 68, 132, 0.25);
+    box-shadow: none;
     transition: all 0.2s ease-in-out;
 }
 
 .btn-guardar:hover {
     background-color: var(--azul-hover);
     color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(26, 68, 132, 0.35);
+    box-shadow: none;
 }

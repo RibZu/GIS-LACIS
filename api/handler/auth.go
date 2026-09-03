@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"PaginaSEG/internal/integrante"
 	"PaginaSEG/internal/usuario" // Importamos tu nuevo paquete de usuarios
 	"net/http"
 	"strconv"
@@ -11,14 +12,16 @@ import (
 )
 
 type AuthHandler struct {
-	usuarioService *usuario.Service
-	logger         *zap.Logger
+	usuarioService    *usuario.Service
+	integranteService *integrante.Service
+	logger            *zap.Logger
 }
 
-func NewAuthHandler(us *usuario.Service, l *zap.Logger) *AuthHandler {
+func NewAuthHandler(us *usuario.Service, is *integrante.Service, l *zap.Logger) *AuthHandler {
 	return &AuthHandler{
-		usuarioService: us,
-		logger:         l,
+		usuarioService:    us,
+		integranteService: is,
+		logger:            l,
 	}
 }
 
@@ -73,6 +76,23 @@ func (h *AuthHandler) ShowDashboard(c *gin.Context) {
 		c.Redirect(http.StatusFound, "/login")
 		return
 	}
+
+	numUsuarios := 0
+	numAdmins := 0
+	if usuarios, err := h.usuarioService.GetAll(); err == nil {
+		numUsuarios = len(usuarios)
+		for _, us := range usuarios {
+			if us.Rol != nil && *us.Rol == "ADMIN" {
+				numAdmins++
+			}
+		}
+	}
+
+	numIntegrantes := 0
+	if integrantes, err := h.integranteService.GetAll(); err == nil {
+		numIntegrantes = len(integrantes)
+	}
+
 	c.HTML(http.StatusOK, "Dashboard.html", gin.H{
 		"LoggedIn":             true,
 		"EsAdmin":              esAdmin(u),
@@ -80,5 +100,11 @@ func (h *AuthHandler) ShowDashboard(c *gin.Context) {
 		"TieneProyectos":       tieneModulo(u, "proyectos"),
 		"TieneReconocimientos": tieneModulo(u, "reconocimientos"),
 		"TieneEmpresas":        tieneModulo(u, "empresas"),
+		"NumUsuarios":          numUsuarios,
+		"NumAdmins":            numAdmins,
+		"NumIntegrantes":       numIntegrantes,
+		// Módulos realmente activos hoy: Integrantes y Administradores.
+		// Proyectos, Reconocimientos y Empresas siguen "Próximamente".
+		"NumModulosActivos": 2,
 	})
 }

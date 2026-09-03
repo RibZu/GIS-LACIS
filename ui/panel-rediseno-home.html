@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propuestas de Rediseño — Home GIS-LACIS</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Cormorant+Garamond:wght@300;400;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="static/css-GIS/style.css">
+<link rel="stylesheet" href="static/css-GIS/Styleheader.css">
+
+<style>
+/* ============ CHROME (barra de control, fuera del home) ============ */
+:root{
+  --chrome-bg:#14181F;
+  --chrome-panel:#1B212B;
+  --chrome-ink:#E7EAEF;
+  --chrome-ink-soft:#9AA4B2;
+  --chrome-accent:#6C8EF5;
+  --chrome-rule:#2A313D;
+
+  /* Paleta y tipografía YA establecidas en el sitio (style.css) — no se tocan */
+  --azul-logo:#1A4484;
+  --azul-profundo:#0A1E2E;
+  --blanco-fondo:#FDFDFD;
+}
+.chrome-header{
+  padding:1.75rem 1.25rem 1.25rem;
+  text-align:center;
+  color:var(--chrome-ink);
+  background:var(--chrome-bg);
+  font-family:'Montserrat',sans-serif;
+}
+.chrome-header .eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--chrome-accent);
+  font-weight:700;
+}
+.chrome-header h1{
+  font-weight:700;
+  font-size:clamp(1.4rem,3.5vw,1.9rem);
+  margin:.4rem 0 .3rem;
+  font-family:'Montserrat',sans-serif;
+}
+.chrome-header p{
+  color:var(--chrome-ink-soft);
+  font-size:.95rem;
+  max-width:64ch;
+  margin:0 auto;
+}
+.switcher-bar{
+  position:sticky; top:0; z-index:999;
+  background:rgba(20,24,31,.95);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--chrome-rule);
+  padding:.85rem 1rem;
+}
+.switcher-row{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.5rem; max-width:1100px; margin:0 auto;
+}
+.switcher-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--chrome-ink-soft); margin-right:.3rem;
+}
+.chip-btn{
+  font-family:'Montserrat',sans-serif;
+  font-size:.84rem; font-weight:600;
+  padding:.4rem .9rem;
+  border-radius:999px;
+  border:1px solid var(--chrome-rule);
+  background:var(--chrome-panel);
+  color:var(--chrome-ink-soft);
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.chip-btn:hover{color:var(--chrome-ink); border-color:var(--chrome-accent);}
+.chip-btn.active{
+  background:var(--chrome-accent);
+  border-color:var(--chrome-accent);
+  color:#0C1220;
+}
+.chrome-footer{
+  text-align:center; color:var(--chrome-ink-soft);
+  font-family:'JetBrains Mono',monospace; font-size:.72rem;
+  padding:1.5rem 1rem 2rem; background:var(--chrome-bg);
+}
+.d-none-panel{ display:none !important; }
+
+/* ---- Switch Escritorio / Mobile (bien visible arriba del todo) ---- */
+.device-toggle-row{
+  display:flex; justify-content:center; align-items:center;
+  padding-bottom:.85rem; margin-bottom:.85rem;
+  border-bottom:1px solid var(--chrome-rule);
+}
+.device-toggle{
+  display:inline-flex; gap:.15rem;
+  background:var(--chrome-panel);
+  border:1px solid var(--chrome-rule);
+  border-radius:999px; padding:.3rem;
+}
+.device-toggle-btn{
+  font-family:'Montserrat',sans-serif;
+  font-size:.86rem; font-weight:700;
+  padding:.55rem 1.4rem;
+  border-radius:999px; border:none; background:transparent;
+  color:var(--chrome-ink-soft);
+  display:inline-flex; align-items:center; gap:.5rem;
+  cursor:pointer; transition:all .18s ease;
+}
+.device-toggle-btn i{ font-size:1rem; }
+.device-toggle-btn:hover{ color:var(--chrome-ink); }
+.device-toggle-btn.active{
+  background:var(--chrome-accent); color:#0C1220;
+  box-shadow:0 3px 14px rgba(108,142,245,.45);
+}
+
+/* ---- Marco de celular para la vista Mobile ---- */
+.mobile-frame-wrap{
+  display:flex; justify-content:center;
+  padding:2.5rem 1rem 3.5rem;
+  background:var(--chrome-bg);
+}
+.mobile-device{
+  position:relative; width:390px; height:780px;
+  background:#111318; border-radius:46px; padding:14px;
+  box-shadow:0 30px 70px rgba(0,0,0,.55), 0 0 0 2px rgba(255,255,255,.06) inset;
+}
+.mobile-notch{
+  position:absolute; top:14px; left:50%; transform:translateX(-50%);
+  width:130px; height:24px; background:#111318; border-radius:0 0 18px 18px; z-index:5;
+}
+.mobile-device iframe{
+  width:100%; height:100%; border:0; border-radius:32px; background:#fff; display:block;
+}
+
+/* Cuando este mismo archivo se carga dentro del iframe de la vista Mobile,
+   se oculta el "chrome" del mockup y queda solo la página real */
+html.is-embedded .chrome-header,
+html.is-embedded .switcher-bar,
+html.is-embedded .chrome-footer{ display:none; }
+
+/* ============ HOME (contenido real de la página) ============ */
+/* Navbar — copiado tal cual de nav.html, mismo estilo del sitio */
+/* Navbar real: estilos ya definidos en Styleheader.css (fondo blanco, links azules).
+   No se pisan acá. */
+
+/* ============ HERO — 3 propuestas de diseño (misma paleta/tipografía) ============ */
+.hero{
+  position:relative;
+  width:100%;
+  height:88vh;
+  min-height:560px;
+  overflow:hidden;
+  background:var(--azul-profundo);
+}
+.hero video{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  z-index:0;
+}
+.hero-slide{ display:none; }
+.hero-slide.is-active{ display:block; animation:hero-fade-in .5s ease; }
+@keyframes hero-fade-in{
+  from{ opacity:0; transform:translateY(8px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+/* Logo + leyenda como un único "lockup" chico, en línea (no como pegote flotante) */
+.hero-logo{ position:relative; display:inline-flex; align-items:center; gap:.6rem; }
+.hero-logo img{
+  display:block; height:46px; width:auto; flex:none;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,.45));
+}
+.hero-logo-caption{
+  font-family:'Montserrat',sans-serif;
+  font-weight:600;
+  font-size:clamp(.56rem,1.2vw,.68rem);
+  white-space:nowrap;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.92);
+  text-shadow:0 1px 3px rgba(0,0,0,.5);
+  border-left:1px solid rgba(255,255,255,.35);
+  padding-left:.6rem;
+}
+.hero-slide h2{ font-family:'Cormorant Garamond',serif; font-weight:600; color:#fff; line-height:1.1; }
+.hero-slide p{ font-family:'Montserrat',sans-serif; font-weight:300; color:rgba(255,255,255,.85); }
+
+.hero-arrow{
+  width:44px; height:44px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.05);
+  color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .2s ease;
+}
+.hero-arrow:hover{ background:#fff; color:var(--azul-profundo); border-color:#fff; }
+
+/* ---- Estilo 1 · Refinado — degradé diagonal, contenido a la izquierda ---- */
+.hero-v1::before{
+  content:'';
+  position:absolute; inset:0; z-index:10;
+  background:
+    linear-gradient(105deg, rgba(10,30,46,.93) 0%, rgba(26,68,132,.6) 42%, transparent 75%),
+    rgba(10,30,46,.3);
+}
+.hero-v1 .hero-inner{
+  position:relative; z-index:20; height:100%;
+  max-width:1180px; margin:0 auto; padding:0 2.5rem;
+  display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
+}
+.hero-v1 .hero-logo{ margin-bottom:1.4rem; }
+.hero-v1 .hero-content{ max-width:640px; }
+.hero-v1 .hero-slide h2{ font-size:clamp(2.4rem,4.5vw,3.6rem); margin:0 0 1rem; }
+.hero-v1 .hero-slide p{ font-size:1.05rem; line-height:1.6; max-width:36rem; margin:0; }
+.hero-v1 .hero-controls{ position:absolute; z-index:30; right:2.5rem; bottom:2rem; display:flex; gap:.6rem; }
+.hero-v1 .hero-pagination{ position:absolute; z-index:30; left:2.5rem; bottom:2.4rem; display:flex; gap:.5rem; }
+.hero-v1 .hero-dot{ width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.4); border:none; cursor:pointer; padding:0; transition:all .2s ease; }
+.hero-v1 .hero-dot.is-active{ background:#fff; width:22px; border-radius:5px; }
+
+/* ---- Estilo 2 · Panel Moderno — franja inferior, tipografía de palo, minimal ---- */
+.hero-v2::before{
+  content:'';
+  position:absolute; inset:0; z-index:10;
+  background:linear-gradient(to top, rgba(10,30,46,.92) 0%, rgba(10,30,46,.55) 38%, transparent 68%);
+}
+.hero-v2 .hero-inner{
+  position:relative; z-index:20; height:100%;
+  max-width:1180px; margin:0 auto; padding:0 2.5rem 3rem;
+  display:flex; flex-direction:column; justify-content:flex-end; align-items:center; text-align:center;
+}
+.hero-v2 .hero-logo{ position:absolute; top:3.5rem; left:2.5rem; }
+.hero-v2 .hero-logo img{ height:50px; }
+.hero-v2 .hero-content{ max-width:620px; margin:0 auto; }
+.hero-v2 .hero-slide h2{ font-family:'Montserrat',sans-serif; font-weight:700; font-size:clamp(2rem,3.8vw,2.9rem); letter-spacing:-.01em; margin:0 0 .6rem; }
+.hero-v2 .hero-slide p{ font-size:1rem; line-height:1.6; max-width:34rem; margin:0 0 1.75rem; }
+.hero-v2 .hero-controls{ display:flex; align-items:center; gap:1.25rem; }
+.hero-v2 .hero-pagination{ display:flex; gap:.4rem; }
+.hero-v2 .hero-dot{ width:30px; height:4px; border-radius:2px; background:rgba(255,255,255,.28); border:none; cursor:pointer; padding:0; transition:all .2s ease; }
+.hero-v2 .hero-dot.is-active{ background:#fff; }
+.hero-v2 .hero-arrow{ width:36px; height:36px; }
+
+/* ---- Estilo 3 · Institucional — simétrico, formal, flat ---- */
+.hero-v3::before{
+  content:'';
+  position:absolute; inset:0; z-index:10;
+  background:rgba(10,30,46,.6);
+}
+.hero-v3 .hero-inner{
+  position:relative; z-index:20; height:100%;
+  max-width:820px; margin:0 auto; padding:0 2rem;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center;
+}
+.hero-v3 .hero-logo{ flex-direction:column; gap:.5rem; margin-bottom:1.1rem; }
+.hero-v3 .hero-logo img{ height:70px; margin:0 auto; }
+.hero-v3 .hero-logo-caption{ border-left:none; padding-left:0; text-align:center; }
+.hero-v3 .hero-rule{ width:56px; height:2px; background:rgba(255,255,255,.5); margin:0 auto 1.75rem; }
+.hero-v3 .hero-slide h2{ font-size:clamp(2.2rem,4vw,3.1rem); margin:0 0 1.1rem; }
+.hero-v3 .hero-slide p{ font-size:1.02rem; line-height:1.65; max-width:34rem; margin:0 auto; }
+.hero-v3 .hero-controls{ position:absolute; z-index:30; left:50%; bottom:1.8rem; transform:translateX(-50%); display:flex; align-items:center; gap:1.25rem; }
+.hero-v3 .hero-arrow{ width:auto; height:auto; border:none; background:none; border-radius:0; font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:rgba(255,255,255,.7); }
+.hero-v3 .hero-arrow:hover{ color:#fff; background:none; }
+.hero-v3 .hero-pagination{ display:flex; gap:.4rem; }
+.hero-v3 .hero-dot{ width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.4); border:none; cursor:pointer; padding:0; }
+.hero-v3 .hero-dot.is-active{ background:#fff; box-shadow:0 0 0 3px rgba(255,255,255,.25); }
+
+/* ---- Estilo 4 · Vidrio — panel esmerilado (glass) abajo a la izquierda ---- */
+.hero-v4::before{
+  content:'';
+  position:absolute; inset:0; z-index:10;
+  background:linear-gradient(to top, rgba(6,14,22,.5) 0%, rgba(6,14,22,.1) 45%, transparent 70%);
+}
+.hero-v4 .hero-inner{
+  position:absolute; z-index:20; left:2.5rem; bottom:2.5rem;
+  width:min(460px,88%);
+  background:rgba(18,28,42,.42);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:18px;
+  padding:2rem 2.25rem;
+  display:flex; flex-direction:column; align-items:flex-start;
+}
+.hero-v4 .hero-logo{ margin-bottom:1.1rem; }
+.hero-v4 .hero-slide h2{ font-size:clamp(1.6rem,2.6vw,2.1rem); margin:0 0 .7rem; }
+.hero-v4 .hero-slide p{ font-size:.95rem; line-height:1.55; margin:0 0 1.4rem; }
+.hero-v4 .hero-controls{ display:flex; align-items:center; gap:1rem; }
+.hero-v4 .hero-arrow{ width:34px; height:34px; }
+.hero-v4 .hero-pagination{ display:flex; gap:.4rem; }
+.hero-v4 .hero-dot{ width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.35); border:none; cursor:pointer; padding:0; }
+.hero-v4 .hero-dot.is-active{ background:#fff; }
+
+/* ---- Estilo 5 · Panel lateral — bloque sólido a la izquierda, video limpio a la derecha ---- */
+.hero-v5{ --v5-panel-w: min(460px,42%); }
+.hero-v5::before{
+  content:'';
+  position:absolute; left:0; top:0; bottom:0; z-index:10;
+  width:var(--v5-panel-w);
+  background:linear-gradient(160deg, var(--azul-profundo) 0%, var(--azul-logo) 100%);
+}
+.hero-v5::after{
+  content:'';
+  position:absolute; left:var(--v5-panel-w); top:0; bottom:0; z-index:11;
+  width:3px;
+  background:linear-gradient(to bottom, transparent, var(--chrome-accent) 15%, var(--chrome-accent) 85%, transparent);
+}
+.hero-v5 .hero-inner{
+  position:relative; z-index:20; height:100%;
+  width:var(--v5-panel-w); margin:0; padding:0 2.75rem;
+  display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
+}
+/* Logo fijo: no se mueve al cambiar el texto de abajo */
+.hero-v5 .hero-logo{ position:absolute; z-index:21; top:10rem; left:2.75rem; margin-bottom:0; }
+.hero-v5 .hero-content{ max-width:100%; }
+.hero-v5 .hero-slide h2{ font-size:clamp(1.9rem,2.6vw,2.4rem); margin:0 0 1rem; }
+.hero-v5 .hero-slide p{ font-size:.98rem; line-height:1.6; margin:0 0 1.75rem; }
+.hero-v5 .hero-controls{ display:flex; align-items:center; gap:1rem; }
+.hero-v5 .hero-pagination{ display:flex; gap:.4rem; }
+.hero-v5 .hero-dot{ width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.3); border:none; cursor:pointer; padding:0; }
+.hero-v5 .hero-dot.is-active{ background:#fff; }
+.hero-v5 .hero-arrow{ width:36px; height:36px; }
+
+/* ---- Estilo 6 · Bloque diagonal — cuña de color de marca con el texto ---- */
+.hero-v6::before{
+  content:'';
+  position:absolute; inset:0; z-index:10;
+  background:linear-gradient(160deg, var(--azul-profundo) 0%, var(--azul-logo) 100%);
+  clip-path: polygon(0 0, 46% 0, 30% 100%, 0 100%);
+}
+.hero-v6 .hero-inner{
+  position:relative; z-index:20; height:100%;
+  width:min(470px,44vw); margin:0; padding:0 .75rem 0 2.5rem;
+  display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
+}
+/* Logo fijo: no se mueve al cambiar de slide (texto más corto/largo) */
+.hero-v6 .hero-logo{ position:absolute; z-index:21; top:5.5rem; left:2.5rem; margin-bottom:0; }
+.hero-v6 .hero-logo img{ height:62px; }
+.hero-v6 .hero-logo-caption{ font-size:.72rem; }
+.hero-v6 .hero-content{ max-width:100%; }
+.hero-v6 .hero-slide h2{ font-size:clamp(2.2rem,3.2vw,2.9rem); margin:0 0 1.1rem; }
+.hero-v6 .hero-slide p{ font-size:1.12rem; line-height:1.56; margin:0; }
+.hero-v6 .hero-controls{ position:absolute; z-index:30; left:2.5rem; bottom:2.25rem; display:flex; gap:.5rem; }
+.hero-v6 .hero-pagination{ position:absolute; z-index:30; left:2.5rem; bottom:5.5rem; display:flex; gap:.4rem; }
+.hero-v6 .hero-dot{ width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.35); border:none; cursor:pointer; padding:0; }
+.hero-v6 .hero-dot.is-active{ background:#fff; }
+.hero-v6 .hero-arrow{ width:32px; height:32px; }
+
+/* ---- Navbar — más presencia visual (menos "vacía") ---- */
+nav.bg-is{ padding-top:.4rem; padding-bottom:.4rem; }
+.navbar-nav-full .nav-item{ margin:0 1.15rem; }
+.navbar-nav-full .nav-link{ font-weight:600; padding:.5rem .1rem; }
+
+/* ---- Footer — Login movido del header ---- */
+.footer-bottom-row{ border-top:1px solid rgba(255,255,255,.12); }
+.footer-login-btn{
+  display:inline-flex; align-items:center; gap:.45rem;
+  color:#fff;
+  border:1.5px solid rgba(255,255,255,.5);
+  border-radius:999px;
+  padding:.45rem 1.35rem;
+  font-family:'Montserrat',sans-serif;
+  font-size:.85rem;
+  font-weight:600;
+  letter-spacing:.02em;
+  text-decoration:none;
+  transition:background-color .2s ease, border-color .2s ease;
+}
+.footer-login-btn:hover{ background:rgba(255,255,255,.14); border-color:#fff; color:#fff; }
+
+/* Oculta la barra de scroll dentro del marco de celular (vista Mobile) */
+html.is-embedded{ scrollbar-width:none; }
+html.is-embedded body{ scrollbar-width:none; }
+html.is-embedded::-webkit-scrollbar,
+html.is-embedded body::-webkit-scrollbar{ display:none; width:0; height:0; }
+
+/* ============ MOBILE — el logo centrado, nunca desalineado, en los 6 estilos ============ */
+@media (max-width: 576px){
+  .hero-logo-caption{ white-space:normal; max-width:190px; font-size:.58rem; letter-spacing:.09em; text-align:center; }
+  .hero-logo{ margin-left:auto; margin-right:auto; }
+
+  .hero-v1 .hero-inner{ align-items:center; text-align:center; padding:0 1.5rem; }
+  .hero-v1 .hero-content{ margin:0 auto; }
+  .hero-v1 .hero-pagination{ left:50%; right:auto; transform:translateX(-50%); }
+  .hero-v1 .hero-controls{ left:50%; right:auto; transform:translateX(-50%); }
+
+  .hero-v2 .hero-logo{ position:absolute; left:50%; top:1.5rem; transform:translateX(-50%); flex-direction:column; gap:.35rem; }
+  .hero-v2 .hero-logo-caption{ border-left:none; padding-left:0; }
+  .hero-v2 .hero-inner{ align-items:center; text-align:center; padding:0 1.5rem 2rem; }
+
+  .hero-v3 .hero-inner{ padding:0 1.5rem; }
+
+  .hero-v5::before{ display:none; }
+  .hero-v5::after{ display:none; }
+  .hero-v5 .hero-logo{ position:static; margin:0 auto 1rem; }
+  .hero-v5 .hero-inner{
+    position:absolute; left:0; right:0; bottom:0; top:auto; width:auto; height:auto;
+    background:linear-gradient(160deg, var(--azul-profundo) 0%, var(--azul-logo) 100%);
+    border-top:3px solid var(--chrome-accent);
+    padding:2rem 1.5rem 2.25rem;
+    align-items:center; text-align:center;
+  }
+  .hero-v5 .hero-content{ text-align:center; }
+  .hero-v5 .hero-controls{ margin:0 auto; }
+
+  .hero-v6::before{ clip-path:none; }
+  .hero-v6 .hero-inner{ width:auto; padding:0 1.75rem; align-items:center; text-align:center; }
+  .hero-v6 .hero-logo{ align-items:center; margin:0 auto 1.4rem; }
+  .hero-v6 .hero-content{ max-width:100%; }
+  .hero-v6 .hero-controls{ left:50%; right:auto; transform:translateX(-50%); }
+  .hero-v6 .hero-pagination{ left:50%; right:auto; transform:translateX(-50%); }
+}
+</style>
+</head>
+<body>
+
+  <div class="chrome-header">
+    <p class="eyebrow">GIS-LACIS &middot; Home</p>
+    <h1>Propuestas de Rediseño — Página de Inicio Completa</h1>
+  </div>
+
+  <div class="switcher-bar">
+    <div class="device-toggle-row">
+      <div class="device-toggle" id="deviceToggle">
+        <button class="device-toggle-btn active" data-device="desktop"><i class="bi bi-display"></i> Escritorio</button>
+        <button class="device-toggle-btn" data-device="mobile"><i class="bi bi-phone"></i> Mobile</button>
+      </div>
+    </div>
+    <div class="switcher-row">
+      <span class="switcher-label">Estilo del Hero</span>
+      <button class="chip-btn" data-style-btn="1">Estilo 1</button>
+      <button class="chip-btn" data-style-btn="2">Estilo 2</button>
+      <button class="chip-btn" data-style-btn="3">Estilo 3</button>
+      <button class="chip-btn" data-style-btn="4">Estilo 4</button>
+      <button class="chip-btn" data-style-btn="5">Estilo 5</button>
+    </div>
+  </div>
+
+  <div id="siteContent">
+  <!-- ======================================================= -->
+  <!-- HERO — 6 diseños intercambiables (va primero, sin navbar encima) -->
+  <!-- ======================================================= -->
+
+  <div class="hero-panel" data-style="1">
+    <div class="hero hero-v5 hero-carousel">
+      <video autoplay loop muted playsinline>
+        <source src="https://fmn.unsl.edu.ar/wp-content/themes/FCFMyN/assets/archivos/video-4.mp4" type="video/mp4">
+      </video>
+      <div class="hero-inner">
+        <div class="hero-logo">
+          <img src="static/assets/img-GIS/gis-logo.svg" alt="G.I.S">
+          <div class="hero-logo-caption">Grupo de Ingeniería de Software</div>
+        </div>
+        <div class="hero-slide is-active"><div class="hero-content">
+          <h2>¿Qué ofrecemos?</h2>
+          <p>Servicios de ingeniería de software respaldados por investigación aplicada y experiencia académica.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Desarrollos a Mediana y Gran Escala</h2>
+          <p>Construimos soluciones de software robustas, pensadas para crecer junto a instituciones y organizaciones.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Peritaje</h2>
+          <p>Análisis técnico y peritajes informáticos con rigurosidad científica y respaldo académico.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Cursos y Capacitaciones</h2>
+          <p>Formación continua en tecnologías y buenas prácticas de desarrollo, dictada por especialistas del laboratorio.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Auditorías y Evaluación de Proyectos</h2>
+          <p>Evaluamos la calidad, arquitectura y viabilidad de proyectos de software existentes.</p>
+        </div></div>
+        <div class="hero-controls">
+          <button class="hero-arrow" data-prev aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+          <div class="hero-pagination">
+            <button class="hero-dot is-active" data-dot></button>
+            <button class="hero-dot" data-dot></button>
+            <button class="hero-dot" data-dot></button>
+            <button class="hero-dot" data-dot></button>
+            <button class="hero-dot" data-dot></button>
+          </div>
+          <button class="hero-arrow" data-next aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-panel d-none-panel" data-style="2">
+    <div class="hero hero-v6 hero-carousel">
+      <video autoplay loop muted playsinline>
+        <source src="https://fmn.unsl.edu.ar/wp-content/themes/FCFMyN/assets/archivos/video-4.mp4" type="video/mp4">
+      </video>
+      <div class="hero-inner">
+        <div class="hero-logo">
+          <img src="static/assets/img-GIS/gis-logo.svg" alt="G.I.S">
+          <div class="hero-logo-caption">Grupo de Ingeniería de Software</div>
+        </div>
+        <div class="hero-slide is-active"><div class="hero-content">
+          <h2>¿Qué ofrecemos?</h2>
+          <p>Servicios de ingeniería de software respaldados por investigación aplicada y experiencia académica.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Desarrollos a Mediana y Gran Escala</h2>
+          <p>Construimos soluciones de software robustas, pensadas para crecer junto a instituciones y organizaciones.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Peritaje</h2>
+          <p>Análisis técnico y peritajes informáticos con rigurosidad científica y respaldo académico.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Cursos y Capacitaciones</h2>
+          <p>Formación continua en tecnologías y buenas prácticas de desarrollo, dictada por especialistas del laboratorio.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Auditorías y Evaluación de Proyectos</h2>
+          <p>Evaluamos la calidad, arquitectura y viabilidad de proyectos de software existentes.</p>
+        </div></div>
+      </div>
+      <div class="hero-controls">
+        <button class="hero-arrow" data-prev aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+        <div class="hero-pagination">
+          <button class="hero-dot is-active" data-dot></button>
+          <button class="hero-dot" data-dot></button>
+          <button class="hero-dot" data-dot></button>
+          <button class="hero-dot" data-dot></button>
+          <button class="hero-dot" data-dot></button>
+        </div>
+        <button class="hero-arrow" data-next aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-panel d-none-panel" data-style="3">
+    <div class="hero hero-v1 hero-carousel">
+      <video autoplay loop muted playsinline>
+        <source src="https://fmn.unsl.edu.ar/wp-content/themes/FCFMyN/assets/archivos/video-4.mp4" type="video/mp4">
+      </video>
+      <div class="hero-inner">
+        <div class="hero-logo">
+          <img src="static/assets/img-GIS/gis-logo.svg" alt="G.I.S">
+          <div class="hero-logo-caption">Grupo de Ingeniería de Software</div>
+        </div>
+        <div class="hero-slide is-active"><div class="hero-content">
+          <h2>¿Qué ofrecemos?</h2>
+          <p>Servicios de ingeniería de software respaldados por investigación aplicada y experiencia académica.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Desarrollos a Mediana y Gran Escala</h2>
+          <p>Construimos soluciones de software robustas, pensadas para crecer junto a instituciones y organizaciones.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Peritaje</h2>
+          <p>Análisis técnico y peritajes informáticos con rigurosidad científica y respaldo académico.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Cursos y Capacitaciones</h2>
+          <p>Formación continua en tecnologías y buenas prácticas de desarrollo, dictada por especialistas del laboratorio.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Auditorías y Evaluación de Proyectos</h2>
+          <p>Evaluamos la calidad, arquitectura y viabilidad de proyectos de software existentes.</p>
+        </div></div>
+      </div>
+      <div class="hero-controls">
+        <button class="hero-arrow" data-prev aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+        <button class="hero-arrow" data-next aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
+      </div>
+      <div class="hero-pagination">
+        <button class="hero-dot is-active" data-dot></button>
+        <button class="hero-dot" data-dot></button>
+        <button class="hero-dot" data-dot></button>
+        <button class="hero-dot" data-dot></button>
+        <button class="hero-dot" data-dot></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-panel d-none-panel" data-style="4">
+    <div class="hero hero-v2 hero-carousel">
+      <video autoplay loop muted playsinline>
+        <source src="https://fmn.unsl.edu.ar/wp-content/themes/FCFMyN/assets/archivos/video-4.mp4" type="video/mp4">
+      </video>
+      <div class="hero-logo">
+        <img src="static/assets/img-GIS/gis-logo.svg" alt="G.I.S">
+        <div class="hero-logo-caption">Grupo de Ingeniería de Software</div>
+      </div>
+      <div class="hero-inner">
+        <div class="hero-slide is-active"><div class="hero-content">
+          <h2>¿Qué ofrecemos?</h2>
+          <p>Servicios de ingeniería de software respaldados por investigación aplicada y experiencia académica.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Desarrollos a Mediana y Gran Escala</h2>
+          <p>Construimos soluciones de software robustas, pensadas para crecer junto a instituciones y organizaciones.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Peritaje</h2>
+          <p>Análisis técnico y peritajes informáticos con rigurosidad científica y respaldo académico.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Cursos y Capacitaciones</h2>
+          <p>Formación continua en tecnologías y buenas prácticas de desarrollo, dictada por especialistas del laboratorio.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Auditorías y Evaluación de Proyectos</h2>
+          <p>Evaluamos la calidad, arquitectura y viabilidad de proyectos de software existentes.</p>
+        </div></div>
+
+        <div class="hero-controls">
+          <button class="hero-arrow" data-prev aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+          <div class="hero-pagination">
+            <button class="hero-dot is-active" data-dot></button>
+            <button class="hero-dot" data-dot></button>
+            <button class="hero-dot" data-dot></button>
+            <button class="hero-dot" data-dot></button>
+            <button class="hero-dot" data-dot></button>
+          </div>
+          <button class="hero-arrow" data-next aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-panel d-none-panel" data-style="5">
+    <div class="hero hero-v3 hero-carousel">
+      <video autoplay loop muted playsinline>
+        <source src="https://fmn.unsl.edu.ar/wp-content/themes/FCFMyN/assets/archivos/video-4.mp4" type="video/mp4">
+      </video>
+      <div class="hero-inner">
+        <div class="hero-logo">
+          <img src="static/assets/img-GIS/gis-logo.svg" alt="G.I.S">
+          <div class="hero-logo-caption">Grupo de Ingeniería de Software</div>
+        </div>
+        <div class="hero-rule"></div>
+        <div class="hero-slide is-active"><div class="hero-content">
+          <h2>¿Qué ofrecemos?</h2>
+          <p>Servicios de ingeniería de software respaldados por investigación aplicada y experiencia académica.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Desarrollos a Mediana y Gran Escala</h2>
+          <p>Construimos soluciones de software robustas, pensadas para crecer junto a instituciones y organizaciones.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Peritaje</h2>
+          <p>Análisis técnico y peritajes informáticos con rigurosidad científica y respaldo académico.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Cursos y Capacitaciones</h2>
+          <p>Formación continua en tecnologías y buenas prácticas de desarrollo, dictada por especialistas del laboratorio.</p>
+        </div></div>
+        <div class="hero-slide"><div class="hero-content">
+          <h2>Auditorías y Evaluación de Proyectos</h2>
+          <p>Evaluamos la calidad, arquitectura y viabilidad de proyectos de software existentes.</p>
+        </div></div>
+      </div>
+      <div class="hero-controls">
+        <button class="hero-arrow" data-prev aria-label="Anterior">&#8249;</button>
+        <div class="hero-pagination">
+          <button class="hero-dot is-active" data-dot></button>
+          <button class="hero-dot" data-dot></button>
+          <button class="hero-dot" data-dot></button>
+          <button class="hero-dot" data-dot></button>
+          <button class="hero-dot" data-dot></button>
+        </div>
+        <button class="hero-arrow" data-next aria-label="Siguiente">&#8250;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= -->
+  <!-- RESTO DEL HOME — contenido real, sin cambios             -->
+  <!-- ======================================================= -->
+  <!-- ======================================================= -->
+  <!-- NAVBAR — igual al real (nav.html), pegada abajo del video -->
+  <!-- ======================================================= -->
+  <nav class="navbar navbar-expand-sm bg-is sticky-top shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="static/assets/img-GIS/gis-logo.svg" style="height:58px;width:auto;" alt="Logo G.I.S">
+      </a>
+      <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end" id="offcanvasNavbar" tabindex="-1" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">El Grupo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav navbar-nav-full justify-content-center flex-grow-1 pe-3">
+            <li class="nav-item"><a class="nav-link" href="#">El Grupo</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">LaCIS</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Proyectos</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Desarrollos</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Integrantes</a></li>
+          </ul>
+          <a href="#"><img src="static/assets/img-GIS/LogoUnsl.png" class="img-fluid" style="max-height:50px;" alt="Logo Unsl"></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section id="sobre-nosotros" class="py-5 px-lg-5">
+      <div class="container">
+        <h2 class="encabezado-seccion text-start mb-5 pb-2 border-bottom border-secondary">NUESTRA ESENCIA Y VALORES</h2>
+
+        <div class="mision row g-5 mb-5 align-items-center">
+          <div class="mision-ver col-12 col-lg-5">
+            <div class="mv-imagen-columna ratio ratio-4x3 rounded overflow-hidden shadow-lg">
+              <img src="static/assets/img-GIS/mision.jpg" class="object-fit-cover w-100 h-100 opacity-90" alt="Imagen Misión Universidad">
+            </div>
+          </div>
+          <div class="col-12 col-lg-7">
+            <div class="mv-contenido-columna pt-lg-0">
+              <h3 class="fs-2 mb-3 text-dark">Misión</h3>
+              <p class="fs-6 lh-base mb-4 text-body">Desarrollar conocimiento de vanguardia en ingeniería de software, promoviendo la innovación tecnológica y aplicando soluciones prácticas a problemas complejos que impacten positivamente tanto en la academia como en la industria.</p>
+              <blockquote class="fs-5 fst-italic border-start border-primary ps-3 mb-0 text-dark">"Nos enfocamos en la creación de conocimientos avanzados, soluciones tecnológicas innovadoras y la formación de talento especializado"</blockquote>
+            </div>
+          </div>
+        </div>
+
+        <div class="vision row g-5 flex-lg-row-reverse align-items-center">
+          <div class="col-12 col-lg-5">
+            <div class="mision-ver mv-imagen-columna ratio ratio-4x3 rounded overflow-hidden shadow-lg">
+              <img src="static/assets/img-GIS/vision.jpg" class="object-fit-cover w-100 h-100 opacity-90" alt="Imagen Visión Universidad">
+            </div>
+          </div>
+          <div class="col-12 col-lg-7">
+            <div class="mv-contenido-columna pt-lg-0">
+              <h3 class="fs-2 mb-3 text-dark">Visión</h3>
+              <p class="fs-6 lh-base mb-4 text-body">Ser referentes nacionales e internacionales en investigación aplicada en ingeniería de software, por la capacidad para transformar conocimientos científicos en soluciones reales y sostenibles, promoviendo la transferencia tecnológica y contribuyendo al avance de las tecnologías de software de próxima generación.</p>
+              <blockquote class="fs-5 fst-italic border-start border-primary ps-3 mb-0 text-dark">"Promover la colaboración con la industria para asegurar que los resultados de la investigación tengan un impacto significativo en el mundo real."</blockquote>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="carreras" class="py-5 px-lg-5">
+      <div class="container">
+        <h2 class="encabezado-seccion text-end mb-5 pb-2 border-bottom border-secondary">CARRERAS RELACIONADAS</h2>
+        <div class="row g-4">
+          <div class="col-12 col-lg-4">
+            <div class="card mx-auto border-0 card-hover-animation">
+              <div class="imagen-contenedor"><i class="ti ti-school fs-1"></i></div>
+              <div class="carrera card-body"><h5 class="carrera-titulo card-title">Doctorado en Ingeniería Informática</h5></div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="card mx-auto border-0 card-hover-animation">
+              <div class="imagen-contenedor"><i class="ti ti-certificate fs-1"></i></div>
+              <div class="carrera card-body"><h5 class="carrera-titulo card-title">Maestría en Calidad de Software</h5></div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="card mx-auto border-0 card-hover-animation">
+              <div class="imagen-contenedor"><i class="ti ti-code fs-1"></i></div>
+              <div class="carrera card-body"><h5 class="carrera-titulo card-title">Maestría en Ingeniería de Software</h5></div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="card mx-auto border-0 card-hover-animation">
+              <div class="imagen-contenedor"><i class="ti ti-award fs-1"></i></div>
+              <div class="carrera card-body"><h5 class="carrera-titulo card-title">Especialización en Ingeniería de Software</h5></div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="card mx-auto border-0 card-hover-animation">
+              <div class="imagen-contenedor"><i class="ti ti-device-laptop fs-1"></i></div>
+              <div class="carrera card-body"><h5 class="carrera-titulo card-title">Ingeniería en Informática</h5></div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="card mx-auto border-0 card-hover-animation">
+              <div class="imagen-contenedor"><i class="ti ti-world-www fs-1"></i></div>
+              <div class="carrera card-body"><h5 class="carrera-titulo card-title">Tecnicatura Universitaria en Web</h5></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================= -->
+  <!-- FOOTER — igual al real (footer.html)                     -->
+  <!-- ======================================================= -->
+  <footer class="text-white pb-4 bg-dark">
+    <div class="container text-center text-md-left">
+      <div class="row text-center">
+        <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
+          <h5 class="text-uppercase mb-4 font-weight-bold text-success">Contacto</h5>
+          <p><strong>Ubicación:</strong> Bloque II - 1 piso</p>
+          <p><strong>Oficinas:</strong> N° 1-2-3-26-27-28-29</p>
+          <p><strong>Teléfono:</strong> 4520300 Int. 2101</p>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
+          <a class="navbar-brand" href="#"><img src="static/assets/img-GIS/logo informatica.png" alt="Logo Dirinfo" class="mx-auto d-block img-fluid mb-5 w-50"></a>
+          <a class="navbar-brand" href="#"><img src="static/assets/img-GIS/LogoFMYN.png" alt="Logo FCFMYN" class="mx-auto d-block img-fluid mb-3 w-50"></a>
+        </div>
+        <div class="col-sm-4 align-items-center mt-3">
+          <div class="ratio ratio-4x3 bg-secondary bg-opacity-25 rounded d-flex align-items-center justify-content-center text-secondary small">Mapa</div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid mt-4 pt-3 footer-bottom-row">
+      <div class="row align-items-center gy-3">
+        <div class="col-md-8 text-center text-md-start">
+          <p class="text-secondary mb-0">© 2026 Universidad Nacional de San Luis. Todos los derechos reservados.</p>
+        </div>
+        <div class="col-md-4 text-center text-md-end">
+          <a href="#" class="footer-login-btn"><i class="bi bi-box-arrow-in-right"></i> Iniciar sesión</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  </div><!-- /#siteContent -->
+
+  <div class="mobile-frame-wrap d-none-panel" id="mobileFrameWrap">
+    <div class="mobile-device">
+      <div class="mobile-notch"></div>
+      <iframe id="mobileIframe" src="panel-rediseno-home.html" title="Vista mobile"></iframe>
+    </div>
+  </div>
+
+<script>
+(function(){
+  // Si esta misma página se carga dentro del iframe de la vista Mobile,
+  // se oculta el "chrome" del mockup (header/switcher) y queda solo el sitio real.
+  if (window.self !== window.top) {
+    document.documentElement.classList.add('is-embedded');
+  }
+
+  var currentStyle = '1';
+  function render(){
+    document.querySelectorAll('.hero-panel').forEach(function(p){
+      p.classList.toggle('d-none-panel', p.dataset.style !== currentStyle);
+    });
+    document.querySelectorAll('[data-style-btn]').forEach(function(b){
+      b.classList.toggle('active', b.dataset.styleBtn === currentStyle);
+    });
+  }
+  document.querySelectorAll('[data-style-btn]').forEach(function(b){
+    b.addEventListener('click', function(){ currentStyle = b.dataset.styleBtn; render(); syncMobileFrame(); });
+  });
+  render();
+
+  // El mockup (ventana de arriba) le avisa al iframe qué estilo mostrar
+  var mobileIframe = document.getElementById('mobileIframe');
+  function syncMobileFrame(){
+    if (mobileIframe && mobileIframe.contentWindow) {
+      mobileIframe.contentWindow.postMessage({ gisStyle: currentStyle }, '*');
+    }
+  }
+  if (mobileIframe) mobileIframe.addEventListener('load', syncMobileFrame);
+
+  // El iframe (vista Mobile) escucha qué estilo tiene que mostrar
+  window.addEventListener('message', function(e){
+    if (e && e.data && e.data.gisStyle) {
+      currentStyle = e.data.gisStyle;
+      render();
+    }
+  });
+
+  // Switch Escritorio / Mobile
+  var currentDevice = 'desktop';
+  var siteContent = document.getElementById('siteContent');
+  var mobileFrameWrap = document.getElementById('mobileFrameWrap');
+  function renderDevice(){
+    if (siteContent) siteContent.classList.toggle('d-none-panel', currentDevice === 'mobile');
+    if (mobileFrameWrap) mobileFrameWrap.classList.toggle('d-none-panel', currentDevice !== 'mobile');
+    document.querySelectorAll('.device-toggle-btn').forEach(function(b){
+      b.classList.toggle('active', b.dataset.device === currentDevice);
+    });
+    if (currentDevice === 'mobile') syncMobileFrame();
+  }
+  document.querySelectorAll('.device-toggle-btn').forEach(function(b){
+    b.addEventListener('click', function(){ currentDevice = b.dataset.device; renderDevice(); });
+  });
+  renderDevice();
+
+  document.querySelectorAll('.hero-carousel').forEach(function(car){
+    var slides = car.querySelectorAll('.hero-slide');
+    var dots = car.querySelectorAll('[data-dot]');
+    var prev = car.querySelector('[data-prev]');
+    var next = car.querySelector('[data-next]');
+    var idx = 0, timer;
+    function show(i){
+      idx = (i + slides.length) % slides.length;
+      slides.forEach(function(s, si){ s.classList.toggle('is-active', si === idx); });
+      dots.forEach(function(d, di){ d.classList.toggle('is-active', di === idx); });
+    }
+    function restart(){ clearInterval(timer); timer = setInterval(function(){ show(idx + 1); }, 4500); }
+    if (prev) prev.addEventListener('click', function(){ show(idx - 1); restart(); });
+    if (next) next.addEventListener('click', function(){ show(idx + 1); restart(); });
+    dots.forEach(function(d, di){ d.addEventListener('click', function(){ show(di); restart(); }); });
+    show(0);
+    restart();
+  });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

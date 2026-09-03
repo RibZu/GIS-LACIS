@@ -79,6 +79,7 @@ CREATE TABLE proyecto (
 CREATE TABLE desarrollo (
     id SERIAL PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
+    anio INT NOT NULL,
     url VARCHAR(500),
     contacto VARCHAR(255),
     descripcion TEXT
