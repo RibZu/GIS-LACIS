@@ -14,3 +14,9 @@ pg_data/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Carpeta personal de ejercicios para aprender Go (no forma parte del proyecto)
+/go-learning/
+
+# Configuración local personal de Claude Code (no compartir con el equipo)
+.claude/settings.local.json

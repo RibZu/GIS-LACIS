@@ -1,17 +1,22 @@
 :root {
-    --adm-navy: #16294F;
-    --adm-accent: #3E6FC4;
-    --adm-bg: #F7F9FC;
-    --adm-border: #DEE3EC;
-    --adm-ink: #16294F;
-    --adm-ink-soft: #5A6B85;
-    --adm-gold: #A8701F;
+    --adm-navy: #1A4484;
+    --adm-accent: #123568;
+    --adm-accent-active: #0F2C56;
+    --adm-bg: #F7F8FA;
+    --adm-border: #E7E9EE;
+    --adm-ink: #101828;
+    --adm-ink-soft: #667085;
+    --adm-gold: #E14C6D;
     --adm-red: #B3261E;
+    --adm-radius-lg: .75rem;
+    --adm-radius: .55rem;
+    --adm-radius-sm: .4rem;
+    --adm-shadow: 0 1px 2px rgba(16,24,40,.07);
 }
 
 body {
     background-color: var(--adm-bg);
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Manrope', sans-serif;
     padding-top: 80px;
 }
 
@@ -34,9 +39,8 @@ main {
 .login-card {
     background: #ffffff;
     border: 1px solid var(--adm-border);
-    border-top: 3px solid var(--adm-navy);
-    border-radius: .3rem;
-    box-shadow: 0 1px 2px rgba(22, 41, 79, 0.06);
+    border-radius: var(--adm-radius-lg);
+    box-shadow: var(--adm-shadow);
     padding: 24px;
 }
 
@@ -68,11 +72,11 @@ main {
 
 .login-card .card-header .eyebrow {
     display: block;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-size: .72rem;
     letter-spacing: .12em;
     text-transform: uppercase;
-    color: var(--adm-accent);
+    color: var(--adm-navy);
     font-weight: 700;
     margin-bottom: .35rem;
 }
@@ -87,7 +91,7 @@ main {
     background-color: var(--adm-navy);
     color: #ffffff;
     font-weight: 600;
-    border-radius: 0;
+    border-radius: var(--adm-radius);
     padding: 10px 22px;
     border: none;
     transition: background-color 0.2s ease-in-out;
@@ -100,6 +104,12 @@ main {
     color: #ffffff;
 }
 
+.btn-crear:active,
+.btn-guardar:active,
+.btn-institucional:active {
+    background-color: var(--adm-accent-active);
+}
+
 .form-label {
     font-weight: 600;
     color: var(--adm-ink);
@@ -109,21 +119,21 @@ main {
 .admin-card .form-control,
 .form-card .form-control,
 .login-card .form-control {
-    border-radius: 0;
+    border-radius: var(--adm-radius);
     border-color: var(--adm-border);
 }
 
 .admin-card .form-control:focus,
 .form-card .form-control:focus,
 .login-card .form-control:focus {
-    border-color: var(--adm-accent);
-    box-shadow: 0 0 0 .2rem rgba(62, 111, 196, .15);
+    border-color: var(--adm-navy);
+    box-shadow: 0 0 0 .2rem rgba(26, 68, 132, .15);
 }
 
 .admin-card .input-group .btn-outline-secondary,
 .form-card .input-group .btn-outline-secondary,
 .login-card .input-group .btn-outline-secondary {
-    border-radius: 0;
+    border-radius: var(--adm-radius);
     border-color: var(--adm-border);
     color: var(--adm-ink-soft);
 }
@@ -141,7 +151,7 @@ main {
     text-transform: uppercase;
     letter-spacing: 0.06em;
     font-weight: 700;
-    border-bottom: 2px solid var(--adm-navy);
+    border-bottom: 1px solid var(--adm-border);
     padding-bottom: 12px;
 }
 
@@ -151,34 +161,39 @@ main {
 }
 
 .table-custom tbody tr:nth-child(even) {
-    background: #F7F9FC;
+    background: var(--adm-bg);
 }
 
 .chip-inst {
     display: inline-flex;
     align-items: center;
     padding: .25rem .7rem;
-    border: 1px solid var(--adm-accent);
-    border-radius: 0;
+    border: none;
+    border-radius: var(--adm-radius-sm);
     font-size: .72rem;
-    letter-spacing: .04em;
+    letter-spacing: .02em;
     text-transform: uppercase;
-    color: var(--adm-accent);
-    font-weight: 600;
-    background: transparent;
+    font-weight: 700;
+    background: #E7EEFA;
+    color: #1A4484;
 }
 
 .chip-inst.gold,
 .chip-inst[data-rol="ADMIN"] {
-    border-color: var(--adm-gold);
+    background: #FDE9EF;
     color: var(--adm-gold);
+}
+
+.chip-inst[data-rol="GESTOR"] {
+    background: #EAE5FB;
+    color: #8B5CF6;
 }
 
 .btn-logout {
     background: transparent;
     color: var(--adm-red);
     border: 1px solid var(--adm-red);
-    border-radius: 0;
+    border-radius: var(--adm-radius);
     font-weight: 600;
     padding: 8px 18px;
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
@@ -191,12 +206,40 @@ main {
 
 .dash-card {
     border: 1px solid var(--adm-border);
-    border-top: 3px solid var(--adm-navy);
-    border-radius: .3rem;
+    border-radius: var(--adm-radius-lg);
+    box-shadow: var(--adm-shadow);
     transition: transform .15s ease, box-shadow .15s ease;
 }
 
 .dash-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(22, 41, 79, .12);
+    box-shadow: 0 6px 16px rgba(16, 24, 40, .12);
+}
+
+/* Tile de ícono cuadrado por módulo (Estilo 2 · Panel Moderno) */
+.dash-modtile {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--adm-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+/* Fila de indicadores (KPIs) del Dashboard */
+.dash-stat {
+    background: #fff;
+    border: 1px solid var(--adm-border);
+    border-radius: var(--adm-radius);
+    padding: 1rem 1.1rem;
+}
+
+.dash-stat .dash-stat-num {
+    font-family: 'JetBrains Mono', 'Manrope', monospace;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--adm-ink);
 }

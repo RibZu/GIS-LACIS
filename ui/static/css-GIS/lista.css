@@ -1,25 +1,24 @@
 /* ==========================================================================
    GIS-LACIS - Estilos de Lista y Tabla de Integrantes (Admin)
-   Paleta: Azules institucionales (--azul-logo, --azul-profundo, --azul-pastel-fondo)
-   SIN COLOR VERDE
+   Estilo 2 · Panel Moderno (ver ui/panel-rediseno.html)
    ========================================================================== */
 
 :root {
-    --azul-logo: #1a4484;
-    --azul-profundo: #0A1E2E;
-    --azul-hover: #133363;
-    --azul-pastel-fondo: #E0F2F7;
-    --azul-claro-badge: #e8f0fe;
-    --azul-texto-badge: #1a4484;
-    --borde-tarjeta: #e2e8f0;
+    --azul-logo: #1A4484;
+    --azul-profundo: #101828;
+    --azul-hover: #123568;
+    --azul-pastel-fondo: #F7F8FA;
+    --azul-claro-badge: #E7EEFA;
+    --azul-texto-badge: #1A4484;
+    --borde-tarjeta: #E7E9EE;
     --gris-fondo-card: #ffffff;
-    --gris-subtle: #f8fafc;
+    --gris-subtle: #F7F8FA;
 }
 
 body {
     background-color: var(--azul-pastel-fondo) !important;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #2d3748;
+    font-family: 'Manrope', sans-serif;
+    color: #101828;
     margin: 0;
     padding: 0;
 }
@@ -31,13 +30,18 @@ main.admin-main, main {
     margin: 0 !important;
 }
 
+/* El header del sitio usa Montserrat; los títulos del panel admin siguen esa
+   tipografía sin importar el estilo elegido para el resto de la pantalla. */
+h1, h2, h3, h4, h5, .admin-header-title {
+    font-family: 'Montserrat', sans-serif;
+}
+
 /* Tarjeta Principal de Administración */
 .admin-card {
     background: var(--gris-fondo-card);
-    border-radius: 16px;
+    border-radius: .75rem;
     border: 1px solid var(--borde-tarjeta);
-    border-left: 5px solid var(--azul-logo);
-    box-shadow: 0 4px 20px rgba(10, 30, 46, 0.07);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .07);
     padding: 28px;
     margin-bottom: 40px;
 }
@@ -54,50 +58,49 @@ main.admin-main, main {
     background-color: var(--azul-logo);
     color: #ffffff;
     font-weight: 600;
-    border-radius: 10px;
+    border-radius: .55rem;
     padding: 10px 24px;
     border: none;
-    box-shadow: 0 4px 12px rgba(26, 68, 132, 0.25);
+    box-shadow: none;
     transition: all 0.2s ease-in-out;
 }
 
 .btn-crear:hover {
     background-color: var(--azul-hover);
     color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(26, 68, 132, 0.35);
+    box-shadow: none;
 }
 
 /* Barra de Filtros y Búsqueda */
 .filter-container {
     background-color: var(--gris-subtle);
-    border: 1px solid #edf2f7;
-    border-radius: 12px;
+    border: 1px solid var(--borde-tarjeta);
+    border-radius: .55rem;
     padding: 16px;
     margin-bottom: 24px;
 }
 
 .search-input-group .form-control {
-    border-radius: 8px 0 0 8px;
-    border-color: #cbd5e1;
+    border-radius: .55rem 0 0 .55rem;
+    border-color: var(--borde-tarjeta);
 }
 
 .search-input-group .input-group-text {
     background-color: #ffffff;
-    border-color: #cbd5e1;
+    border-color: var(--borde-tarjeta);
     color: var(--azul-logo);
-    border-radius: 0 8px 8px 0;
+    border-radius: 0 .55rem .55rem 0;
 }
 
 /* Botones de Filtro Rápido (Pills) */
 .filter-pill {
     font-size: 0.82rem;
     font-weight: 600;
-    border-radius: 20px;
+    border-radius: 999px;
     padding: 6px 16px;
-    border: 1px solid #cbd5e1;
+    border: 1px solid var(--borde-tarjeta);
     background-color: #ffffff;
-    color: #4a5568;
+    color: var(--azul-profundo);
     transition: all 0.2s ease;
     cursor: pointer;
     text-decoration: none;
@@ -108,7 +111,7 @@ main.admin-main, main {
     background-color: var(--azul-logo);
     color: #ffffff;
     border-color: var(--azul-logo);
-    box-shadow: 0 2px 8px rgba(26, 68, 132, 0.2);
+    box-shadow: none;
 }
 
 /* Tabla Estilizada */
@@ -117,20 +120,20 @@ main.admin-main, main {
 }
 
 .table-custom th {
-    background-color: #f1f5f9;
-    color: var(--azul-profundo);
-    font-size: 0.78rem;
+    background-color: transparent;
+    color: #667085;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.7px;
+    letter-spacing: 0.06em;
     font-weight: 700;
-    border-bottom: 2px solid #cbd5e1;
+    border-bottom: 1px solid var(--borde-tarjeta);
     padding: 14px 16px;
 }
 
 .table-custom td {
     padding: 16px;
     vertical-align: middle;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--borde-tarjeta);
 }
 
 .table-custom tbody tr {
@@ -138,7 +141,7 @@ main.admin-main, main {
 }
 
 .table-custom tbody tr:hover {
-    background-color: #f8fafc;
+    background-color: var(--gris-subtle);
 }
 
 /* Avatar / Foto de Perfil */
@@ -148,7 +151,7 @@ main.admin-main, main {
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
-    border: 2px solid #cbd5e1;
+    border: none;
     background-color: var(--azul-claro-badge);
     display: flex;
     align-items: center;
@@ -164,44 +167,44 @@ main.admin-main, main {
     object-fit: cover;
 }
 
-/* Badges de Roles y Estado (Azules y Neutros, CERO VERDE) */
+/* Badges de Roles y Estado (pastilla de color sólido, Estilo 2) */
 .badge-rol-director {
-    background-color: #0A1E2E;
-    color: #ffffff;
-    font-weight: 600;
+    background-color: #FDE9EF;
+    color: #E14C6D;
+    font-weight: 700;
     padding: 6px 12px;
-    border-radius: 8px;
+    border-radius: .4rem;
     font-size: 0.75rem;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.02em;
 }
 
 .badge-rol-investigador {
     background-color: var(--azul-claro-badge);
     color: var(--azul-logo);
-    border: 1px solid #b8daff;
-    font-weight: 600;
+    border: none;
+    font-weight: 700;
     padding: 6px 12px;
-    border-radius: 8px;
+    border-radius: .4rem;
     font-size: 0.75rem;
 }
 
 .badge-rol-asesor {
-    background-color: #e2e8f0;
-    color: #334155;
-    border: 1px solid #cbd5e1;
-    font-weight: 600;
+    background-color: #E6F6F6;
+    color: #0EA5A0;
+    border: none;
+    font-weight: 700;
     padding: 6px 12px;
-    border-radius: 8px;
+    border-radius: .4rem;
     font-size: 0.75rem;
 }
 
 .badge-rol-estudiante {
-    background-color: #eff6ff;
-    color: #2563eb;
-    border: 1px solid #bfdbfe;
-    font-weight: 600;
+    background-color: #EAE5FB;
+    color: #8B5CF6;
+    border: none;
+    font-weight: 700;
     padding: 6px 12px;
-    border-radius: 8px;
+    border-radius: .4rem;
     font-size: 0.75rem;
 }
 
@@ -209,30 +212,30 @@ main.admin-main, main {
     font-size: 0.72rem;
     font-weight: 600;
     padding: 4px 8px;
-    border-radius: 6px;
-    background-color: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
+    border-radius: .4rem;
+    background-color: #F1F2F5;
+    color: #667085;
+    border: none;
 }
 
 .badge-estado-activo {
-    background-color: #dbeafe;
-    color: #1e40af;
-    border: 1px solid #93c5fd;
+    background-color: #E7F7EE;
+    color: #12885C;
+    border: none;
     font-size: 0.72rem;
     font-weight: 700;
     padding: 4px 10px;
-    border-radius: 20px;
+    border-radius: 999px;
 }
 
 .badge-estado-inactivo {
-    background-color: #f1f5f9;
-    color: #64748b;
-    border: 1px solid #cbd5e1;
+    background-color: #F1F2F5;
+    color: #667085;
+    border: none;
     font-size: 0.72rem;
     font-weight: 700;
     padding: 4px 10px;
-    border-radius: 20px;
+    border-radius: 999px;
 }
 
 /* Botones de Acción */
@@ -243,16 +246,16 @@ main.admin-main, main {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: .4rem;
     font-size: 0.9rem;
     transition: all 0.2s ease;
     text-decoration: none;
 }
 
 .btn-action-ver {
-    background-color: #eff6ff;
+    background-color: #F7F8FA;
     color: var(--azul-logo);
-    border: 1px solid #bfdbfe;
+    border: 1px solid var(--borde-tarjeta);
 }
 .btn-action-ver:hover {
     background-color: var(--azul-logo);
@@ -260,17 +263,17 @@ main.admin-main, main {
 }
 
 .btn-action-edit {
-    background-color: #f0f4f8;
-    color: #0A1E2E;
-    border: 1px solid #cbd5e1;
+    background-color: #F7F8FA;
+    color: var(--azul-profundo);
+    border: 1px solid var(--borde-tarjeta);
 }
 .btn-action-edit:hover {
-    background-color: #0A1E2E;
+    background-color: var(--azul-profundo);
     color: #ffffff;
 }
 
 .btn-action-delete {
-    background-color: #fef2f2;
+    background-color: #FEF2F2;
     color: #dc2626;
     border: 1px solid #fecaca;
 }
@@ -281,9 +284,9 @@ main.admin-main, main {
 
 /* Modal de Detalle */
 .modal-content {
-    border-radius: 16px;
+    border-radius: .75rem;
     border: none;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 20px 40px rgba(16, 24, 40, .15);
     overflow: hidden;
 }
 
@@ -291,15 +294,15 @@ main.admin-main, main {
     background-color: var(--azul-logo);
     color: #ffffff;
     border-bottom: none;
-    border-radius: 16px 16px 0 0;
+    border-radius: .75rem .75rem 0 0;
     padding: 20px 24px;
 }
 
 /* Paginación Elegante */
 .pagination-custom .page-link {
     color: var(--azul-logo);
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
+    border: 1px solid var(--borde-tarjeta);
+    border-radius: .4rem;
     margin: 0 3px;
     padding: 6px 14px;
     font-size: 0.9rem;
@@ -308,7 +311,7 @@ main.admin-main, main {
 }
 
 .pagination-custom .page-link:hover {
-    background-color: #eff6ff;
+    background-color: #F7F8FA;
     border-color: var(--azul-logo);
     color: var(--azul-logo);
 }
@@ -318,11 +321,11 @@ main.admin-main, main {
     border-color: var(--azul-logo);
     color: #ffffff;
     font-weight: 600;
-    box-shadow: 0 2px 6px rgba(26, 68, 132, 0.3);
+    box-shadow: none;
 }
 
 .pagination-custom .page-item.disabled .page-link {
-    color: #94a3b8;
-    background-color: #f8fafc;
-    border-color: #e2e8f0;
+    color: #98A2B3;
+    background-color: #F7F8FA;
+    border-color: var(--borde-tarjeta);
 }

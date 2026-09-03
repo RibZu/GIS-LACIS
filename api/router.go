@@ -99,7 +99,7 @@ func InitRoutes(e *gin.Engine) {
 
 	usuarioStorage := usuario.NewPostgressStorage(db)
 	usuarioService := usuario.NewService(usuarioStorage, logger)
-	authHandler := handler.NewAuthHandler(usuarioService, logger)
+	authHandler := handler.NewAuthHandler(usuarioService, integranteService, logger)
 	usuarioHandler := handler.NewUsuarioHandler(usuarioService, logger)
 
 	e.GET("/login", authHandler.ShowLogin)
