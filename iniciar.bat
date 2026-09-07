@@ -6,6 +6,16 @@ echo        GIS-LACIS - Script de Inicio Automtico
 echo ========================================================
 echo.
 
+echo [INFO] Cerrando sesiones de PostgreSQL que hayan quedado abiertas...
+taskkill /F /IM postgres.exe /T > nul 2>&1
+
+echo [INFO] Cerrando el servidor web que haya quedado abierto (puerto 8080)...
+for /f "tokens=5" %%P in ('netstat -ano ^| findstr ":8080" ^| findstr "LISTENING"') do (
+    taskkill /F /PID %%P /T > nul 2>&1
+)
+
+timeout /t 1 /nobreak > nul
+
 REM Buscar PostgreSQL en C:\Program Files\PostgreSQL
 set "PG_PATH="
 for /d %%D in ("C:\Program Files\PostgreSQL\*") do (
@@ -65,4 +75,5 @@ pause > nul
 
 echo [INFO] Deteniendo base de datos...
 "!PG_PATH!\pg_ctl.exe" -D "pg_data" stop > nul
+taskkill /F /IM postgres.exe /T > nul 2>&1
 
