@@ -1,0 +1,194 @@
+:root {
+    --azul-logo: #1a4484;
+    --azul-profundo: #0A1E2E;
+    --azul-pastel-fondo: #f0f6fa;
+    --azul-hover: #133261;
+    --celeste-acento: #0dcaf0;
+    --verde-acento: #198754;
+    --rojo-peligro: #dc3545;
+    --gris-borde: #e2e8f0;
+    --sombra-suave: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --sombra-hover: 0 8px 30px rgba(26, 68, 132, 0.12);
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--azul-pastel-fondo);
+    color: #334155;
+    min-height: 100vh;
+}
+
+.fuente-serif {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Selector de Opciones / Switcher de Vistas */
+.vista-switcher {
+    background: white;
+    padding: 6px;
+    border-radius: 50rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    display: inline-flex;
+    border: 1px solid var(--gris-borde);
+}
+
+.vista-switcher .btn-switch {
+    border-radius: 50rem;
+    padding: 6px 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.vista-switcher .btn-switch.active {
+    background: var(--azul-logo);
+    color: white;
+    box-shadow: 0 2px 8px rgba(26, 68, 132, 0.25);
+}
+
+.vista-switcher .btn-switch:hover:not(.active) {
+    color: var(--azul-logo);
+    background-color: #f1f5f9;
+}
+
+/* Tarjeta contenedora Admin */
+.admin-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--gris-borde);
+    transition: all 0.3s ease;
+}
+
+/* Estilos de Tabla */
+.table-custom {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-custom thead th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--gris-borde);
+    padding: 14px 16px;
+}
+
+.table-custom tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.table-custom tbody tr:hover {
+    background-color: #f8fbfe;
+}
+
+.table-custom td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--gris-borde);
+    vertical-align: middle;
+}
+
+/* Badges */
+.badge-vigente {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    padding: 0.35em 0.75em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-historico {
+    background-color: #f1f5f9;
+    color: #64748b;
+    padding: 0.35em 0.75em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Tarjetas Grid (Opción 2) */
+.proyecto-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--gris-borde);
+    box-shadow: var(--sombra-suave);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.proyecto-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sombra-hover);
+    border-color: #cbd5e1;
+}
+
+.proyecto-card .card-top-bar {
+    height: 6px;
+    background: linear-gradient(90deg, var(--azul-logo), #3b82f6);
+}
+
+.proyecto-card.historico .card-top-bar {
+    background: #cbd5e1;
+}
+
+/* Split-View (Opción 3) */
+.split-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 992px) {
+    .split-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.split-list-item {
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+    margin-bottom: 8px;
+}
+
+.split-list-item:hover {
+    background: #f1f5f9;
+    transform: translateX(3px);
+}
+
+.split-list-item.active {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+}
+
+.preview-box {
+    background: #0A1E2E;
+    color: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 25px rgba(10, 30, 46, 0.2);
+}
+
+.preview-box h3 {
+    color: #60a5fa;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+}
