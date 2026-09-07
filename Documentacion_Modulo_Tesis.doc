@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>Documentación Técnica - Módulo Tesis y Posgrados GIS-LaCIS</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #1e293b;
+        line-height: 1.6;
+        margin: 40px;
+        background-color: #ffffff;
+    }
+    h1 {
+        color: #1a4484;
+        font-size: 26pt;
+        font-weight: bold;
+        border-bottom: 3px solid #1a4484;
+        padding-bottom: 8px;
+        margin-top: 0;
+    }
+    h2 {
+        color: #0A1E2E;
+        font-size: 16pt;
+        border-bottom: 1.5px solid #cbd5e1;
+        padding-bottom: 5px;
+        margin-top: 25pt;
+    }
+    h3 {
+        color: #1a4484;
+        font-size: 13pt;
+        margin-top: 15pt;
+    }
+    p, li {
+        font-size: 11pt;
+        color: #334155;
+    }
+    .badge {
+        background-color: #e0f2f7;
+        color: #1a4484;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 9.5pt;
+    }
+    .badge-doctorado {
+        background-color: #fdf2f8;
+        color: #be185d;
+        border: 1px solid #fbcfe8;
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 9pt;
+    }
+    .badge-maestria {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 9pt;
+    }
+    .badge-especializacion {
+        background-color: #f0fdf4;
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 9pt;
+    }
+    .badge-grado {
+        background-color: #f8fafc;
+        color: #475569;
+        border: 1px solid #cbd5e1;
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 9pt;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 10.5pt;
+    }
+    th {
+        background-color: #1a4484;
+        color: #ffffff;
+        font-weight: 600;
+        text-align: left;
+        padding: 10px;
+        border: 1px solid #1a4484;
+    }
+    td {
+        padding: 9px 10px;
+        border: 1px solid #cbd5e1;
+        vertical-align: top;
+    }
+    tr:nth-child(even) td {
+        background-color: #f8fafc;
+    }
+    .info-box {
+        background-color: #f0f7ff;
+        border-left: 4px solid #1a4484;
+        padding: 12px 16px;
+        margin: 15px 0;
+        border-radius: 0 6px 6px 0;
+    }
+    .success-box {
+        background-color: #f0fdf4;
+        border-left: 4px solid #16a34a;
+        padding: 12px 16px;
+        margin: 15px 0;
+        border-radius: 0 6px 6px 0;
+    }
+    .warning-box {
+        background-color: #fffbeb;
+        border-left: 4px solid #f59e0b;
+        padding: 12px 16px;
+        margin: 15px 0;
+        border-radius: 0 6px 6px 0;
+    }
+    .code-block {
+        background-color: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 12px;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 10pt;
+        color: #0f172a;
+        white-space: pre-wrap;
+    }
+    .meta-table {
+        margin-bottom: 25px;
+    }
+    .meta-table td {
+        border: none;
+        padding: 4px 8px;
+    }
+</style>
+</head>
+<body>
+
+    <h1>DOCUMENTACIÓN TÉCNICA DEL SISTEMA</h1>
+    <h3 style="color: #64748b; margin-top: -5px; font-weight: normal;">Módulo de Administración de Tesis y Posgrados (ABM) — GIS-LaCIS</h3>
+
+    <table class="meta-table">
+        <tr>
+            <td style="width: 170px; font-weight: bold; color: #1a4484;">Proyecto:</td>
+            <td>GIS-LACIS (Grupo de Ingeniería de Software & Laboratorio de Computación Inteligente y Sistemas)</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold; color: #1a4484;">Tecnologías:</td>
+            <td>Go (Golang 1.20+), Gin Web Framework, PostgreSQL 18, HTML5 / CSS3 / JavaScript (Vanilla)</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold; color: #1a4484;">Base de Datos:</td>
+            <td>PostgreSQL (Puerto 5433 / Base de datos: <code>lacis</code>)</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold; color: #1a4484;">Módulo:</td>
+            <td>Producción Académica · ABM de Tesis y Trabajos de Posgrado</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold; color: #1a4484;">Fecha de Entrega:</td>
+            <td>7 de Septiembre de 2026</td>
+        </tr>
+    </table>
+
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
+
+    <h2>1. Resumen Ejecutivo y Alcance</h2>
+    <p>
+        El presente documento detalla la especificación técnica, diseño arquitectónico e implementación integral del <strong>Módulo ABM (Alta, Baja, Modificación y Consulta) de Tesis y Posgrados</strong>. Este componente centraliza y gestiona la producción académica derivada de los programas de posgrado (Doctorados, Maestrías, Especializaciones) y carreras de grado vinculadas a los investigadores y estudiantes del <strong>Grupo de Ingeniería de Software (GIS)</strong> y del <strong>Laboratorio de Computación Inteligente y Sistemas (LaCIS)</strong>.
+    </p>
+    <div class="info-box">
+        <strong>Objetivos alcanzados:</strong>
+        <ul>
+            <li><strong>Gestión integral de producción académica:</strong> Registro completo de tesis con metadatos rigurosos (título, nivel académico, carrera de origen, año de defensa, palabras clave, resumen ejecutivo y documento PDF).</li>
+            <li><strong>Modelo híbrido de autoría y dirección:</strong> Permite vincular integrantes registrados en la base de datos (con enlace relacional íntegro) o ingresar autores/directores externos e históricos en campos de texto libre.</li>
+            <li><strong>Gestión documental segura (PDF):</strong> Carga, validación estricta de extensiones/peso (máx. 25 MB) y almacenamiento en servidor para consulta y descarga pública.</li>
+            <li><strong>Interfaz reactiva de alta usabilidad:</strong> Buscador instantáneo multicriterio, filtros por nivel académico, filtro por carreras de posgrado, paginación reactiva (10 registros por página) y modal interactivo <em>Ficha Académica de la Tesis</em>.</li>
+            <li><strong>Backend robusto en Go:</strong> Implementación limpia bajo Clean Architecture (Domain, Storage, Service, Handler), pruebas unitarias automatizadas y control de acceso granular mediante middleware.</li>
+        </ul>
+    </div>
+
+    <h2>2. Arquitectura de Software en Capas (Go)</h2>
+    <p>
+        El módulo fue desarrollado respetando estrictamente la separación de responsabilidades en capas del backend en Go:
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">Capa / Nivel</th>
+                <th style="width: 35%;">Archivo Fuente</th>
+                <th style="width: 40%;">Responsabilidad Principal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1. Dominio (Domain)</strong></td>
+                <td><code>internal/tesis/domain.go</code></td>
+                <td>
+                    Define las estructuras centrales <code>Tesis</code> y <code>UpdateFields</code>. Implementa métodos helper como <code>GetAutorDisplay()</code>, <code>GetDirectorDisplay()</code>, <code>GetCoodirectorDisplay()</code> y <code>GetAnioDisplay()</code> para resolver elegantemente la visualización híbrida (registrado vs. externo).
+                </td>
+            </tr>
+            <tr>
+                <td><strong>2. Persistencia (Storage)</strong></td>
+                <td><code>internal/tesis/storage.go</code></td>
+                <td>
+                    Implementa la interfaz <code>Storage</code> contra PostgreSQL utilizando consultas preparadas, <code>LEFT JOIN</code> con la tabla <code>integrante</code> para enriquecer nombres en una sola consulta, uso de <code>COALESCE</code> para evitar valores nulos y operaciones CRUD completas.
+                </td>
+            </tr>
+            <tr>
+                <td><strong>3. Lógica de Negocio (Service)</strong></td>
+                <td><code>internal/tesis/service.go</code></td>
+                <td>
+                    Aplica las reglas de negocio y validaciones de obligatoriedad (título, nivel, carrera de origen, año válido entre 1970 y año actual + 5, y existencia obligatoria de al menos un autor). Registra eventos mediante <code>zap.Logger</code> estructurado.
+                </td>
+            </tr>
+            <tr>
+                <td><strong>4. Controladores (Handler)</strong></td>
+                <td><code>api/handler/tesis.go</code></td>
+                <td>
+                    Procesa las solicitudes HTTP de Gin, gestiona formularios multipart, ejecuta la subida y sustitución de archivos PDF en disco, sanitiza entradas y renderiza las vistas HTML.
+                </td>
+            </tr>
+            <tr>
+                <td><strong>5. Enrutador y Seguridad</strong></td>
+                <td><code>api/router.go</code></td>
+                <td>
+                    Registra las rutas administrativas bajo el grupo <code>/admin</code> protegidas por el middleware <code>RequireModule(usuarioService, "tesis")</code>.
+                </td>
+            </tr>
+            <tr>
+                <td><strong>6. Pruebas Unitarias</strong></td>
+                <td><code>internal/tesis/service_test.go</code></td>
+                <td>
+                    Batería de pruebas unitarias automatizadas con mocks para validar exhaustivamente el cumplimiento de las reglas de negocio del servicio.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>3. Estructura de la Base de Datos PostgreSQL</h2>
+    <p>
+        El módulo se fundamenta en las tablas <code>tesis</code> e <code>integrantes_tesis</code>, integradas con integridad referencial a la tabla <code>integrante</code>:
+    </p>
+
+    <h3>Tabla: <code>tesis</code></h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Columna</th>
+                <th>Tipo de Dato</th>
+                <th>Restricciones</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><code>id</code></td><td>SERIAL</td><td>PRIMARY KEY</td><td>Identificador único autoincremental de la tesis.</td></tr>
+            <tr><td><code>titulo</code></td><td>VARCHAR(300)</td><td>NOT NULL</td><td>Título académico completo del trabajo.</td></tr>
+            <tr><td><code>anio</code></td><td>INT</td><td>NULL</td><td>Año de defensa o publicación (ej. 2024).</td></tr>
+            <tr><td><code>nivel</code></td><td>VARCHAR(100)</td><td>NULL</td><td>Nivel formativo: Doctorado, Maestría, Especialización o Grado.</td></tr>
+            <tr><td><code>carrera_origen</code></td><td>VARCHAR(200)</td><td>NULL</td><td>Programa de posgrado o carrera universitaria de origen.</td></tr>
+            <tr><td><code>palabras_clave</code></td><td>VARCHAR(500)</td><td>NULL</td><td>Keywords o conceptos clave separados por comas.</td></tr>
+            <tr><td><code>resumen</code></td><td>TEXT</td><td>NULL</td><td>Resumen ejecutivo, objetivos y aportes del trabajo.</td></tr>
+            <tr><td><code>archivo_pdf</code></td><td>VARCHAR(500)</td><td>NULL</td><td>Ruta relativa al archivo PDF del documento completo.</td></tr>
+            <tr><td><code>autor_id</code></td><td>INT</td><td>REFERENCES integrante(id) ON DELETE SET NULL</td><td>FK opcional al autor registrado en el sistema.</td></tr>
+            <tr><td><code>autor_historico</code></td><td>VARCHAR(255)</td><td>NULL</td><td>Nombre completo si el autor es externo o histórico.</td></tr>
+            <tr><td><code>director_id</code></td><td>INT</td><td>REFERENCES integrante(id) ON DELETE SET NULL</td><td>FK opcional al director registrado en el grupo.</td></tr>
+            <tr><td><code>director_historico</code></td><td>VARCHAR(255)</td><td>NULL</td><td>Nombre del director si es docente o investigador externo.</td></tr>
+            <tr><td><code>coodirector_id</code></td><td>INT</td><td>REFERENCES integrante(id) ON DELETE SET NULL</td><td>FK opcional al co-director registrado (si aplica).</td></tr>
+            <tr><td><code>coodirector_historico</code></td><td>VARCHAR(255)</td><td>NULL</td><td>Nombre del co-director externo (si aplica).</td></tr>
+            <tr><td><code>proyecto_id</code></td><td>INT</td><td>REFERENCES proyecto(id) ON DELETE SET NULL</td><td>FK opcional al proyecto I+D+i marco de la investigación.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Tabla: <code>integrantes_tesis</code> (Relación N a N)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Columna</th>
+                <th>Tipo de Dato</th>
+                <th>Restricciones</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><code>id</code></td><td>SERIAL</td><td>PRIMARY KEY</td><td>Identificador único autoincremental.</td></tr>
+            <tr><td><code>tesis_id</code></td><td>INT</td><td>NOT NULL, FK tesis(id) ON DELETE CASCADE</td><td>Referencia a la tesis.</td></tr>
+            <tr><td><code>integrante_id</code></td><td>INT</td><td>NOT NULL, FK integrante(id) ON DELETE CASCADE</td><td>Referencia al integrante vinculado secundario.</td></tr>
+        </tbody>
+    </table>
+
+    <h2>4. Lógica de Negocio y Modelo Híbrido de Autoría</h2>
+    <p>
+        Una de las particularidades de mayor valor del módulo es su capacidad de gestionar autores, directores y codirectores bajo un <strong>esquema híbrido flexible</strong>:
+    </p>
+
+    <div class="success-box">
+        <strong>Comportamiento del selector híbrido:</strong>
+        <ul>
+            <li><strong>Opción Registrado:</strong> Se selecciona un integrante existente de la lista institucional. El backend almacena la clave foránea (<code>autor_id</code>, <code>director_id</code> o <code>coodirector_id</code>) y deja en blanco el campo de texto histórico. Esto mantiene la integridad referencial y permite mostrar la especialidad y avatar del integrante.</li>
+            <li><strong>Opción Externo / Histórico:</strong> Se habilita un campo de texto libre para ingresar el nombre de profesionales de otras universidades o tesis de graduados históricos que ya no forman parte activa del plantel. El backend persiste el texto (<code>autor_historico</code>, etc.) y establece el ID en <code>NULL</code>.</li>
+            <li><strong>Opción Ninguno (Co-Director):</strong> Para el caso del co-director (opcional), se permite explícitamente la ausencia del mismo, asignando <code>NULL</code> a ambos campos.</li>
+        </ul>
+    </div>
+
+    <h3>Reglas de Validación en <code>Service</code></h3>
+    <ul>
+        <li><strong>Título Obligatorio:</strong> No se permiten cadenas vacías ni compuestas solo de espacios en blanco.</li>
+        <li><strong>Nivel Académico Requerido:</strong> Debe seleccionarse una de las categorías válidas (<em>Doctorado</em>, <em>Maestría</em>, <em>Especialización</em>, <em>Grado</em>).</li>
+        <li><strong>Carrera o Programa Requerido:</strong> Es mandatorio especificar el programa de pertenencia.</li>
+        <li><strong>Rango Temporal Válido:</strong> Si se especifica el año, este debe estar comprendido entre 1970 y el año en curso + 5 años futuros para defensas programadas.</li>
+        <li><strong>Autor Obligatorio:</strong> Es obligatorio especificar al menos un autor, ya sea mediante selección de integrante registrado o ingresando su nombre histórico.</li>
+    </ul>
+
+    <h2>5. Controladores, Rutas y Endpoints (Gin Framework)</h2>
+    <p>
+        Todas las operaciones del módulo se encuentran organizadas en <code>api/handler/tesis.go</code> y mapeadas en <code>api/router.go</code>:
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 12%;">Método</th>
+                <th style="width: 28%;">Ruta / Endpoint</th>
+                <th style="width: 30%;">Controlador (Handler)</th>
+                <th style="width: 30%;">Descripción del Flujo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="badge" style="background:#e0f2fe; color:#0369a1;">GET</span></td>
+                <td><code>/admin/tesis</code></td>
+                <td><code>tesisHandler.Lista</code></td>
+                <td>Obtiene la lista completa de tesis enriquecida con autores y renderiza <code>ListaTesis.html</code>.</td>
+            </tr>
+            <tr>
+                <td><span class="badge" style="background:#e0f2fe; color:#0369a1;">GET</span></td>
+                <td><code>/admin/crear-tesis</code></td>
+                <td><code>tesisHandler.Crear</code></td>
+                <td>Carga la lista de integrantes registrados y renderiza el formulario de alta en <code>CrearTesis.html</code>.</td>
+            </tr>
+            <tr>
+                <td><span class="badge" style="background:#dcfce7; color:#15803d;">POST</span></td>
+                <td><code>/admin/insertar-tesis</code></td>
+                <td><code>tesisHandler.Insertar</code></td>
+                <td>Valida los datos, almacena el archivo PDF en disco, inserta el registro en PostgreSQL y redirige a la lista.</td>
+            </tr>
+            <tr>
+                <td><span class="badge" style="background:#e0f2fe; color:#0369a1;">GET</span></td>
+                <td><code>/admin/editar-tesis?id={id}</code></td>
+                <td><code>tesisHandler.Editar</code></td>
+                <td>Recupera la tesis por su ID, carga los integrantes y presenta los datos precargados en <code>EditarTesis.html</code>.</td>
+            </tr>
+            <tr>
+                <td><span class="badge" style="background:#dcfce7; color:#15803d;">POST</span></td>
+                <td><code>/admin/actualizar-tesis</code></td>
+                <td><code>tesisHandler.Actualizar</code></td>
+                <td>Aplica los cambios en la base de datos. Si se sube un nuevo PDF, elimina el anterior de forma segura y enlaza el nuevo.</td>
+            </tr>
+            <tr>
+                <td><span class="badge" style="background:#fee2e2; color:#b91c1c;">GET</span></td>
+                <td><code>/admin/borrar-tesis?id={id}</code></td>
+                <td><code>tesisHandler.Borrar</code></td>
+                <td>Elimina el registro en PostgreSQL, borra el archivo PDF asociado del disco y redirige a la lista con mensaje.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="info-box">
+        <strong>Seguridad y Control de Acceso por Módulos:</strong>
+        <br>
+        El enrutador aplica el middleware <code>RequireModule(usuarioService, "tesis")</code>. Solamente los usuarios administradores (rol <code>ADMIN</code>) o aquellos que posean el módulo <code>tesis</code> concedido en su perfil tienen acceso a estas rutas. Peticiones no autorizadas son interceptadas automáticamente.
+    </div>
+
+    <h2>6. Frontend y Experiencia de Usuario (UI/UX)</h2>
+
+    <h3>Estructura de Vistas HTML</h3>
+    <ul>
+        <li><strong><code>ui/html/admin/ListaTesis.html</code>:</strong>
+            Panel principal de gestión. Contiene tabla interactiva con columnas: Tesis / Título, Nivel Académico, Autoría y Dirección, Año de Defensa y Acciones (Ver Ficha, Editar, Eliminar).
+        </li>
+        <li><strong><code>ui/html/admin/CrearTesis.html</code>:</strong>
+            Formulario modular distribuido en 4 secciones claras con iconos institucionales:
+            <ol>
+                <li>Información General (Título, Nivel, Carrera de Origen con datalist sugerido, Año de Defensa, Palabras Clave).</li>
+                <li>Autoría y Dirección Académica (Tarjetas individuales para Autor, Director y Co-Director con selectores tipo chip).</li>
+                <li>Documento Adjunto (Campo para archivo PDF con límite de tamaño).</li>
+                <li>Resumen / Abstract (Área de texto enriquecida para síntesis del trabajo).</li>
+            </ol>
+        </li>
+        <li><strong><code>ui/html/admin/EditarTesis.html</code>:</strong>
+            Formulario de modificación con precarga completa de datos, indicador visual del PDF cargado actualmente con enlace de previsualización y opción de reemplazo.
+        </li>
+        <li><strong><code>ui/html/admin/Dashboard.html</code>:</strong>
+            Tarjeta de acceso rápido al módulo con tile cuadrado (<code>dash-modtile</code>) e ícono <code>bi-mortarboard-fill</code> estandarizado.
+        </li>
+    </ul>
+
+    <h3>Comportamiento Dinámico (JavaScript)</h3>
+    <ul>
+        <li><strong><code>ui/static/js-GIS/listaTesis.js</code>:</strong>
+            <ul>
+                <li><strong>Buscador Reactivo:</strong> Filtrado en tiempo real sin recarga de página sobre título, autor, director, carrera o palabras clave.</li>
+                <li><strong>Filtros por Nivel:</strong> Botones píldora para alternar entre <em>Todos</em>, <em>Doctorado</em>, <em>Maestría</em>, <em>Especialización</em> y <em>Grado</em>.</li>
+                <li><strong>Paginador en el Cliente:</strong> Segmentación dinámica a <strong>10 registros por página</strong> con recálculo automático al filtrar.</li>
+                <li><strong>Modal "Ficha Académica de la Tesis":</strong> Ventana emergente con insignias cromáticas por nivel, ficha de autor, director, codirector, resumen completo y botón directo de descarga de PDF.</li>
+                <li><strong>Modal de Confirmación de Borrado:</strong> Previene eliminaciones accidentales solicitando confirmación explícita antes de ejecutar la baja.</li>
+            </ul>
+        </li>
+        <li><strong><code>ui/static/js-GIS/formularioTesis.js</code>:</strong>
+            <ul>
+                <li><strong>Alternancia Inteligente:</strong> Oculta/muestra inmediatamente el <code>&lt;select&gt;</code> de integrantes o el <code>&lt;input text&gt;</code> según el tipo elegido (Registrado vs. Externo), actualizando la obligatoriedad (<code>required</code>) en tiempo real.</li>
+                <li><strong>Validación de Archivo PDF:</strong> Control en el cliente que verifica la extensión <code>.pdf</code> y que el archivo no supere el tamaño máximo de 25 MB antes del envío.</li>
+                <li><strong>Sugerencia de Carreras:</strong> Auto-completa sugerencias de carreras según el nivel seleccionado (Doctorado en Ingeniería en Informática, Especialización en Ingeniería de Software, etc.).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>Diseño y Paleta de Colores</h3>
+    <p>
+        El módulo se diseñó siguiendo la identidad visual institucional de GIS y LaCIS:
+    </p>
+    <ul>
+        <li><strong>Azul Institucional Primario (<code>--azul-logo: #1A4484</code>):</strong> Utilizado en encabezados, botones de acción principal, bordes de foco e insignias clave.</li>
+        <li><strong>Azul Oscuro Profundo (<code>--azul-profundo: #101828</code>):</strong> Para tipografía principal y títulos destacados.</li>
+        <li><strong>Gris Claro de Fondo (<code>#F7F8FA</code>):</strong> Fondo suave para descanso visual en paneles administrativos.</li>
+        <li><strong>Badges de Niveles Académicos:</strong>
+            <span class="badge-doctorado">Doctorado</span>
+            <span class="badge-maestria">Maestría</span>
+            <span class="badge-especializacion">Especialización</span>
+            <span class="badge-grado">Grado</span>
+        </li>
+    </ul>
+
+    <h2>7. Gestión de Documentos PDF y Almacenamiento en Disco</h2>
+    <p>
+        Los archivos adjuntos de las tesis son tratados bajo estrictas medidas de consistencia:
+    </p>
+    <ul>
+        <li><strong>Directorio destino:</strong> <code>ui/static/assets/tesis-GIS/</code></li>
+        <li><strong>Sanitización de nombres:</strong> Los nombres de archivo se limpian para remover caracteres especiales y espacios, evitando colisiones o fallos de lectura en servidores Linux/Windows.</li>
+        <li><strong>Gestión de ciclo de vida:</strong>
+            <ul>
+                <li>Al actualizar una tesis con un nuevo PDF, el controlador elimina el archivo anterior del disco antes de almacenar el nuevo.</li>
+                <li>Al borrar una tesis, el archivo PDF físico asociado se elimina automáticamente para no dejar archivos huérfanos.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>8. Pruebas Automatizadas y Calidad de Código</h2>
+    <p>
+        Se implementaron pruebas unitarias completas en <code>internal/tesis/service_test.go</code> para asegurar la estabilidad del servicio:
+    </p>
+
+    <div class="code-block">=== RUN   TestCreate_SinTitulo_DebeDevolverError
+--- PASS: TestCreate_SinTitulo_DebeDevolverError (0.00s)
+=== RUN   TestCreate_SinNivel_DebeDevolverError
+--- PASS: TestCreate_SinNivel_DebeDevolverError (0.00s)
+=== RUN   TestCreate_SinCarrera_DebeDevolverError
+--- PASS: TestCreate_SinCarrera_DebeDevolverError (0.00s)
+=== RUN   TestCreate_SinAutor_DebeDevolverError
+--- PASS: TestCreate_SinAutor_DebeDevolverError (0.00s)
+=== RUN   TestCreate_Exitoso
+--- PASS: TestCreate_Exitoso (0.00s)
+=== RUN   TestRead_IDInvalido
+--- PASS: TestRead_IDInvalido (0.00s)
+=== RUN   TestRead_Exitoso
+--- PASS: TestRead_Exitoso (0.00s)
+=== RUN   TestGetAll_Exitoso
+--- PASS: TestGetAll_Exitoso (0.00s)
+PASS
+ok      PaginaSEG/internal/tesis    0.051s</div>
+
+    <h2>9. Incidencias Técnicas Resueltas durante la Implementación</h2>
+
+    <h3>A. Deformación de Radios en Tarjetas de Autoría</h3>
+    <p>
+        <strong>Causa:</strong> En <code>admin.css</code> y <code>actualizar.css</code> existía la regla <code>.group-card .form-check-input { width: 2.7em; height: 1.45em; }</code> diseñada para los switches de Integrantes. Esto provocaba que los botones de opción (<code>type="radio"</code>) de las tarjetas de tesis se deformaran como óvalos horizontales.
+        <br>
+        <strong>Solución:</strong> Se acotó la regla a <code>.group-card .form-switch .form-check-input</code> y se crearon estilos específicos tipo chip (<code>.tipo-selector</code>) con dimensiones precisas (<code>1.15em × 1.15em</code>), esquinas redondeadas y realce activo al estar seleccionados.
+    </p>
+
+    <h3>B. Truncamiento de Texto en Selector de Director</h3>
+    <p>
+        <strong>Causa:</strong> El texto por defecto <em>"Seleccionar director del grupo..."</em> excedía el ancho útil de la columna dentro de tarjetas de 3 columnas en pantallas medianas.
+        <br>
+        <strong>Solución:</strong> Se unificó a <em>"Seleccionar director..."</em> evitando el corte de caracteres contra la flecha desplegable.
+    </p>
+
+    <h3>C. Estandarización de Ícono en el Dashboard</h3>
+    <p>
+        <strong>Causa:</strong> La tarjeta de Tesis en el panel de administración carecía del contenedor cuadrado <code>dash-modtile</code> presente en los demás módulos.
+        <br>
+        <strong>Solución:</strong> Se envolvió el ícono en <code>&lt;div class="dash-modtile" style="background:#4F46E5"&gt;&lt;i class="bi bi-mortarboard-fill"&gt;&lt;/i&gt;&lt;/div&gt;</code>, garantizando simetría y coherencia visual en todo el dashboard.
+    </p>
+
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+
+    <div style="text-align: center; color: #64748b; font-size: 10pt;">
+        <p>Proyecto GIS-LACIS — Universidad Nacional de San Luis (UNSL)<br>
+        Laboratorio de Computación Inteligente y Sistemas & Grupo de Ingeniería de Software</p>
+    </div>
+
+</body>
+</html>

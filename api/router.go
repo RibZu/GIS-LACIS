@@ -3,6 +3,7 @@ package api
 import (
 	"PaginaSEG/api/handler"
 	"PaginaSEG/internal/integrante"
+	"PaginaSEG/internal/tesis"
 	"PaginaSEG/internal/usuario"
 	"database/sql"
 	"net/http"
@@ -101,6 +102,10 @@ func InitRoutes(e *gin.Engine) {
 	integranteService := integrante.NewService(integranteStorage, logger)
 	integranteHandler := handler.NewIntegranteHandler(integranteService, logger)
 
+	tesisStorage := tesis.NewPostgresStorage(db)
+	tesisService := tesis.NewService(tesisStorage, logger)
+	tesisHandler := handler.NewTesisHandler(tesisService, integranteService, logger)
+
 	usuarioStorage := usuario.NewPostgressStorage(db)
 	usuarioService := usuario.NewService(usuarioStorage, logger)
 	authHandler := handler.NewAuthHandler(usuarioService, integranteService, logger)
@@ -123,6 +128,16 @@ func InitRoutes(e *gin.Engine) {
 	integrantesAdmin.POST("/actualizar-integrante", integranteHandler.Actualizar)
 	integrantesAdmin.GET("/borrar-integrante", integranteHandler.Borrar)
 
+	// Módulo "tesis": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
+	tesisAdmin := v1Admin.Group("")
+	tesisAdmin.Use(handler.RequireModule(usuarioService, "tesis"))
+	tesisAdmin.GET("/tesis", tesisHandler.Lista)
+	tesisAdmin.GET("/crear-tesis", tesisHandler.Crear)
+	tesisAdmin.POST("/insertar-tesis", tesisHandler.Insertar)
+	tesisAdmin.GET("/editar-tesis", tesisHandler.Editar)
+	tesisAdmin.POST("/actualizar-tesis", tesisHandler.Actualizar)
+	tesisAdmin.GET("/borrar-tesis", tesisHandler.Borrar)
+
 	// Módulo "administradores": reservado a rol ADMIN, nunca asignable como módulo suelto
 	usuariosAdmin := v1Admin.Group("")
 	usuariosAdmin.Use(handler.RequireAdmin(usuarioService))
@@ -138,5 +153,7 @@ func InitRoutes(e *gin.Engine) {
 	v1API := e.Group("/api/v1")
 	v1API.GET("/integrantes", integranteHandler.API_GetAll)
 	v1API.GET("/integrantes/:id", integranteHandler.API_Read)
+	v1API.GET("/tesis", tesisHandler.API_GetAll)
+	v1API.GET("/tesis/:id", tesisHandler.API_Read)
 
 }

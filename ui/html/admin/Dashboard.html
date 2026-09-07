@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -44,6 +44,21 @@
                                 <h5 class="card-title mb-1">Gestionar Integrantes</h5>
                                 <p class="card-text small text-muted mb-2">Alta, baja y modificación de integrantes y sus roles.</p>
                                 <a href="/admin/integrantes" class="btn btn-sm btn-outline-primary mt-2">Ir a Módulo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ end }}
+
+                {{ if .TieneTesis }}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 dash-card">
+                        <div class="card-body d-flex gap-3">
+                            <div class="dash-modtile" style="background:#4F46E5"><i class="bi bi-mortarboard-fill"></i></div>
+                            <div>
+                                <h5 class="card-title mb-1">Tesis y Posgrados</h5>
+                                <p class="card-text small text-muted mb-2">Gestión de tesis, directores, autores, carreras de origen y archivos PDF.</p>
+                                <a href="/admin/tesis" class="btn btn-sm btn-outline-primary mt-2">Ir a Módulo</a>
                             </div>
                         </div>
                     </div>
