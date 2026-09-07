@@ -18,7 +18,7 @@ let proyectos = [];
 
         async function cargarDesdeAPI() {
             try {
-                const res = await fetch('/api/v1/admin/proyectos');
+                const res = await fetch('/api/v1/admin/proyectos-todos');  // antes: '/api/v1/admin/proyectos'
                 if (!res.ok) throw new Error('Error de conexión');
                 proyectos = await res.json() || [];
                 renderizarCards();

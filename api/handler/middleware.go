@@ -77,3 +77,20 @@ func RequireAdmin(s *usuario.Service) gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func RequireModuleAPI(s *usuario.Service, modulo string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		u, ok := currentUsuario(c, s)
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "No autenticado"})
+			c.Abort()
+			return
+		}
+		if !tieneModulo(u, modulo) {
+			c.JSON(http.StatusForbidden, gin.H{"error": "No tenés permiso para este módulo"})
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}

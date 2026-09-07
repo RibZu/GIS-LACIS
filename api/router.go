@@ -74,10 +74,6 @@ func InitRoutes(e *gin.Engine) {
 	e.GET("/proyectos", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "Proyecto.html", nil)
 	})
-	// 4.b Desarrollos (pendiente de conectar a datos reales, ver checklist de backend)
-	e.GET("/desarrollos", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "Desarrollos.html", nil)
-	})
 	// 5. Posgrado: Doctorado en Ingeniería de Software
 	e.GET("/doctorado-ing-software", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "DrIngSoft.html", nil)
@@ -149,19 +145,24 @@ func InitRoutes(e *gin.Engine) {
 	v1API.GET("/integrantes", integranteHandler.API_GetAll)
 	v1API.GET("/integrantes/:id", integranteHandler.API_Read)
 
+	// Módulo "proyectos": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
+	proyectosAdmin := v1Admin.Group("")
+	proyectosAdmin.Use(handler.RequireModule(usuarioService, "proyectos"))
 	// Vistas HTML Admin para Proyectos (3 Opciones de diseño para el cliente)
-	v1Admin.GET("/proyectos", proyectoHandler.View_ProyectosAdmin)
+	proyectosAdmin.GET("/proyectos", proyectoHandler.View_ProyectosAdmin)
 
-	// Rutas API Proyectos y Reconocimientos
+	// Rutas API públicas de Proyectos y Reconocimientos
 	v1API.GET("/proyectos", proyectoHandler.API_GetAll)
-	v1API.GET("/admin/proyectos-todos", proyectoHandler.API_GetAllAdmin)
-	v1API.PATCH("/admin/proyectos/:id/restaurar", proyectoHandler.API_Restaurar)
-	v1API.POST("/admin/proyectos", proyectoHandler.API_Create)
-	v1API.GET("/admin/proyectos", proyectoHandler.API_GetAllAdmin)
-	v1API.GET("/admin/proyectos/:id", proyectoHandler.API_Read)
-	v1API.PUT("/admin/proyectos/:id", proyectoHandler.API_Update)
-	v1API.DELETE("/admin/proyectos/:id", proyectoHandler.API_Delete)
-
 	v1API.GET("/reconocimientos", reconocimientoHandler.API_GetAll)
+
+	// Rutas API de administración de Proyectos
+	proyectosAPIAdmin := v1API.Group("")
+	proyectosAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "proyectos"))
+	proyectosAPIAdmin.GET("/admin/proyectos-todos", proyectoHandler.API_GetAllAdmin)
+	proyectosAPIAdmin.PATCH("/admin/proyectos/:id/restaurar", proyectoHandler.API_Restaurar)
+	proyectosAPIAdmin.POST("/admin/proyectos", proyectoHandler.API_Create)
+	proyectosAPIAdmin.GET("/admin/proyectos/:id", proyectoHandler.API_Read)
+	proyectosAPIAdmin.PUT("/admin/proyectos/:id", proyectoHandler.API_Update)
+	proyectosAPIAdmin.DELETE("/admin/proyectos/:id", proyectoHandler.API_Delete)
 
 }
