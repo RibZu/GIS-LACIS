@@ -3,6 +3,8 @@ package api
 import (
 	"PaginaSEG/api/handler"
 	"PaginaSEG/internal/integrante"
+	"PaginaSEG/internal/proyecto"
+	"PaginaSEG/internal/reconocimiento"
 	"PaginaSEG/internal/usuario"
 	"database/sql"
 	"net/http"
@@ -102,6 +104,14 @@ func InitRoutes(e *gin.Engine) {
 	authHandler := handler.NewAuthHandler(usuarioService, integranteService, logger)
 	usuarioHandler := handler.NewUsuarioHandler(usuarioService, logger)
 
+	proyectoStorage := proyecto.NewPostgresStorage(db)
+	proyectoService := proyecto.NewService(proyectoStorage, logger)
+	proyectoHandler := handler.NewProyectoHandler(proyectoService, logger)
+
+	reconocimientoStorage := reconocimiento.NewPostgresStorage(db)
+	reconocimientoService := reconocimiento.NewService(reconocimientoStorage, logger)
+	reconocimientoHandler := handler.NewReconocimientoHandler(reconocimientoService, logger)
+
 	e.GET("/login", authHandler.ShowLogin)
 	e.POST("/login", authHandler.ProcessLogin)
 	e.GET("/logout", authHandler.Logout)
@@ -134,5 +144,20 @@ func InitRoutes(e *gin.Engine) {
 	v1API := e.Group("/api/v1")
 	v1API.GET("/integrantes", integranteHandler.API_GetAll)
 	v1API.GET("/integrantes/:id", integranteHandler.API_Read)
+
+	// Vistas HTML Admin para Proyectos (3 Opciones de diseño para el cliente)
+	v1Admin.GET("/proyectos", proyectoHandler.View_ProyectosAdmin)
+
+	// Rutas API Proyectos y Reconocimientos
+	v1API.GET("/proyectos", proyectoHandler.API_GetAll)
+	v1API.GET("/admin/proyectos-todos", proyectoHandler.API_GetAllAdmin)
+	v1API.PATCH("/admin/proyectos/:id/restaurar", proyectoHandler.API_Restaurar)
+	v1API.POST("/admin/proyectos", proyectoHandler.API_Create)
+	v1API.GET("/admin/proyectos", proyectoHandler.API_GetAllAdmin)
+	v1API.GET("/admin/proyectos/:id", proyectoHandler.API_Read)
+	v1API.PUT("/admin/proyectos/:id", proyectoHandler.API_Update)
+	v1API.DELETE("/admin/proyectos/:id", proyectoHandler.API_Delete)
+
+	v1API.GET("/reconocimientos", reconocimientoHandler.API_GetAll)
 
 }

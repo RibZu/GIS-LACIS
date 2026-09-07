@@ -67,13 +67,13 @@ CREATE TABLE colaboradores (
 
 CREATE TABLE proyecto (
     id SERIAL PRIMARY KEY,
-    titulo VARCHAR(255) NOT NULL,
+    titulo TEXT NOT NULL,
     descripcion TEXT,
-    enlace VARCHAR(500),
-    equipo_historico VARCHAR(500),
-    anio_inicio INT NOT NULL,
-    anio_fin INT NOT NULL
-    
+    enlace TEXT,
+    equipo_historico TEXT,
+    anio_inicio INT,
+    anio_fin INT,
+    activo BOOLEAN DEFAULT TRUE 
 );
 
 CREATE TABLE desarrollo (
