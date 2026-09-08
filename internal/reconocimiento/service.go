@@ -34,7 +34,15 @@ func (s *Service) GetAll() ([]Reconocimiento, error) {
 
 // GetAllAdmin retorna todos los reconocimientos (incluyendo inactivos) para el panel admin
 func (s *Service) GetAllAdmin() ([]Reconocimiento, error) {
-	return s.GetAll()
+	reconocimientos, err := s.storage.GetAllAdmin()
+	if err != nil {
+		s.logger.Error("Error al obtener reconocimientos (admin) en el servicio", zap.Error(err))
+		return nil, err
+	}
+	if reconocimientos == nil {
+		reconocimientos = make([]Reconocimiento, 0)
+	}
+	return reconocimientos, nil
 }
 
 func (s *Service) Create(r *Reconocimiento) error {

@@ -20,9 +20,9 @@
 </head>
 
 <body class="grilla">
-    <header>
-        {{ template "nav" . }}
-    </header>
+  <header>
+    {{ template "nav" . }}
+  </header>
 
 
   <main class="d-flex flex-column align-items-center py-5 pt-6">
@@ -147,68 +147,8 @@
     <section id="colab" class="extras-section px-3 px-md-4" data-aos="fade-up" data-aos-duration="1000">
       <h2 class="titulo-seccion-proy">Nuestros Colaboradores</h2>
       <div class="container">
-        <div class="row justify-content-center g-4">
-
-          <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4" data-aos="flip-right">
-            <div class="card-flip mx-auto card-colaborador-chica">
-              <div class="card-flip-inner">
-                <div class="card-flip-front">
-                  <img src="../../static/assets/img-GIS/Intel_logo.png" alt="Logo INTEL" class="img-fluid">
-                </div>
-                <div class="card-flip-back">
-                  <p>Intel diseña y produce chips electrónicos, siendo famosa por sus procesadores para computadoras.
-                    Sus productos se usan en PCs, servidores, dispositivos móviles, centros de datos e inteligencia
-                    artificial.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4" data-aos="flip-left" data-aos-delay="100">
-            <div class="card-flip mx-auto card-colaborador-chica">
-              <div class="card-flip-inner">
-                <div class="card-flip-front">
-                  <img src="../../static/assets/img-GIS/MercadoLibre.png" alt="Logo MercadoLibre" class="img-fluid">
-                </div>
-                <div class="card-flip-back">
-                  <p>Mercado Libre es una plataforma líder en comercio electrónico y servicios financieros en América
-                    Latina, que ofrece compras, pagos, envíos y créditos, impulsando la inclusión digital desde su
-                    fundación en 1999.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4" data-aos="flip-left" data-aos-delay="200">
-            <div class="card-flip mx-auto card-colaborador-chica">
-              <div class="card-flip-inner">
-                <div class="card-flip-front">
-                  <img src="../../static/assets/img-GIS/Logo_de_Clip.png" alt="Logo CLIP" class="img-fluid">
-                </div>
-                <div class="card-flip-back">
-                  <p>Clip es una fintech mexicana que brinda soluciones de pago a pequeños negocios, permitiéndoles
-                    aceptar tarjetas, links y QR. Ofrece terminales accesibles, sin contratos, con depósitos rápidos y
-                    servicios financieros.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4" data-aos="flip-left" data-aos-delay="300">
-            <div class="card-flip mx-auto card-colaborador-chica">
-              <div class="card-flip-inner">
-                <div class="card-flip-front">
-                  <img src="../../static/assets/img-GIS/CISTIC.jpg" alt="Logo CISTIC" class="img-fluid">
-                </div>
-                <div class="card-flip-back">
-                  <p>CISTIC es la cámara que agrupa empresas de software y tecnología en San Luis, promoviendo
-                    desarrollo, formación de talento, networking y colaboración entre industria, academia y gobierno.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <div id="colaboradoresContainer" class="row justify-content-center g-4">
+          <!-- Los colaboradores se cargarán dinámicamente aquí -->
         </div>
       </div>
     </section>
@@ -266,6 +206,62 @@
   </footer>
 
   <script src="../../static/js-GIS/Proyectos.js" defer></script>
+  <script src="../../static/js-GIS/main.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await fetch('/api/v1/colaboradores');
+        if (!res.ok) throw new Error('Error en respuesta de API');
+        const colaboradores = await res.json();
+        
+        const container = document.getElementById('colaboradoresContainer');
+        if (!colaboradores || colaboradores.length === 0) {
+          container.innerHTML = '<p class="text-center text-muted">Aún no hay colaboradores cargados.</p>';
+          return;
+        }
+
+        let html = '';
+        let delay = 0;
+        
+        colaboradores.forEach(c => {
+          if (!c.activo) return; // Solo activos
+          
+          const logoHtml = c.logo_url
+            ? `<img src="${c.logo_url}" alt="Logo Colaborador" class="img-fluid" onerror="this.onerror=null; this.src='/static/assets/img-GIS/favicon-text.png';">`
+            : `<div class="logo-placeholder"><i class="bi bi-building"></i></div>`;
+            
+          html += `
+            <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4" data-aos="flip-left" data-aos-delay="${delay}">
+              <div class="card-flip mx-auto card-colaborador-chica">
+                <div class="card-flip-inner">
+                  <div class="card-flip-front">
+                    ${logoHtml}
+                  </div>
+                  <div class="card-flip-back">
+                    <p>${c.descripcion || ''}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+          
+          delay += 100;
+          if (delay > 300) delay = 0; // Limitar el delay para que no tarde mucho en aparecer
+        });
+        
+        container.innerHTML = html;
+        
+        // Re-inicializar AOS si está presente para animar los nuevos elementos
+        if (typeof AOS !== 'undefined') {
+          AOS.refresh();
+        }
+      } catch (err) {
+        console.error('Error al cargar colaboradores:', err);
+      }
+    });
+  </script>
+
   <script>
     AOS.init({ duration: 1000, once: false });
   </script>

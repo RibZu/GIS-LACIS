@@ -58,7 +58,8 @@ CREATE TABLE colaboradores (
     id BIGSERIAL PRIMARY KEY,
     usuario_gestor_id INT REFERENCES usuario_gestor(id) ON DELETE SET NULL,
     descripcion TEXT,
-    logo_url VARCHAR(500)
+    logo_url VARCHAR(500),
+    activo BOOLEAN DEFAULT TRUE
 );
 
 -- -----------------------------------------------------------------------------
