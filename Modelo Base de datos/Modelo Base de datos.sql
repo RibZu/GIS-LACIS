@@ -88,7 +88,8 @@ CREATE TABLE desarrollo (
 CREATE TABLE reconocimientos (
     id BIGSERIAL PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
-    descripcion TEXT
+    descripcion TEXT,
+    activo BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE participante_externo (
