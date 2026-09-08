@@ -165,4 +165,19 @@ func InitRoutes(e *gin.Engine) {
 	proyectosAPIAdmin.PUT("/admin/proyectos/:id", proyectoHandler.API_Update)
 	proyectosAPIAdmin.DELETE("/admin/proyectos/:id", proyectoHandler.API_Delete)
 
+	// Módulo "reconocimientos": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
+	reconocimientosAdmin := v1Admin.Group("")
+	reconocimientosAdmin.Use(handler.RequireModule(usuarioService, "reconocimientos"))
+	reconocimientosAdmin.GET("/reconocimientos", reconocimientoHandler.View_ReconocimientosAdmin)
+
+	// Rutas API de administración de Reconocimientos (CRUD placeholders)
+	reconocimientosAPIAdmin := v1API.Group("")
+	reconocimientosAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "reconocimientos"))
+	reconocimientosAPIAdmin.GET("/admin/reconocimientos-todos", reconocimientoHandler.API_GetAllAdmin)
+	reconocimientosAPIAdmin.POST("/admin/reconocimientos", reconocimientoHandler.API_Create)
+	reconocimientosAPIAdmin.GET("/admin/reconocimientos/:id", reconocimientoHandler.API_Read)
+	reconocimientosAPIAdmin.PUT("/admin/reconocimientos/:id", reconocimientoHandler.API_Update)
+	reconocimientosAPIAdmin.DELETE("/admin/reconocimientos/:id", reconocimientoHandler.API_Delete)
+	reconocimientosAPIAdmin.PATCH("/admin/reconocimientos/:id/restaurar", reconocimientoHandler.API_Restaurar)
 }
+

@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"PaginaSEG/internal/proyecto"
-	"PaginaSEG/internal/reconocimiento"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -136,30 +135,6 @@ func (h *ProyectoHandler) API_Delete(c *gin.Context) {
 // View_ProyectosAdmin renderiza la vista de proyectos
 func (h *ProyectoHandler) View_ProyectosAdmin(c *gin.Context) {
 	c.HTML(http.StatusOK, "EditarProyectos.html", nil)
-}
-
-// Handler de Reconocimientos
-type ReconocimientoHandler struct {
-	service *reconocimiento.Service
-	logger  *zap.Logger
-}
-
-func NewReconocimientoHandler(s *reconocimiento.Service, l *zap.Logger) *ReconocimientoHandler {
-	return &ReconocimientoHandler{
-		service: s,
-		logger:  l,
-	}
-}
-
-// API_GetAll retorna la lista de reconocimientos en JSON
-func (h *ReconocimientoHandler) API_GetAll(c *gin.Context) {
-	recs, err := h.service.GetAll()
-	if err != nil {
-		h.logger.Error("Error al obtener reconocimientos", zap.Error(err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "error al obtener reconocimientos"})
-		return
-	}
-	c.JSON(http.StatusOK, recs)
 }
 
 // API_GetAllAdmin retorna todos los proyectos (incluyendo inactivos) para el panel admin
