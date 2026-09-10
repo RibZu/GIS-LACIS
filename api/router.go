@@ -2,6 +2,7 @@ package api
 
 import (
 	"PaginaSEG/api/handler"
+	"PaginaSEG/internal/desarrollo"
 	"PaginaSEG/internal/integrante"
 	"PaginaSEG/internal/proyecto"
 	"PaginaSEG/internal/reconocimiento"
@@ -99,6 +100,10 @@ func InitRoutes(e *gin.Engine) {
 	integranteService := integrante.NewService(integranteStorage, logger)
 	integranteHandler := handler.NewIntegranteHandler(integranteService, logger)
 
+	desarrolloStorage := desarrollo.NewPostgresStorage(db)
+	desarrolloService := desarrollo.NewService(desarrolloStorage, logger)
+	desarrolloHandler := handler.NewDesarrolloHandler(desarrolloService, integranteService, logger)
+
 	usuarioStorage := usuario.NewPostgressStorage(db)
 	usuarioService := usuario.NewService(usuarioStorage, logger)
 	authHandler := handler.NewAuthHandler(usuarioService, integranteService, logger)
@@ -128,6 +133,16 @@ func InitRoutes(e *gin.Engine) {
 	integrantesAdmin.GET("/editar-integrante", integranteHandler.Editar)
 	integrantesAdmin.POST("/actualizar-integrante", integranteHandler.Actualizar)
 	integrantesAdmin.GET("/borrar-integrante", integranteHandler.Borrar)
+
+	// Módulo "proyectos": Desarrollos (mismo permiso que Proyectos I+D+i, ver README)
+	desarrollosAdmin := v1Admin.Group("")
+	desarrollosAdmin.Use(handler.RequireModule(usuarioService, "proyectos"))
+	desarrollosAdmin.GET("/desarrollos", desarrolloHandler.Lista)
+	desarrollosAdmin.GET("/crear-desarrollo", desarrolloHandler.Crear)
+	desarrollosAdmin.POST("/insertar-desarrollo", desarrolloHandler.Insertar)
+	desarrollosAdmin.GET("/editar-desarrollo", desarrolloHandler.Editar)
+	desarrollosAdmin.POST("/actualizar-desarrollo", desarrolloHandler.Actualizar)
+	desarrollosAdmin.GET("/borrar-desarrollo", desarrolloHandler.Borrar)
 
 	// Módulo "administradores": reservado a rol ADMIN, nunca asignable como módulo suelto
 	usuariosAdmin := v1Admin.Group("")

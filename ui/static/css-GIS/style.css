@@ -51,6 +51,25 @@ h1, h2, h3, h4, h5 {
     transition: color 1.5s ease-in-out;
 }
 
+/* Línea institucional (Departamento de Informática · UNSL) debajo del
+   título: arranca invisible y solo se revela cuando la sección pasa a
+   fondo azul por scroll (misma transición de 1.5s que ya usa el
+   título/párrafo al cambiar a blanco, para que entren juntos). */
+.eyebrow-institucional {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--blanco-fondo);
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.seccion-principal.fondo-azul .eyebrow-institucional {
+    opacity: 1;
+}
+
 .encabezado-seccion {
     font-size: 2.2rem;
     color: var(--azul-profundo);

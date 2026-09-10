@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresar Nuevo Desarrollo - Admin GIS-LACIS</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.12.1/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/ui/static/css-GIS/Styleheader.css">
+    <link rel="stylesheet" href="/ui/static/css-GIS/admin.css">
+    <link rel="stylesheet" href="/ui/static/css-GIS/desarrollos.css">
+</head>
+<body class="grilla">
+
+    <!-- Header / Navbar Compartido -->
+    <header>
+        {{ template "nav" . }}
+    </header>
+
+    <main class="admin-main py-4">
+        <div class="container">
+
+            <div class="form-card">
+
+                <!-- Encabezado del Formulario -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4 gap-2">
+                    <div>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-1 small">
+                                <li class="breadcrumb-item"><a href="/admin/dashboard" class="text-decoration-none" style="color: var(--azul-logo);">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="/admin/desarrollos" class="text-decoration-none" style="color: var(--azul-logo);">Desarrollos</a></li>
+                                <li class="breadcrumb-item active" aria-current="page" style="color: var(--azul-profundo);">Nuevo</li>
+                            </ol>
+                        </nav>
+                        <h3 class="form-header-title mb-1">
+                            <i class="bi bi-folder-plus me-2" style="color: var(--azul-logo);"></i>Ingresar Nuevo Desarrollo
+                        </h3>
+                        <p class="text-muted mb-0 small">Completa los datos del desarrollo para darlo de alta en el sistema.</p>
+                    </div>
+                    <a href="/admin/desarrollos" class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-1 rounded-pill px-3">
+                        <i class="bi bi-arrow-left"></i> Volver a la Lista
+                    </a>
+                </div>
+
+                {{ if .Error }}
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                    <div>{{ .Error }}</div>
+                </div>
+                {{ end }}
+
+                <!-- Formulario -->
+                <form action="/admin/insertar-desarrollo" method="POST">
+
+                    <!-- SECCIÓN 1: DATOS DEL DESARROLLO -->
+                    <div class="form-section-subtitle">
+                        <i class="bi bi-card-heading me-2" style="color: var(--azul-logo);"></i>1. Datos del Desarrollo
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label for="titulo" class="form-label">Título <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Ej: Sistema de Gestión Académica" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="anio" class="form-label">Año <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="anio" name="anio" min="1990" max="2100" placeholder="Ej: 2026" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="url" class="form-label">Enlace / URL (Opcional)</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-link-45deg"></i></span>
+                                <input type="text" class="form-control" id="url" name="url" placeholder="ejemplo.com.ar (con o sin https://)">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="contacto" class="form-label">Contacto (Opcional)</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="text" class="form-control" id="contacto" name="contacto" placeholder="usuario@unsl.edu.ar">
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="descripcion" class="form-label">Descripción (Opcional)</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" placeholder="Describe brevemente el desarrollo..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 2: INTEGRANTES PARTICIPANTES -->
+                    <div class="form-section-subtitle mt-4">
+                        <i class="bi bi-people-fill me-2" style="color: var(--azul-logo);"></i>2. Integrantes Participantes
+                    </div>
+                    <p class="text-muted small mb-2">
+                        Buscá entre los integrantes <strong>activos</strong> del laboratorio. Si la persona no aparece
+                        (por ejemplo, alguien externo al laboratorio), se puede sumar como <strong>participante externo</strong>.
+                    </p>
+
+                    <div class="participant-search-wrap" id="participantesWrap">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control" id="buscadorParticipante" placeholder="Escribí un nombre..." autocomplete="off">
+                        </div>
+                        <div class="participant-search-dropdown d-none" id="resultadosBusqueda"></div>
+                    </div>
+
+                    <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="btnAgregarExternoManual">
+                        <i class="bi bi-person-plus"></i> Agregar participante externo
+                    </button>
+                    <div class="input-group mt-2 d-none" id="externoManualWrap" style="max-width:420px;">
+                        <input type="text" class="form-control" id="externoManualInput" placeholder="Nombre del participante externo">
+                        <button type="button" class="btn btn-outline-primary" id="btnConfirmarExternoManual">Agregar</button>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mt-3" id="chipsParticipantes"></div>
+                    <div id="hiddenParticipantes"></div>
+
+                    <!-- Botones de Acción -->
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                        <a href="/admin/desarrollos" class="btn btn-outline-secondary px-4 rounded-pill">
+                            <i class="bi bi-x-circle me-1"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-guardar d-inline-flex align-items-center gap-2 rounded-pill">
+                            <i class="bi bi-check-circle-fill"></i> Guardar Desarrollo
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer Compartido -->
+    <footer>
+        {{ template "footer" . }}
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/ui/static/js-GIS/participantesWidget.js"></script>
+    <script>
+        // Solo integrantes ACTIVOS entran al buscador (filtrado acá porque
+        // el handler pasa .Integrantes con todos, activos e inactivos).
+        var INTEGRANTES_ACTIVOS = [
+            {{ range .Integrantes }}{{ if .Activo }}{ id: {{ .ID }}, nombre: "{{ .Nombre }} {{ .Apellido }}" },
+            {{ end }}{{ end }}
+        ];
+
+        crearWidgetParticipantes({
+            wrapId: 'participantesWrap',
+            buscadorId: 'buscadorParticipante',
+            dropdownId: 'resultadosBusqueda',
+            chipsId: 'chipsParticipantes',
+            hiddenId: 'hiddenParticipantes',
+            btnManualId: 'btnAgregarExternoManual',
+            manualWrapId: 'externoManualWrap',
+            manualInputId: 'externoManualInput',
+            manualConfirmId: 'btnConfirmarExternoManual',
+            integrantesActivos: INTEGRANTES_ACTIVOS,
+            seleccionInicial: []
+        });
+    </script>
+</body>
+</html>
