@@ -458,6 +458,7 @@ fetch('../../static/json-GIS/director.json')
   .then(data => {
     director=data;
     CrearCartaDirector(director); /* invocacion de funcion a cargar carta director */
+    if (typeof AOS !== 'undefined') AOS.refreshHard(); /* las cartas se agregan despues de que AOS ya escaneo la pagina, sin esto quedan invisibles */
 
   })
 
@@ -479,7 +480,8 @@ fetch('../../static/json-GIS/director.json')
   .then(data => {
     todos_los_directores=data;
     CrearCartaDirectores(todos_los_directores); /* invocacion de funcion a cargar carta directores de linea */
-    
+    if (typeof AOS !== 'undefined') AOS.refreshHard();
+
   })
 
     
@@ -489,7 +491,8 @@ fetch('../../static/json-GIS/director.json')
   .then(data => {
     todos_los_integrantes=data;
     CrearCartaIntegrantes(todos_los_integrantes); /* invocacion de funcion a cargar carta integrantes */
-    
+    if (typeof AOS !== 'undefined') AOS.refreshHard();
+
   })
 
     fetch('../../static/json-GIS/integrantesLacis.json')

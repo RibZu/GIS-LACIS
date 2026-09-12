@@ -88,19 +88,23 @@ func InitRoutes(e *gin.Engine) {
 
 	// 1. Inicio
 	e.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "index.html", gin.H{"LoggedIn": loggedIn})
 	})
 	// 2. Integrantes
 	e.GET("/integrantes", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "integrantes.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "integrantes.html", gin.H{"LoggedIn": loggedIn})
 	})
 	// 3. LaCIS
 	e.GET("/lacis", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "Lacis.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "Lacis.html", gin.H{"LoggedIn": loggedIn})
 	})
 	// 4. Proyectos
 	e.GET("/proyectos", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "Proyecto.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "Proyecto.html", gin.H{"LoggedIn": loggedIn})
 	})
 	// 5. Posgrado: Doctorado en Ingeniería de Software
 	e.GET("/doctorado-ing-software", func(c *gin.Context) {
