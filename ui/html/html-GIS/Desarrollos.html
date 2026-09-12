@@ -17,16 +17,17 @@
   <link rel="icon" type="image/png" href="../../static/assets/img-GIS/favicon-text.png?v=1">
   <link rel="stylesheet" type="text/css" href="../../static/css-GIS/EProyecto.css">
   <link rel="stylesheet" type="text/css" href="../../static/css-GIS/Styleheader.css">
+  <link rel="stylesheet" type="text/css" href="../../static/css-GIS/desarrollos-publico.css">
 </head>
 
-<body class="grilla">
+<body class="grilla pagina-desarrollos">
   <header>
     {{ template "nav" . }}
   </header>
 
   <main class="d-flex flex-column align-items-center py-5 pt-6">
 
-    <!-- 1. Título Hero -->
+
     <div class="hero-proyectos blur-in" data-aos="fade-down" data-aos-duration="1000">
       <span class="hero-eyebrow">Investigación & Desarrollo</span>
       <h1 class="titulo-seccion-principal"><span>Desarrollos</span> del Laboratorio</h1>
@@ -37,65 +38,36 @@
       <div class="hero-divider"></div>
     </div>
 
-    <!-- 2. Listado de Desarrollos -->
+
     <section class="seccion-extension px-3 px-md-4" data-aos="fade-up" data-aos-duration="1000">
       <h2 class="titulo-seccion-proy sin-subrayado">Desarrollos Realizados</h2>
-
-      <!--
-        Las tarjetas de abajo son de EJEMPLO (contenido fijo en el HTML).
-        Cuando el panel /admin/desarrollos esté conectado a la base de datos
-        (ver checklist de backend), esta sección se reemplaza para listar
-        los registros reales de la tabla "desarrollo" en vez de estar
-        hardcodeada acá.
-      -->
-      <div class="row g-4 justify-content-center">
-        <div class="col-12 col-lg-10 col-xl-9" data-aos="fade-up" data-aos-delay="100">
-          <div class="row g-4">
-
-            <!-- Desarrollo 1 (Ejemplo) -->
-            <div class="col-12">
-              <div class="tarjeta-extension">
-                <div>
-                  <h3 class="titulo-extension">Nombre del Desarrollo (Ejemplo) — 2026</h3>
-                  <p class="info-extension">
-                    <strong>Contacto:</strong> equipo@unsl.edu.ar<br><br>
-                    <strong>Descripción:</strong><br>
-                    Acá va la descripción del desarrollo: qué problema resuelve, a quién está dirigido y qué
-                    tecnologías utiliza. Este bloque se reemplaza por los datos reales de la tabla
-                    <code>desarrollo</code> una vez conectado el backend.
-                  </p>
-                </div>
-                <div>
-                  <a href="#" target="_blank" rel="noopener noreferrer" title="Visitar enlace del desarrollo">
-                    <i class="fa-solid fa-link circulo-icono"></i>
-                  </a>
-                </div>
-              </div>
+      {{ if .Desarrollos }}
+      <div class="grilla-desarrollos row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4" data-aos="fade-up" data-aos-delay="100">
+        {{ range .Desarrollos }}
+        <div class="col">
+          <div class="pub-card h-100 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="pub-tile"><i class="fa-solid fa-diagram-project"></i></div>
+              <span class="pub-year-pill">{{ .Anio }}</span>
             </div>
-
-            <!-- Desarrollo 2 (Ejemplo) -->
-            <div class="col-12">
-              <div class="tarjeta-extension">
-                <div>
-                  <h3 class="titulo-extension">Otro Desarrollo (Ejemplo) — 2025</h3>
-                  <p class="info-extension">
-                    <strong>Contacto:</strong> contacto@unsl.edu.ar<br><br>
-                    <strong>Descripción:</strong><br>
-                    Segunda tarjeta de ejemplo, para comprobar que el diseño se acomoda bien con varios
-                    desarrollos listados uno debajo del otro.
-                  </p>
-                </div>
-                <div>
-                  <a href="#" target="_blank" rel="noopener noreferrer" title="Visitar enlace del desarrollo">
-                    <i class="fa-solid fa-link circulo-icono"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-
+            <h3 class="pub-titulo">{{ .Titulo }}</h3>
+            {{ if .Contacto }}
+            <p class="pub-descripcion small mb-2"><strong>Contacto:</strong> {{ .Contacto }}</p>
+            {{ end }}
+            <p class="pub-descripcion small clamp-3 mb-3">{{ .Descripcion }}</p>
+            {{ if .URL }}
+            <a href="{{ .URL }}" target="_blank" rel="noopener noreferrer" class="pub-cta mt-auto align-self-start">
+              Visitar desarrollo <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            {{ end }}
           </div>
         </div>
+        {{ end }}
       </div>
+      {{ else }}
+      <p class="text-center text-secondary py-4">Todavía no hay desarrollos cargados.</p>
+      {{ end }}
+
     </section>
 
   </main>

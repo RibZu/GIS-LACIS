@@ -73,10 +73,6 @@ func InitRoutes(e *gin.Engine) {
 	e.GET("/proyectos", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "Proyecto.html", nil)
 	})
-	// 4.b Desarrollos (pendiente de conectar a datos reales, ver checklist de backend)
-	e.GET("/desarrollos", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "Desarrollos.html", nil)
-	})
 	// 5. Posgrado: Doctorado en Ingeniería de Software
 	e.GET("/doctorado-ing-software", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "DrIngSoft.html", nil)
@@ -105,6 +101,9 @@ func InitRoutes(e *gin.Engine) {
 	desarrolloStorage := desarrollo.NewPostgresStorage(db)
 	desarrolloService := desarrollo.NewService(desarrolloStorage, logger)
 	desarrolloHandler := handler.NewDesarrolloHandler(desarrolloService, integranteService, logger)
+
+	// 4.b Desarrollos (público) — misma fuente de datos que /admin/desarrollos
+	e.GET("/desarrollos", desarrolloHandler.ViewPublica)
 
 	usuarioStorage := usuario.NewPostgressStorage(db)
 	usuarioService := usuario.NewService(usuarioStorage, logger)
