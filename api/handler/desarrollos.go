@@ -203,3 +203,20 @@ func (h *DesarrolloHandler) Borrar(c *gin.Context) {
 	}
 	c.Redirect(http.StatusSeeOther, "/admin/desarrollos")
 }
+
+// ViewPublica renderiza la vista pública de desarrollos en Desarrollos.html
+func (h *DesarrolloHandler) ViewPublica(c *gin.Context) {
+	desarrollos, err := h.service.GetAll()
+	if err != nil {
+		h.logger.Error("Error al obtener desarrollos para vista pública Desarrollos.html", zap.Error(err))
+		desarrollos = []desarrollo.Desarrollo{}
+	}
+
+	_, loggedIn := CurrentUserID(c)
+
+	c.HTML(http.StatusOK, "Desarrollos.html", gin.H{
+		"Desarrollos": desarrollos,
+		"LoggedIn":    loggedIn,
+	})
+}
+
