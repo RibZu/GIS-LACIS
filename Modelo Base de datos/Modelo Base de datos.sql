@@ -17,7 +17,9 @@ CREATE TABLE rol (
 
 CREATE TABLE integrante (
     id SERIAL PRIMARY KEY,
-    rol_id INT REFERENCES rol(id) ON DELETE SET NULL,
+    rol_id INT REFERENCES rol(id) ON DELETE SET NULL, -- Rol general / legado
+    rol_lacis_id INT REFERENCES rol(id) ON DELETE SET NULL, -- Rol específico en LaCIS
+    rol_software_id INT REFERENCES rol(id) ON DELETE SET NULL, -- Rol específico en Grupo Software (GIS)
     activo BOOLEAN NOT NULL DEFAULT TRUE, -- Baja lógica
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
@@ -67,13 +69,13 @@ CREATE TABLE colaboradores (
 
 CREATE TABLE proyecto (
     id SERIAL PRIMARY KEY,
-    titulo VARCHAR(255) NOT NULL,
+    titulo TEXT NOT NULL,
     descripcion TEXT,
-    enlace VARCHAR(500),
-    equipo_historico VARCHAR(500),
-    anio_inicio INT NOT NULL,
-    anio_fin INT NOT NULL
-    
+    enlace TEXT,
+    equipo_historico TEXT,
+    anio_inicio INT,
+    anio_fin INT,
+    activo BOOLEAN DEFAULT TRUE 
 );
 
 CREATE TABLE desarrollo (
@@ -177,6 +179,8 @@ CREATE TABLE integrantes_lacis (
 -- -----------------------------------------------------------------------------
 
 CREATE INDEX idx_integrante_rol ON integrante(rol_id);
+CREATE INDEX idx_integrante_rol_lacis ON integrante(rol_lacis_id);
+CREATE INDEX idx_integrante_rol_software ON integrante(rol_software_id);
 CREATE INDEX idx_usuario_gestor_integrante ON usuario_gestor(integrante_id);
 CREATE INDEX idx_configuracion_gestor ON configuracion_sitio(usuario_gestor_id);
 CREATE INDEX idx_colaboradores_gestor ON colaboradores(usuario_gestor_id);

@@ -1,0 +1,256 @@
+./<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desarrollos (público) — 3 propuestas · Azul + Verde LaCIS</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.12.1/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<!-- Estilo 2 · Panel Moderno + variante pública azul/verde (ver comentarios en el propio archivo) -->
+<link rel="stylesheet" href="estilo-2.css">
+
+<style>
+  /* ============ Chrome del mockup (barra de control, no es parte del diseño real) ============ */
+  :root{
+    --chrome-bg:#14181F; --chrome-panel:#1B212B; --chrome-ink:#E7EAEF;
+    --chrome-ink-soft:#9AA4B2; --chrome-accent:#6C8EF5; --chrome-rule:#2A313D;
+  }
+  html,body{margin:0;}
+  body{ background:var(--chrome-bg); }
+  .chrome-header{ padding:1.75rem 1.25rem 1.25rem; text-align:center; color:var(--chrome-ink); font-family:'Manrope',sans-serif; }
+  .chrome-header .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--chrome-accent); font-weight:700;
+  }
+  .chrome-header h1{ font-weight:800; font-size:clamp(1.4rem,3.5vw,1.9rem); margin:.4rem 0 .3rem; }
+  .chrome-header p{ color:var(--chrome-ink-soft); font-size:.95rem; max-width:60ch; margin:0 auto; }
+  .switcher-bar{
+    position:sticky; top:0; z-index:50; background:rgba(20,24,31,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--chrome-rule); padding:.85rem 1rem;
+  }
+  .switcher-row{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:.4rem; max-width:1100px; margin:0 auto; }
+  .switcher-label{
+    font-family:'JetBrains Mono',monospace; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--chrome-ink-soft); margin-right:.4rem;
+  }
+  .chip-btn{
+    font-family:'Manrope',sans-serif; font-size:.84rem; font-weight:600; padding:.4rem .9rem; border-radius:999px;
+    border:1px solid var(--chrome-rule); background:var(--chrome-panel); color:var(--chrome-ink-soft);
+    cursor:pointer; transition:all .15s ease;
+  }
+  .chip-btn:hover{ color:var(--chrome-ink); border-color:var(--chrome-accent); }
+  .chip-btn.active{ background:var(--chrome-accent); border-color:var(--chrome-accent); color:#0C1220; }
+  .stage-wrap{ max-width:1160px; margin:1.5rem auto 3rem; padding:0 1rem; }
+  .browser-frame{ border-radius:14px; overflow:hidden; box-shadow:0 30px 60px -20px rgba(0,0,0,.55); border:1px solid var(--chrome-rule); }
+  .browser-toolbar{ background:#0F1319; padding:.55rem .9rem; display:flex; align-items:center; gap:.6rem; }
+  .browser-dots{ display:flex; gap:5px; }
+  .browser-dots span{ width:9px; height:9px; border-radius:50%; background:#3A4250; }
+  .browser-url{ flex:1; background:#1B212B; color:var(--chrome-ink-soft); font-family:'JetBrains Mono',monospace; font-size:.72rem; padding:.3rem .7rem; border-radius:6px; text-align:center; }
+  .view{ display:block; }
+  .view.d-none-view{ display:none !important; }
+  .chrome-footer{ text-align:center; color:var(--chrome-ink-soft); font-family:'JetBrains Mono',monospace; font-size:.72rem; padding-bottom:2rem; }
+  .clamp-3{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+
+  /* Encabezado editorial de la página pública (dentro del stage, no es chrome) */
+  .pub-hero{ text-align:center; padding:2.5rem 1rem 1.5rem; }
+  .pub-hero .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--pub-blue); font-weight:700;
+  }
+  .pub-hero h2{ font-family:'Montserrat',sans-serif; font-weight:800; color:var(--pub-green-ink); margin:.5rem 0 .6rem; }
+  .pub-hero p{ color:var(--adm-ink-soft); max-width:60ch; margin:0 auto; }
+</style>
+</head>
+<body>
+
+  <div class="chrome-header">
+    <p class="eyebrow">GIS&#8209;LACIS &middot; Mockup &middot; Pestaña pública "Desarrollo"</p>
+    <h1>Desarrollos — 3 propuestas para el visitante</h1>
+  </div>
+
+  <div class="switcher-bar">
+    <div class="switcher-row">
+      <span class="switcher-label">Vista</span>
+      <button class="chip-btn" data-view-btn="tarjetas">1 · Galería de tarjetas</button>
+      <button class="chip-btn" data-view-btn="destacados">2 · Destacados</button>
+      <button class="chip-btn" data-view-btn="lista">3 · Lista editorial</button>
+    </div>
+  </div>
+
+  <div class="stage-wrap">
+    <div class="browser-frame">
+      <div class="browser-toolbar">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url">gis-lacis.unsl.edu.ar/desarrollos</div>
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- VISTA 1 · GALERÍA DE TARJETAS                            -->
+      <!-- ======================================================= -->
+      <div class="view" data-view="tarjetas">
+        <div class="p-3 p-md-4 pb-5" style="background:var(--adm-bg);">
+          <div class="pub-hero">
+            <span class="eyebrow">Investigación &amp; Desarrollo</span>
+            <h2>Desarrollos del Laboratorio</h2>
+          </div>
+          <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3" id="stage-tarjetas"></div>
+        </div>
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- VISTA 2 · DESTACADOS (uno grande + secundarios)          -->
+      <!-- ======================================================= -->
+      <div class="view d-none-view" data-view="destacados">
+        <div class="p-3 p-md-4 pb-5" style="background:var(--adm-bg);">
+          <div class="pub-hero">
+            <span class="eyebrow">Investigación &amp; Desarrollo</span>
+            <h2>Lo último que construimos</h2>
+          </div>
+          <div class="mx-auto" style="max-width:760px;">
+            <div id="stage-destacado"></div>
+            <h6 class="text-secondary text-uppercase small fw-bold mt-4 mb-2" style="letter-spacing:.06em;">También en el catálogo</h6>
+            <div id="stage-secundarios"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- VISTA 3 · LISTA EDITORIAL (filas tipo índice de prensa)  -->
+      <!-- ======================================================= -->
+      <div class="view d-none-view" data-view="lista">
+        <div class="p-3 p-md-4 pb-5" style="background:var(--adm-bg);">
+          <div class="pub-hero">
+            <span class="eyebrow">Investigación &amp; Desarrollo</span>
+            <h2>Desarrollos del Laboratorio</h2>
+          </div>
+          <div class="pub-card p-4 mx-auto" style="max-width:760px;" id="stage-lista"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="chrome-footer">Mockup de presentación &middot; datos de ejemplo, no conectado a la base &middot; Bootstrap 5.3 + Bootstrap Icons + estilo-2.css</div>
+
+<script>
+(function(){
+  var DESARROLLOS = [
+    { titulo: 'AVI — Asistente Virtual con Inteligencia Artificial', anio: 2026,
+      url: 'https://noticias.unsl.edu.ar/26/08/2026/crean-un-asistente-virtual-para-atender-consultas-de-ingresantes/',
+      descripcion: 'Asistente conversacional para consultas de ingresantes a la FCFMyN: responde en lenguaje natural combinando RAG con un modelo de lenguaje, basándose solo en documentos institucionales para evitar respuestas incorrectas. Funciona las 24 horas y se actualiza desde un panel administrativo sin conocimientos técnicos.',
+      integrantes: ['Lorena Baigorria'], participantesExternos: ['Marcos Gelves', 'Santiago Delías'] },
+    { titulo: 'Sistema Informático para el Análisis de Sábanas de Telefonía', anio: 2026,
+      url: 'https://noticias.unsl.edu.ar/18/08/2026/ingeniera-de-la-unsl-crea-un-software-gratuito-para-investigaciones-penales/',
+      descripcion: 'Aplicación gratuita y de código abierto que automatiza la carga de registros telefónicos ("sábanas") usados en investigaciones penales, y georreferencia las antenas involucradas en mapas interactivos. El Poder Judicial de San Luis lo está implementando en su área de Delitos Complejos.',
+      integrantes: ['Lorena Baigorria'], participantesExternos: ['Inalén Godoy'] }
+  ];
+
+  function iniciales(nombre){ return nombre.split(' ').map(function(p){ return p[0]; }).slice(0,2).join('').toUpperCase(); }
+  // En la vista pública no distinguimos integrante/externo (eso es un detalle
+  // de gestión interna) — se muestran todos como "quién trabajó en esto".
+  function participantes(d){ return d.integrantes.concat(d.participantesExternos); }
+  function chips(d){
+    return participantes(d).map(function(n){
+      return '<span class="pub-chip-blue"><span class="ini">'+iniciales(n)+'</span>'+n+'</span>';
+    }).join(' ');
+  }
+
+  // -------- Vista 1: Galería de tarjetas --------
+  function renderTarjetas(){
+    var html = DESARROLLOS.map(function(d, i){
+      var tileClass = (i % 2 === 0) ? 'blue' : 'green';
+      return (
+        '<div class="col"><div class="pub-card h-100 p-3 d-flex flex-column">' +
+          '<div class="d-flex justify-content-between align-items-start mb-2">' +
+            '<div class="pub-tile '+tileClass+'"><i class="bi bi-kanban-fill"></i></div>' +
+            '<span class="pub-year-pill">'+d.anio+'</span>' +
+          '</div>' +
+          '<h6 class="fw-bold mb-1">'+d.titulo+'</h6>' +
+          '<p class="small text-secondary clamp-3 mb-3">'+d.descripcion+'</p>' +
+          '<div class="d-flex flex-wrap gap-1 mb-3">'+chips(d)+'</div>' +
+          '<a href="'+d.url+'" target="_blank" class="pub-cta mt-auto align-self-start">Ver desarrollo <i class="bi bi-arrow-right"></i></a>' +
+        '</div></div>'
+      );
+    }).join('');
+    document.getElementById('stage-tarjetas').innerHTML = html;
+  }
+
+  // -------- Vista 2: Destacados (el más nuevo grande + el resto en filas) --------
+  function renderDestacados(){
+    var ordenado = DESARROLLOS.slice().sort(function(a,b){ return b.anio - a.anio; });
+    var principal = ordenado[0];
+    var resto = ordenado.slice(1);
+
+    document.getElementById('stage-destacado').innerHTML =
+      '<div class="pub-featured">' +
+        '<div class="pub-featured-band"></div>' +
+        '<div class="pub-featured-body">' +
+          '<span class="pub-featured-eyebrow">Más reciente &middot; ' + principal.anio + '</span>' +
+          '<h3 class="fw-bold mt-2 mb-2" style="color:var(--pub-blue)">' + principal.titulo + '</h3>' +
+          '<p class="text-secondary mb-3">' + principal.descripcion + '</p>' +
+          '<div class="d-flex flex-wrap gap-1 mb-3">' + chips(principal) + '</div>' +
+          '<a href="' + principal.url + '" target="_blank" class="pub-cta">Ver desarrollo <i class="bi bi-arrow-right"></i></a>' +
+        '</div>' +
+      '</div>';
+
+    document.getElementById('stage-secundarios').innerHTML = resto.length ? resto.map(function(d, i){
+      return (
+        '<div class="pub-row">' +
+          '<div class="pub-row-tile ' + ((i % 2 === 0) ? 'green' : 'blue') + '"><i class="bi bi-kanban-fill"></i></div>' +
+          '<div class="flex-grow-1">' +
+            '<div class="pub-row-year mb-1">' + d.anio + '</div>' +
+            '<h6 class="fw-bold mb-1">' + d.titulo + '</h6>' +
+            '<p class="small text-secondary mb-2">' + d.descripcion + '</p>' +
+            '<div class="d-flex flex-wrap align-items-center gap-2">' +
+              '<div class="d-flex flex-wrap gap-1">' + chips(d) + '</div>' +
+              '<a href="' + d.url + '" target="_blank" class="pub-cta">Ver desarrollo <i class="bi bi-arrow-right"></i></a>' +
+            '</div>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('') : '<p class="text-secondary small">No hay más desarrollos cargados todavía.</p>';
+  }
+
+  // -------- Vista 3: Lista editorial (índice de prensa) --------
+  function renderLista(){
+    var ordenado = DESARROLLOS.slice().sort(function(a,b){ return b.anio - a.anio; });
+    document.getElementById('stage-lista').innerHTML = ordenado.map(function(d, i){
+      return (
+        '<div class="pub-row">' +
+          '<div class="pub-row-tile ' + ((i % 2 === 0) ? 'blue' : 'green') + '"><i class="bi bi-kanban-fill"></i></div>' +
+          '<div class="flex-grow-1">' +
+            '<div class="pub-row-year mb-1">' + d.anio + '</div>' +
+            '<h6 class="fw-bold mb-1">' + d.titulo + '</h6>' +
+            '<p class="small text-secondary mb-2">' + d.descripcion + '</p>' +
+            '<div class="d-flex flex-wrap align-items-center justify-content-between gap-2">' +
+              '<div class="d-flex flex-wrap gap-1">' + chips(d) + '</div>' +
+              '<a href="' + d.url + '" target="_blank" class="pub-cta flex-shrink-0">Ver desarrollo <i class="bi bi-arrow-right"></i></a>' +
+            '</div>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+  }
+
+  renderTarjetas();
+  renderDestacados();
+  renderLista();
+
+  var currentView = 'tarjetas';
+  function render(){
+    document.querySelectorAll('.view').forEach(function(v){ v.classList.toggle('d-none-view', v.dataset.view !== currentView); });
+    document.querySelectorAll('[data-view-btn]').forEach(function(b){ b.classList.toggle('active', b.dataset.viewBtn === currentView); });
+  }
+  document.querySelectorAll('[data-view-btn]').forEach(function(b){
+    b.addEventListener('click', function(){ currentView = b.dataset.viewBtn; render(); });
+  });
+  render();
+})();
+</script>
+</body>
+</html>

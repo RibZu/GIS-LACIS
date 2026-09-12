@@ -88,6 +88,10 @@
                             <label class="form-check-label" for="mod-integrantes">Integrantes</label>
                         </div>
                         <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="modulos" value="tesis" id="mod-tesis" {{ if index .Seleccionados "tesis" }}checked{{ end }}>
+                            <label class="form-check-label" for="mod-tesis">Tesis de Posgrado / Carreras</label>
+                        </div>
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="modulos" value="proyectos" id="mod-proyectos" {{ if index .Seleccionados "proyectos" }}checked{{ end }}>
                             <label class="form-check-label" for="mod-proyectos">Proyectos I+D+i</label>
                         </div>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Desarrollos - Software Engineering Group</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <link rel="icon" type="image/png" href="../../static/assets/img-GIS/favicon-text.png?v=1">
+  <link rel="stylesheet" type="text/css" href="../../static/css-GIS/EProyecto.css">
+  <link rel="stylesheet" type="text/css" href="../../static/css-GIS/Styleheader.css">
+</head>
+
+<body class="grilla">
+  <header>
+    {{ template "nav" . }}
+  </header>
+
+  <main class="d-flex flex-column align-items-center py-5 pt-6">
+
+    <!-- 1. Título Hero -->
+    <div class="hero-proyectos blur-in" data-aos="fade-down" data-aos-duration="1000">
+      <span class="hero-eyebrow">Investigación & Desarrollo</span>
+      <h1 class="titulo-seccion-principal"><span>Desarrollos</span> del Laboratorio</h1>
+      <p class="descripcion-seccion">
+        Sistemas, herramientas y productos de software desarrollados por integrantes de LaCIS y del Grupo de
+        Ingeniería de Software, fruto de la transferencia de conocimiento hacia la industria y la comunidad.
+      </p>
+      <div class="hero-divider"></div>
+    </div>
+
+    <!-- 2. Listado de Desarrollos -->
+    <section class="seccion-extension px-3 px-md-4" data-aos="fade-up" data-aos-duration="1000">
+      <h2 class="titulo-seccion-proy sin-subrayado">Desarrollos Realizados</h2>
+
+      <!--
+        Las tarjetas de abajo son de EJEMPLO (contenido fijo en el HTML).
+        Cuando el panel /admin/desarrollos esté conectado a la base de datos
+        (ver checklist de backend), esta sección se reemplaza para listar
+        los registros reales de la tabla "desarrollo" en vez de estar
+        hardcodeada acá.
+      -->
+      <div class="row g-4 justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-9" data-aos="fade-up" data-aos-delay="100">
+          <div class="row g-4">
+
+            <!-- Desarrollo 1 (Ejemplo) -->
+            <div class="col-12">
+              <div class="tarjeta-extension">
+                <div>
+                  <h3 class="titulo-extension">Nombre del Desarrollo (Ejemplo) — 2026</h3>
+                  <p class="info-extension">
+                    <strong>Contacto:</strong> equipo@unsl.edu.ar<br><br>
+                    <strong>Descripción:</strong><br>
+                    Acá va la descripción del desarrollo: qué problema resuelve, a quién está dirigido y qué
+                    tecnologías utiliza. Este bloque se reemplaza por los datos reales de la tabla
+                    <code>desarrollo</code> una vez conectado el backend.
+                  </p>
+                </div>
+                <div>
+                  <a href="#" target="_blank" rel="noopener noreferrer" title="Visitar enlace del desarrollo">
+                    <i class="fa-solid fa-link circulo-icono"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Desarrollo 2 (Ejemplo) -->
+            <div class="col-12">
+              <div class="tarjeta-extension">
+                <div>
+                  <h3 class="titulo-extension">Otro Desarrollo (Ejemplo) — 2025</h3>
+                  <p class="info-extension">
+                    <strong>Contacto:</strong> contacto@unsl.edu.ar<br><br>
+                    <strong>Descripción:</strong><br>
+                    Segunda tarjeta de ejemplo, para comprobar que el diseño se acomoda bien con varios
+                    desarrollos listados uno debajo del otro.
+                  </p>
+                </div>
+                <div>
+                  <a href="#" target="_blank" rel="noopener noreferrer" title="Visitar enlace del desarrollo">
+                    <i class="fa-solid fa-link circulo-icono"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    {{ template "footer" . }}
+  </footer>
+
+  <script>
+    AOS.init({ duration: 1000, once: false });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

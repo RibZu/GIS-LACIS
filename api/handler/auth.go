@@ -97,6 +97,7 @@ func (h *AuthHandler) ShowDashboard(c *gin.Context) {
 		"LoggedIn":             true,
 		"EsAdmin":              esAdmin(u),
 		"TieneIntegrantes":     tieneModulo(u, "integrantes"),
+		"TieneTesis":           tieneModulo(u, "tesis"),
 		"TieneProyectos":       tieneModulo(u, "proyectos"),
 		"TieneReconocimientos": tieneModulo(u, "reconocimientos"),
 		"TieneEmpresas":        tieneModulo(u, "empresas"),

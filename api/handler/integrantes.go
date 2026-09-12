@@ -46,10 +46,30 @@ func (h *IntegranteHandler) Crear(c *gin.Context) {
 
 // Procesar el Formulario Crear (POST)
 func (h *IntegranteHandler) Insertar(c *gin.Context) {
-	rolID, _ := strconv.Atoi(c.PostForm("rol_id"))
 	perteneceLacis := c.PostForm("pertenece_lacis") == "true" || c.PostForm("pertenece_lacis") == "on"
 	perteneceSoftware := c.PostForm("pertenece_grupo_software") == "true" || c.PostForm("pertenece_grupo_software") == "on"
 	activo := c.PostForm("activo") == "true" || c.PostForm("activo") == "on" || c.PostForm("activo") == ""
+
+	var rolLacisIDPtr *int
+	if perteneceLacis {
+		if val, err := strconv.Atoi(c.PostForm("rol_lacis_id")); err == nil && val > 0 {
+			rolLacisIDPtr = &val
+		}
+	}
+
+	var rolSoftwareIDPtr *int
+	if perteneceSoftware {
+		if val, err := strconv.Atoi(c.PostForm("rol_software_id")); err == nil && val > 0 {
+			rolSoftwareIDPtr = &val
+		}
+	}
+
+	var rolID int
+	if rolLacisIDPtr != nil {
+		rolID = *rolLacisIDPtr
+	} else if rolSoftwareIDPtr != nil {
+		rolID = *rolSoftwareIDPtr
+	}
 
 	req := integrante.Integrante{
 		Nombre:                 c.PostForm("nombre"),
@@ -62,6 +82,8 @@ func (h *IntegranteHandler) Insertar(c *gin.Context) {
 		PerteneceGrupoSoftware: perteneceSoftware,
 		Activo:                 activo,
 		RolID:                  rolID,
+		RolLacisID:             rolLacisIDPtr,
+		RolSoftwareID:          rolSoftwareIDPtr,
 	}
 
 	if fileImg, err := c.FormFile("imagen"); err == nil && fileImg != nil {
@@ -112,7 +134,7 @@ func (h *IntegranteHandler) Editar(c *gin.Context) {
 	})
 }
 
-// Procesar la Actualización (POST)
+// Procesar la Actualización (POST) - Solo permite modificar: título, CV, resumen y rol/pertenencia
 func (h *IntegranteHandler) Actualizar(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	if id <= 0 {
@@ -120,36 +142,38 @@ func (h *IntegranteHandler) Actualizar(c *gin.Context) {
 		return
 	}
 
-	rolID, _ := strconv.Atoi(c.PostForm("rol_id"))
-	nombre := c.PostForm("nombre")
-	apellido := c.PostForm("apellido")
-	contacto := c.PostForm("contacto")
-	contactoLinkedin := c.PostForm("contacto_linkedin")
 	especializacion := c.PostForm("especializacion")
 	descripcion := c.PostForm("descripcion")
 	perteneceLacis := c.PostForm("pertenece_lacis") == "true" || c.PostForm("pertenece_lacis") == "on"
 	perteneceSoftware := c.PostForm("pertenece_grupo_software") == "true" || c.PostForm("pertenece_grupo_software") == "on"
-	activo := c.PostForm("activo") == "true" || c.PostForm("activo") == "on"
+
+	var rolLacisIDPtr *int
+	if perteneceLacis {
+		if val, err := strconv.Atoi(c.PostForm("rol_lacis_id")); err == nil && val > 0 {
+			rolLacisIDPtr = &val
+		}
+	} else {
+		valZero := 0
+		rolLacisIDPtr = &valZero
+	}
+
+	var rolSoftwareIDPtr *int
+	if perteneceSoftware {
+		if val, err := strconv.Atoi(c.PostForm("rol_software_id")); err == nil && val > 0 {
+			rolSoftwareIDPtr = &val
+		}
+	} else {
+		valZero := 0
+		rolSoftwareIDPtr = &valZero
+	}
 
 	fields := integrante.UpdateFields{
-		Nombre:                 &nombre,
-		Apellido:               &apellido,
-		Contacto:               &contacto,
-		ContactoLinkedin:       &contactoLinkedin,
 		Especializacion:        &especializacion,
 		Descripcion:            &descripcion,
 		PerteneceLacis:         &perteneceLacis,
 		PerteneceGrupoSoftware: &perteneceSoftware,
-		Activo:                 &activo,
-		RolID:                  &rolID,
-	}
-
-	if fileImg, err := c.FormFile("imagen"); err == nil && fileImg != nil {
-		destPath := "ui/static/assets/img-GIS/IMGintegrantes/" + fileImg.Filename
-		if err := c.SaveUploadedFile(fileImg, destPath); err == nil {
-			imgPath := "../../static/assets/img-GIS/IMGintegrantes/" + fileImg.Filename
-			fields.Imagen = &imgPath
-		}
+		RolLacisID:             rolLacisIDPtr,
+		RolSoftwareID:          rolSoftwareIDPtr,
 	}
 
 	if fileCV, err := c.FormFile("cv"); err == nil && fileCV != nil {
