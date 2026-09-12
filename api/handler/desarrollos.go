@@ -203,3 +203,15 @@ func (h *DesarrolloHandler) Borrar(c *gin.Context) {
 	}
 	c.Redirect(http.StatusSeeOther, "/admin/desarrollos")
 }
+
+func (h *DesarrolloHandler) ViewPublica(c *gin.Context) {
+	lista, err := h.service.GetAll()
+	if err != nil {
+		h.logger.Error("Error al obtener desarrollos para la página pública", zap.Error(err))
+		lista = []desarrollo.Desarrollo{}
+	}
+
+	c.HTML(http.StatusOK, "Desarrollos.html", gin.H{
+		"Desarrollos": lista,
+	})
+}
