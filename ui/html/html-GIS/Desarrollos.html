@@ -52,46 +52,69 @@
         <div class="col-12 col-lg-10 col-xl-9" data-aos="fade-up" data-aos-delay="100">
           <div class="row g-4">
 
-            <!-- Desarrollo 1 (Ejemplo) -->
-            <div class="col-12">
-              <div class="tarjeta-extension">
-                <div>
-                  <h3 class="titulo-extension">Nombre del Desarrollo (Ejemplo) — 2026</h3>
-                  <p class="info-extension">
-                    <strong>Contacto:</strong> equipo@unsl.edu.ar<br><br>
-                    <strong>Descripción:</strong><br>
-                    Acá va la descripción del desarrollo: qué problema resuelve, a quién está dirigido y qué
-                    tecnologías utiliza. Este bloque se reemplaza por los datos reales de la tabla
-                    <code>desarrollo</code> una vez conectado el backend.
-                  </p>
-                </div>
-                <div>
-                  <a href="#" target="_blank" rel="noopener noreferrer" title="Visitar enlace del desarrollo">
-                    <i class="fa-solid fa-link circulo-icono"></i>
-                  </a>
+            {{ if .Desarrollos }}
+              {{ range .Desarrollos }}
+              <div class="col-12">
+                <div class="tarjeta-extension">
+                  <div>
+                    <h3 class="titulo-extension">{{ .Titulo }}{{ if .Anio }} — {{ .Anio }}{{ end }}</h3>
+                    <p class="info-extension">
+                      {{ if .Contacto }}<strong>Contacto:</strong> {{ .Contacto }}<br><br>{{ end }}
+                      {{ if .Descripcion }}<strong>Descripción:</strong><br>{{ .Descripcion }}{{ end }}
+                    </p>
+                  </div>
+                  {{ if .URL }}
+                  <div>
+                    <a href="{{ .URL }}" target="_blank" rel="noopener noreferrer" title="Visitar enlace del desarrollo">
+                      <i class="fa-solid fa-link circulo-icono"></i>
+                    </a>
+                  </div>
+                  {{ end }}
                 </div>
               </div>
-            </div>
+              {{ end }}
+            {{ else }}
+              <!-- Desarrollo 1 (Ejemplo) -->
+              <div class="col-12">
+                <div class="tarjeta-extension">
+                  <div>
+                    <h3 class="titulo-extension">Nombre del Desarrollo (Ejemplo) — 2026</h3>
+                    <p class="info-extension">
+                      <strong>Contacto:</strong> equipo@unsl.edu.ar<br><br>
+                      <strong>Descripción:</strong><br>
+                      Acá va la descripción del desarrollo: qué problema resuelve, a quién está dirigido y qué
+                      tecnologías utiliza. Este bloque se reemplaza por los datos reales de la tabla
+                      <code>desarrollo</code> una vez conectado el backend.
+                    </p>
+                  </div>
+                  <div>
+                    <a href="#" target="_blank" rel="noopener noreferrer" title="Visitar enlace del desarrollo">
+                      <i class="fa-solid fa-link circulo-icono"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
 
-            <!-- Desarrollo 2 (Ejemplo) -->
-            <div class="col-12">
-              <div class="tarjeta-extension">
-                <div>
-                  <h3 class="titulo-extension">Otro Desarrollo (Ejemplo) — 2025</h3>
-                  <p class="info-extension">
-                    <strong>Contacto:</strong> contacto@unsl.edu.ar<br><br>
-                    <strong>Descripción:</strong><br>
-                    Segunda tarjeta de ejemplo, para comprobar que el diseño se acomoda bien con varios
-                    desarrollos listados uno debajo del otro.
-                  </p>
-                </div>
-                <div>
-                  <a href="#" target="_blank" rel="noopener noreferrer" title="Visitar enlace del desarrollo">
-                    <i class="fa-solid fa-link circulo-icono"></i>
-                  </a>
+              <!-- Desarrollo 2 (Ejemplo) -->
+              <div class="col-12">
+                <div class="tarjeta-extension">
+                  <div>
+                    <h3 class="titulo-extension">Otro Desarrollo (Ejemplo) — 2025</h3>
+                    <p class="info-extension">
+                      <strong>Contacto:</strong> contacto@unsl.edu.ar<br><br>
+                      <strong>Descripción:</strong><br>
+                      Segunda tarjeta de ejemplo, para comprobar que el diseño se acomoda bien con varios
+                      desarrollos listados uno debajo del otro.
+                    </p>
+                  </div>
+                  <div>
+                    <a href="#" target="_blank" rel="noopener noreferrer" title="Visitar enlace del desarrollo">
+                      <i class="fa-solid fa-link circulo-icono"></i>
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
+            {{ end }}
 
           </div>
         </div>
