@@ -156,3 +156,36 @@ func (s *Service) Delete(id int) error {
 	s.logger.Info("Integrante eliminado exitosamente", zap.Int("id", id))
 	return nil
 }
+
+func (s *Service) CreateMinimo(nombre, apellido string, rolID int, perteneceLacis bool) (*Integrante, error) {
+	if nombre == "" {
+		return nil, ErrNombreRequerido
+	}
+	if apellido == "" {
+		return nil, ErrApellidoRequerido
+	}
+	if rolID <= 0 {
+		return nil, ErrRolRequerido
+	}
+	if !esSoloLetras(nombre) {
+		return nil, ErrNombreInvalido
+	}
+	if !esSoloLetras(apellido) {
+		return nil, ErrApellidoInvalido
+	}
+
+	i := &Integrante{
+		Nombre:         nombre,
+		Apellido:       apellido,
+		RolID:          rolID,
+		PerteneceLacis: perteneceLacis,
+		Activo:         true,
+	}
+
+	if err := s.storage.Create(i); err != nil {
+		s.logger.Error("Error al crear integrante mínimo", zap.Error(err))
+		return nil, fmt.Errorf("servicio createMinimo: %w", err)
+	}
+	s.logger.Info("Integrante mínimo creado exitosamente", zap.Int("id", i.ID))
+	return i, nil
+}

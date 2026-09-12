@@ -169,3 +169,68 @@ func (h *ProyectoHandler) API_Restaurar(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"mensaje": "proyecto restaurado exitosamente"})
 }
+
+type miembroEquipoInput struct {
+	IntegranteID  int    `json:"integrante_id" binding:"required"`
+	RolEnProyecto string `json:"rol_en_proyecto"`
+}
+
+// API_GetEquipo devuelve el equipo actual de un proyecto (endpoint público)
+func (h *ProyectoHandler) API_GetEquipo(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil || id <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+		return
+	}
+	equipo, err := h.service.GetEquipo(id)
+	if err != nil {
+		h.logger.Error("Error al obtener equipo", zap.Int("id", id), zap.Error(err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "error al obtener el equipo del proyecto"})
+		return
+	}
+	c.JSON(http.StatusOK, equipo)
+}
+
+// API_AgregarMiembro agrega (o actualiza el rol de) un integrante al equipo del proyecto
+func (h *ProyectoHandler) API_AgregarMiembro(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil || id <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+		return
+	}
+	var input miembroEquipoInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "JSON inválido"})
+		return
+	}
+	if err := h.service.AgregarMiembro(id, input.IntegranteID, input.RolEnProyecto); err != nil {
+		h.logger.Error("Error al agregar miembro al proyecto", zap.Error(err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "error al agregar el integrante al equipo"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"mensaje": "integrante agregado al equipo"})
+}
+
+// API_QuitarMiembro quita un integrante del equipo del proyecto
+func (h *ProyectoHandler) API_QuitarMiembro(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil || id <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+		return
+	}
+	integranteID, err := strconv.Atoi(c.Param("integrante_id"))
+	if err != nil || integranteID <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID de integrante inválido"})
+		return
+	}
+	if err := h.service.QuitarMiembro(id, integranteID); err != nil {
+		if errors.Is(err, proyecto.ErrNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "el integrante no pertenece al equipo de este proyecto"})
+			return
+		}
+		h.logger.Error("Error al quitar miembro del proyecto", zap.Error(err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "error al quitar el integrante del equipo"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"mensaje": "integrante quitado del equipo"})
+}

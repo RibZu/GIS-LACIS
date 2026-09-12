@@ -170,6 +170,8 @@ func InitRoutes(e *gin.Engine) {
 	proyectosAPIAdmin.GET("/admin/proyectos/:id", proyectoHandler.API_Read)
 	proyectosAPIAdmin.PUT("/admin/proyectos/:id", proyectoHandler.API_Update)
 	proyectosAPIAdmin.DELETE("/admin/proyectos/:id", proyectoHandler.API_Delete)
+	proyectosAPIAdmin.POST("/admin/proyectos/:id/equipo", proyectoHandler.API_AgregarMiembro)
+	proyectosAPIAdmin.DELETE("/admin/proyectos/:id/equipo/:integrante_id", proyectoHandler.API_QuitarMiembro)
 
 	// Módulo "reconocimientos": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
 	reconocimientosAdmin := v1Admin.Group("")
@@ -200,4 +202,13 @@ func InitRoutes(e *gin.Engine) {
 	colaboradoresAPIAdmin.PUT("/admin/colaboradores/:id", colaboradorHandler.API_Update)
 	colaboradoresAPIAdmin.DELETE("/admin/colaboradores/:id", colaboradorHandler.API_Delete)
 	colaboradoresAPIAdmin.PATCH("/admin/colaboradores/:id/restaurar", colaboradorHandler.API_Restaurar)
+
+	// Público: consultar equipo de un proyecto
+	v1API.GET("/proyectos/:id/equipo", proyectoHandler.API_GetEquipo)
+
+	// Nuevo grupo admin para integrantes
+	integrantesAPIAdmin := v1API.Group("")
+	integrantesAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "integrantes"))
+	integrantesAPIAdmin.POST("/admin/integrantes/mini", integranteHandler.API_CreateMinimo)
+
 }

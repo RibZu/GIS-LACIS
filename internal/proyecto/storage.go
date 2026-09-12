@@ -20,6 +20,10 @@ type Storage interface {
 	GetAll() ([]Proyecto, error)
 	GetAllAdmin() ([]Proyecto, error)
 	Restaurar(id int) error
+
+	GetEquipo(proyectoID int) ([]MiembroEquipo, error)
+	AgregarMiembro(proyectoID, integranteID int, rolEnProyecto string) error
+	QuitarMiembro(proyectoID, integranteID int) error
 }
 
 type PostgresStorage struct {
@@ -250,6 +254,59 @@ func (s *PostgresStorage) Restaurar(id int) error {
 		return fmt.Errorf("error al restaurar el proyecto con ID %d: %w", id, err)
 	}
 
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return ErrNotFound
+	}
+	return nil
+}
+
+func (s *PostgresStorage) GetEquipo(proyectoID int) ([]MiembroEquipo, error) {
+	query := `SELECT pi.integrante_id, i.nombre, i.apellido, COALESCE(pi.rol_en_proyecto, '')
+	          FROM proyecto_integrantes pi
+	          JOIN integrante i ON i.id = pi.integrante_id
+	          WHERE pi.proyecto_id = $1
+	          ORDER BY pi.id ASC`
+	rows, err := s.db.Query(query, proyectoID)
+	if err != nil {
+		return nil, fmt.Errorf("error al consultar equipo del proyecto: %w", err)
+	}
+	defer rows.Close()
+
+	equipo := make([]MiembroEquipo, 0)
+	for rows.Next() {
+		var m MiembroEquipo
+		if err := rows.Scan(&m.IntegranteID, &m.Nombre, &m.Apellido, &m.RolEnProyecto); err != nil {
+			return nil, fmt.Errorf("error al escanear miembro de equipo: %w", err)
+		}
+		equipo = append(equipo, m)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error en iteración de equipo: %w", err)
+	}
+	return equipo, nil
+}
+
+func (s *PostgresStorage) AgregarMiembro(proyectoID, integranteID int, rolEnProyecto string) error {
+	query := `INSERT INTO proyecto_integrantes (proyecto_id, integrante_id, rol_en_proyecto)
+	          VALUES ($1, $2, $3)
+	          ON CONFLICT (proyecto_id, integrante_id) DO UPDATE SET rol_en_proyecto = EXCLUDED.rol_en_proyecto`
+	_, err := s.db.Exec(query, proyectoID, integranteID, rolEnProyecto)
+	if err != nil {
+		return fmt.Errorf("error al agregar miembro al equipo: %w", err)
+	}
+	return nil
+}
+
+func (s *PostgresStorage) QuitarMiembro(proyectoID, integranteID int) error {
+	query := `DELETE FROM proyecto_integrantes WHERE proyecto_id = $1 AND integrante_id = $2`
+	res, err := s.db.Exec(query, proyectoID, integranteID)
+	if err != nil {
+		return fmt.Errorf("error al quitar miembro del equipo: %w", err)
+	}
 	rows, err := res.RowsAffected()
 	if err != nil {
 		return err

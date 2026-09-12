@@ -120,10 +120,38 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-bold small text-muted text-uppercase">Equipo Histórico /
-                        Dirección</label>
-                    <input type="text" class="form-control" id="formEquipo"
-                        placeholder="Ej: Dr. Mario Berón, Mg. Norma Pérez">
+                    <label class="form-label fw-bold small text-muted text-uppercase">Equipo del Proyecto</label>
+
+                    <div class="position-relative mb-2">
+                        <input type="text" class="form-control" id="inputBuscarIntegrante"
+                            placeholder="Escribí un nombre para buscar..." autocomplete="off">
+                        <div id="resultadosBusqueda" class="list-group position-absolute w-100 shadow-sm"
+                            style="z-index: 1060; max-height: 220px; overflow-y: auto; display: none; top: 100%;"></div>
+                    </div>
+
+                    <div id="seleccionActual" class="d-none alert alert-light border d-flex justify-content-between align-items-center py-2 px-3 mb-2">
+                        <span id="seleccionNombre" class="fw-bold small"></span>
+                        <button type="button" class="btn-close" id="btnCancelarSeleccion" aria-label="Cancelar"></button>
+                    </div>
+
+                    <div class="input-group mb-2">
+                        <select class="form-select" id="inputRolEnProyecto">
+                            <option value="" selected>Seleccioná un rol...</option>
+                            <option value="Director / Co-Director">Director / Co-Director</option>
+                            <option value="Investigador">Investigador</option>
+                            <option value="Asesor Externo">Asesor Externo</option>
+                            <option value="Estudiante / Becario">Estudiante / Becario</option>
+                        </select>
+                        <button class="btn btn-outline-primary" type="button" id="btnAgregarMiembro" disabled>
+                            <i class="bi bi-plus-lg"></i> Agregar
+                        </button>
+                    </div>
+
+                    <div class="small text-end mb-2">
+                        <a href="#" id="linkCrearIntegranteRapido"><i class="bi bi-person-plus"></i> ¿No está en la lista? Cargarlo rápido</a>
+                    </div>
+
+                    <ul class="list-group" id="listaEquipoActual"></ul>
                 </div>
 
                 <div class="mb-3">
@@ -133,8 +161,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label fw-bold small text-muted text-uppercase">Enlace Web / Repositorio
-                        (Opcional)</label>
+                    <label class="form-label fw-bold small text-muted text-uppercase"> enlace de resolucion (opcional)</label>
                     <div class="input-group">
                         <span class="input-group-text bg-light"><i class="bi bi-link-45deg"></i></span>
                         <input type="url" class="form-control" id="formEnlace" placeholder="https://lacis.unsl.edu.ar">
@@ -181,6 +208,44 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modalMiniIntegrante" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Carga rápida de integrante</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-uppercase text-muted">Nombre *</label>
+          <input type="text" class="form-control" id="miniNombre">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-uppercase text-muted">Apellido *</label>
+          <input type="text" class="form-control" id="miniApellido">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-uppercase text-muted">Rol *</label>
+          <select class="form-select" id="miniRolId">
+            <option value="1">Director / Co-Director</option>
+            <option value="2">Investigador</option>
+            <option value="3">Asesor Externo</option>
+            <option value="4">Estudiante / Becario</option>
+          </select>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="miniPerteneceLacis">
+          <label class="form-check-label small" for="miniPerteneceLacis">Pertenece a LaCIS</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnGuardarMiniIntegrante">Crear y agregar al equipo</button>
+      </div>
+    </div>
+  </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js-GIS/abmProyectos.js"></script>

@@ -1,5 +1,11 @@
 let proyectos = [];
         let idProyectoAEliminar = null;
+        let todosLosIntegrantes = [];
+        let equipoActual = [];       
+        let equipoPendiente = [];   
+        let proyectoIdActual = null;
+        let integranteSeleccionado = null;
+        const modalMiniIntegranteBS = new bootstrap.Modal(document.getElementById('modalMiniIntegrante'));
 
         const cardsGrid = document.getElementById('cardsGrid');
         const emptyState = document.getElementById('emptyState');
@@ -13,6 +19,7 @@ let proyectos = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             cargarDesdeAPI();
+            cargarIntegrantes();
             configurarEventos();
         });
 
@@ -135,6 +142,13 @@ let proyectos = [];
         function abrirDrawerCrear() {
             document.getElementById('formProyecto').reset();
             document.getElementById('formId').value = '';
+            proyectoIdActual = null;
+            equipoActual = [];
+            equipoPendiente = [];
+            integranteSeleccionado = null;
+            document.getElementById('seleccionActual').classList.add('d-none');
+            document.getElementById('btnAgregarMiembro').disabled = true;
+            renderizarEquipoActual();
             document.getElementById('drawerTitulo').innerHTML = '<i class="bi bi-plus-circle text-primary"></i> <span>Nuevo Proyecto</span>';
             document.getElementById('formAnioInicio').value = new Date().getFullYear();
             document.getElementById('formAnioFin').value = new Date().getFullYear() + 2;
@@ -145,6 +159,8 @@ let proyectos = [];
             const p = proyectos.find(item => item.id === id);
             if (!p) return;
 
+            proyectoIdActual = p.id;
+            equipoPendiente = [];
             document.getElementById('formId').value = p.id;
             document.getElementById('formTitulo').value = p.titulo || '';
             document.getElementById('formAnioInicio').value = p.anio_inicio || 2024;
@@ -152,6 +168,8 @@ let proyectos = [];
             document.getElementById('formEquipo').value = p.equipo_historico || '';
             document.getElementById('formDescripcion').value = p.descripcion || '';
             document.getElementById('formEnlace').value = p.enlace || '';
+
+            cargarEquipoDeProyecto(p.id);
 
             document.getElementById('drawerTitulo').innerHTML = '<i class="bi bi-pencil-square text-primary"></i> <span>Editar Proyecto #' + p.id + '</span>';
             drawerBS.show();
@@ -170,28 +188,36 @@ let proyectos = [];
             };
 
             try {
-                let res;
                 if (!id) {
-                    res = await fetch('/api/v1/admin/proyectos', {
+                    const res = await fetch('/api/v1/admin/proyectos', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
-                } else {
-                    res = await fetch(`/api/v1/admin/proyectos/${id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
+                    if (!res.ok) {
+                        const err = await res.json();
+                        throw new Error(err.error || 'Error al guardar');
+                    }
+                    const nuevoProyecto = await res.json();
+                    proyectoIdActual = nuevoProyecto.id;
+                    document.getElementById('formId').value = nuevoProyecto.id;
+                    document.getElementById('drawerTitulo').innerHTML = '<i class="bi bi-pencil-square text-primary"></i> <span>Editar Proyecto #' + nuevoProyecto.id + '</span>';
+                    cargarDesdeAPI();
+                    mostrarToast('Proyecto creado. Ahora podés agregar el equipo abajo.');
+                    return; // Dejamos el drawer abierto para cargar el equipo
                 }
 
+                const res = await fetch(`/api/v1/admin/proyectos/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
                 if (!res.ok) {
                     const err = await res.json();
                     throw new Error(err.error || 'Error al guardar');
                 }
-
                 drawerBS.hide();
-                mostrarToast(id ? 'Proyecto actualizado con éxito.' : 'Proyecto creado con éxito.');
+                mostrarToast('Proyecto actualizado con éxito.');
                 cargarDesdeAPI();
             } catch (err) {
                 mostrarToast(err.message, 'danger');
@@ -220,7 +246,205 @@ let proyectos = [];
         });
 
         function configurarEventos() {
-            // Ya no escuchamos a los radio buttons de vigencia, solo al buscador y al selector de orden
             inputBuscar.addEventListener('input', () => renderizarCards());
             selectOrden.addEventListener('change', () => renderizarCards());
         }
+        async function cargarIntegrantes() {
+            try {
+                const res = await fetch('/api/v1/integrantes');
+                todosLosIntegrantes = await res.json() || [];
+                document.getElementById('listaIntegrantes').innerHTML = todosLosIntegrantes
+                    .map(i => `<option data-id="${i.id}" value="${i.nombre} ${i.apellido}">`)
+                    .join('');
+            } catch (err) {
+                console.error('No se pudo cargar la lista de integrantes', err);
+            }
+        }
+
+        const inputBuscarIntegrante = document.getElementById('inputBuscarIntegrante');
+        const resultadosBusqueda = document.getElementById('resultadosBusqueda');
+
+        inputBuscarIntegrante.addEventListener('input', () => {
+            const texto = inputBuscarIntegrante.value.trim().toLowerCase();
+            if (!texto) {
+                resultadosBusqueda.style.display = 'none';
+                return;
+            }
+
+            const yaEnEquipo = new Set(obtenerEquipoVisible().map(m => m.integrante_id));
+            const coincidencias = todosLosIntegrantes
+                .filter(i => !yaEnEquipo.has(i.id))
+                .filter(i => `${i.nombre} ${i.apellido}`.toLowerCase().includes(texto))
+                .slice(0, 8);
+
+            resultadosBusqueda.innerHTML = '';
+            if (coincidencias.length === 0) {
+                resultadosBusqueda.innerHTML = '<div class="list-group-item small text-muted">Sin coincidencias.</div>';
+            } else {
+                coincidencias.forEach(i => {
+                    const item = document.createElement('button');
+                    item.type = 'button';
+                    item.className = 'list-group-item list-group-item-action small';
+                    item.textContent = `${i.nombre} ${i.apellido}`;
+                    item.addEventListener('click', () => seleccionarIntegrante(i));
+                    resultadosBusqueda.appendChild(item);
+                });
+            }
+            resultadosBusqueda.style.display = 'block';
+        });
+
+        // Cierra el dropdown al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!resultadosBusqueda.contains(e.target) && e.target !== inputBuscarIntegrante) {
+                resultadosBusqueda.style.display = 'none';
+            }
+        });
+
+        function seleccionarIntegrante(i) {
+            integranteSeleccionado = i;
+            document.getElementById('seleccionNombre').textContent = `${i.nombre} ${i.apellido}`;
+            document.getElementById('seleccionActual').classList.remove('d-none');
+            document.getElementById('btnAgregarMiembro').disabled = false;
+            inputBuscarIntegrante.value = '';
+            resultadosBusqueda.style.display = 'none';
+        }
+
+        document.getElementById('btnCancelarSeleccion').addEventListener('click', () => {
+            integranteSeleccionado = null;
+            document.getElementById('seleccionActual').classList.add('d-none');
+            document.getElementById('btnAgregarMiembro').disabled = true;
+        });
+
+        async function cargarEquipoDeProyecto(id) {
+            try {
+                const res = await fetch(`/api/v1/proyectos/${id}/equipo`);
+                equipoActual = await res.json() || [];
+            } catch (err) {
+                equipoActual = [];
+            }
+            renderizarEquipoActual();
+        }
+
+        function obtenerEquipoVisible() {
+    return proyectoIdActual ? equipoActual : equipoPendiente;
+    }
+
+    function renderizarEquipoActual() {
+        const lista = document.getElementById('listaEquipoActual');
+        const equipo = obtenerEquipoVisible();
+        lista.innerHTML = '';
+
+        if (equipo.length === 0) {
+            lista.innerHTML = '<li class="list-group-item text-muted small">Aún no hay integrantes cargados.</li>';
+            return;
+        }
+
+        equipo.forEach((m, idx) => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            li.innerHTML = `
+                <span><strong>${m.nombre} ${m.apellido}</strong>${m.rol_en_proyecto ? ' — ' + m.rol_en_proyecto : ''}</span>
+                <button type="button" class="btn btn-sm btn-outline-danger" data-idx="${idx}">
+                    <i class="bi bi-x-lg"></i>
+                </button>`;
+            li.querySelector('button').addEventListener('click', () => quitarMiembroEquipo(m.integrante_id, idx));
+            lista.appendChild(li);
+        });
+    }
+
+        async function agregarMiembroEquipo(integranteId, rol) {
+            if (!proyectoIdActual) {
+                mostrarToast('Primero guardá el proyecto para poder agregar el equipo.', 'danger');
+                return;
+            }
+            try {
+                const res = await fetch(`/api/v1/admin/proyectos/${proyectoIdActual}/equipo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ integrante_id: integranteId, rol_en_proyecto: rol })
+                });
+                if (!res.ok) throw new Error('No se pudo agregar el integrante');
+                await cargarEquipoDeProyecto(proyectoIdActual);
+            } catch (err) {
+                mostrarToast(err.message, 'danger');
+            }
+        }
+
+        async function quitarMiembroEquipo(integranteId, idx) {
+            if (!proyectoIdActual) {
+                // Todavía no se guardó nada en el servidor: solo sacarlo de la lista local
+                equipoPendiente.splice(idx, 1);
+                renderizarEquipoActual();
+                return;
+            }
+            try {
+                const res = await fetch(`/api/v1/admin/proyectos/${proyectoIdActual}/equipo/${integranteId}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error('No se pudo quitar el integrante');
+                await cargarEquipoDeProyecto(proyectoIdActual);
+            } catch (err) {
+                mostrarToast(err.message, 'danger');
+            }
+        }
+
+        document.getElementById('btnAgregarMiembro').addEventListener('click', async () => {
+            if (!integranteSeleccionado) return;
+            const rol = document.getElementById('inputRolEnProyecto').value.trim();
+
+            if (proyectoIdActual) {
+                // El proyecto ya existe: se persiste al toque
+                await agregarMiembroEquipo(integranteSeleccionado.id, rol);
+            } else {
+                // Proyecto nuevo: se guarda en memoria hasta hacer clic en "Guardar Proyecto"
+                equipoPendiente.push({
+                    integrante_id: integranteSeleccionado.id,
+                    nombre: integranteSeleccionado.nombre,
+                    apellido: integranteSeleccionado.apellido,
+                    rol_en_proyecto: rol
+                });
+                renderizarEquipoActual();
+            }
+
+            integranteSeleccionado = null;
+            document.getElementById('seleccionActual').classList.add('d-none');
+            document.getElementById('btnAgregarMiembro').disabled = true;
+            document.getElementById('inputRolEnProyecto').value = '';
+        });
+
+        document.getElementById('linkCrearIntegranteRapido').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('miniNombre').value = '';
+            document.getElementById('miniApellido').value = '';
+            document.getElementById('miniPerteneceLacis').checked = false;
+            modalMiniIntegranteBS.show();
+        });
+
+        document.getElementById('btnGuardarMiniIntegrante').addEventListener('click', async () => {
+            const payload = {
+                nombre: document.getElementById('miniNombre').value.trim(),
+                apellido: document.getElementById('miniApellido').value.trim(),
+                rol_id: parseInt(document.getElementById('miniRolId').value),
+                pertenece_lacis: document.getElementById('miniPerteneceLacis').checked
+            };
+            if (!payload.nombre || !payload.apellido) {
+                mostrarToast('Nombre y apellido son obligatorios.', 'danger');
+                return;
+            }
+            try {
+                const res = await fetch('/api/v1/admin/integrantes/mini', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'No se pudo crear el integrante');
+                }
+                const nuevo = await res.json();
+                await cargarIntegrantes();
+                modalMiniIntegranteBS.hide();
+                await agregarMiembroEquipo(nuevo.id, document.getElementById('inputRolEnProyecto').value.trim());
+                mostrarToast('Integrante creado y agregado al equipo.');
+            } catch (err) {
+                mostrarToast(err.message, 'danger');
+            }
+        });

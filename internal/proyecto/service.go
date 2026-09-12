@@ -131,3 +131,37 @@ func (s *Service) Restaurar(id int) error {
 	s.logger.Info("Proyecto restaurado exitosamente", zap.Int("id", id))
 	return nil
 }
+
+func (s *Service) GetEquipo(proyectoID int) ([]MiembroEquipo, error) {
+	if proyectoID <= 0 {
+		return nil, ErrIDInvalido
+	}
+	equipo, err := s.storage.GetEquipo(proyectoID)
+	if err != nil {
+		s.logger.Error("Error al obtener equipo del proyecto", zap.Int("proyecto_id", proyectoID), zap.Error(err))
+		return nil, err
+	}
+	return equipo, nil
+}
+
+func (s *Service) AgregarMiembro(proyectoID, integranteID int, rolEnProyecto string) error {
+	if proyectoID <= 0 || integranteID <= 0 {
+		return ErrIDInvalido
+	}
+	if err := s.storage.AgregarMiembro(proyectoID, integranteID, rolEnProyecto); err != nil {
+		s.logger.Error("Error al agregar miembro al equipo", zap.Error(err))
+		return err
+	}
+	return nil
+}
+
+func (s *Service) QuitarMiembro(proyectoID, integranteID int) error {
+	if proyectoID <= 0 || integranteID <= 0 {
+		return ErrIDInvalido
+	}
+	if err := s.storage.QuitarMiembro(proyectoID, integranteID); err != nil {
+		s.logger.Error("Error al quitar miembro del equipo", zap.Error(err))
+		return err
+	}
+	return nil
+}

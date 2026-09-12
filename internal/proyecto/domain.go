@@ -19,3 +19,10 @@ type UpdateFields struct {
 	AnioInicio      *int    `json:"anio_inicio"`
 	AnioFin         *int    `json:"anio_fin"`
 }
+
+type MiembroEquipo struct {
+	IntegranteID  int    `json:"integrante_id"`
+	Nombre        string `json:"nombre"`
+	Apellido      string `json:"apellido"`
+	RolEnProyecto string `json:"rol_en_proyecto"`
+}

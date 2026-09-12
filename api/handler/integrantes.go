@@ -219,3 +219,24 @@ func (ih *IntegranteHandler) API_Read(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, i)
 }
+
+type integranteMinimoInput struct {
+	Nombre         string `json:"nombre" binding:"required"`
+	Apellido       string `json:"apellido" binding:"required"`
+	RolID          int    `json:"rol_id" binding:"required"`
+	PerteneceLacis bool   `json:"pertenece_lacis"`
+}
+
+func (ih *IntegranteHandler) API_CreateMinimo(c *gin.Context) {
+	var input integranteMinimoInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "JSON inválido"})
+		return
+	}
+	i, err := ih.service.CreateMinimo(input.Nombre, input.Apellido, input.RolID, input.PerteneceLacis)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, i)
+}

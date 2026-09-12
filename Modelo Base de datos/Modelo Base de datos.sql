@@ -103,6 +103,7 @@ CREATE TABLE proyecto_integrantes (
     id SERIAL PRIMARY KEY,
     integrante_id INT NOT NULL REFERENCES integrante(id) ON DELETE CASCADE,
     proyecto_id INT NOT NULL REFERENCES proyecto(id) ON DELETE CASCADE,
+    rol_en_proyecto VARCHAR(150),
     CONSTRAINT uq_proyecto_integrante UNIQUE (proyecto_id, integrante_id)
 );
 
