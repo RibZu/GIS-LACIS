@@ -58,7 +58,33 @@ func InitRoutes(e *gin.Engine) {
 	// Cargar las plantillas HTML
 	e.LoadHTMLGlob("ui/html/**/*.html")
 
-	// RUTAS PARA PÁGINAS WEB (HTML) estatico
+	// INICIALIZACIÓN DE SERVICIOS Y HANDLERS
+	integranteStorage := integrante.NewPostgresStorage(db)
+	integranteService := integrante.NewService(integranteStorage, logger)
+	integranteHandler := handler.NewIntegranteHandler(integranteService, logger)
+
+	tesisStorage := tesis.NewPostgresStorage(db)
+	tesisService := tesis.NewService(tesisStorage, logger)
+	tesisHandler := handler.NewTesisHandler(tesisService, integranteService, logger)
+
+	desarrolloStorage := desarrollo.NewPostgresStorage(db)
+	desarrolloService := desarrollo.NewService(desarrolloStorage, logger)
+	desarrolloHandler := handler.NewDesarrolloHandler(desarrolloService, integranteService, logger)
+
+	usuarioStorage := usuario.NewPostgressStorage(db)
+	usuarioService := usuario.NewService(usuarioStorage, logger)
+	authHandler := handler.NewAuthHandler(usuarioService, integranteService, logger)
+	usuarioHandler := handler.NewUsuarioHandler(usuarioService, logger)
+
+	proyectoStorage := proyecto.NewPostgresStorage(db)
+	proyectoService := proyecto.NewService(proyectoStorage, logger)
+	proyectoHandler := handler.NewProyectoHandler(proyectoService, logger)
+
+	reconocimientoStorage := reconocimiento.NewPostgresStorage(db)
+	reconocimientoService := reconocimiento.NewService(reconocimientoStorage, logger)
+	reconocimientoHandler := handler.NewReconocimientoHandler(reconocimientoService, logger)
+
+	// RUTAS PARA PÁGINAS WEB (HTML)
 
 	// 1. Inicio
 	e.GET("/", func(c *gin.Context) {
@@ -92,34 +118,10 @@ func InitRoutes(e *gin.Engine) {
 	e.GET("/maestria-ing-software", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "MgIngSoft.html", nil)
 	})
-
-	// Al usar plantillas de GO se hace de esta manera
-
-	// RUTAS DE ADMINISTRACIÓN CON PLANTILLAS GO (SERVER-SIDE RENDERED)
-
-	integranteStorage := integrante.NewPostgresStorage(db)
-	integranteService := integrante.NewService(integranteStorage, logger)
-	integranteHandler := handler.NewIntegranteHandler(integranteService, logger)
-
-	tesisStorage := tesis.NewPostgresStorage(db)
-	tesisService := tesis.NewService(tesisStorage, logger)
-	tesisHandler := handler.NewTesisHandler(tesisService, integranteService, logger)
-	desarrolloStorage := desarrollo.NewPostgresStorage(db)
-	desarrolloService := desarrollo.NewService(desarrolloStorage, logger)
-	desarrolloHandler := handler.NewDesarrolloHandler(desarrolloService, integranteService, logger)
-
-	usuarioStorage := usuario.NewPostgressStorage(db)
-	usuarioService := usuario.NewService(usuarioStorage, logger)
-	authHandler := handler.NewAuthHandler(usuarioService, integranteService, logger)
-	usuarioHandler := handler.NewUsuarioHandler(usuarioService, logger)
-
-	proyectoStorage := proyecto.NewPostgresStorage(db)
-	proyectoService := proyecto.NewService(proyectoStorage, logger)
-	proyectoHandler := handler.NewProyectoHandler(proyectoService, logger)
-
-	reconocimientoStorage := reconocimiento.NewPostgresStorage(db)
-	reconocimientoService := reconocimiento.NewService(reconocimientoStorage, logger)
-	reconocimientoHandler := handler.NewReconocimientoHandler(reconocimientoService, logger)
+	// 9. Desarrollos
+	e.GET("/desarrollos", desarrolloHandler.ViewPublica)
+	// 10. Tesis
+	e.GET("/tesis", tesisHandler.ViewPublica)
 
 	e.GET("/login", authHandler.ShowLogin)
 	e.POST("/login", authHandler.ProcessLogin)

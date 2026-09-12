@@ -1,0 +1,169 @@
+
+.tesis-filter-bar {
+  background-color: #ffffff;
+  border: var(--borde-tarjeta, 1px solid rgba(26, 68, 132, 0.08));
+  border-radius: 20px;
+  box-shadow: var(--sombra-suave, 0 4px 20px rgba(26, 68, 132, 0.07));
+  padding: 1.6rem 2rem;
+  margin-bottom: 2.5rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.tesis-filter-bar:hover {
+  box-shadow: var(--sombra-hover, 0 8px 24px rgba(26, 68, 132, 0.12));
+}
+
+.filtro-tipo-btn {
+  border: 1px solid var(--azul-claro, #daeaf6);
+  background-color: #ffffff;
+  color: var(--azul-profundo, #0A1E2E);
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 0.55rem 1.3rem;
+  border-radius: 999px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.filtro-tipo-btn:hover {
+  background-color: var(--azul-pastel, #f0f7ff);
+  color: var(--azul-logo, #1a4484);
+  border-color: var(--azul-medio, #3b82f6);
+}
+
+.filtro-tipo-btn.active {
+  background-color: var(--azul-logo, #1a4484);
+  color: #ffffff !important;
+  border-color: var(--azul-logo, #1a4484);
+  box-shadow: 0 4px 12px rgba(26, 68, 132, 0.22);
+}
+
+.search-input-tesis {
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  padding: 0.65rem 1rem;
+  font-size: 0.92rem;
+  color: var(--texto-principal, #334155);
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.search-input-tesis:focus {
+  border-color: var(--azul-logo, #1a4484);
+  box-shadow: 0 0 0 3px rgba(26, 68, 132, 0.14);
+  outline: none;
+}
+
+.select-filtro-tesis {
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  padding: 0.65rem 1rem;
+  font-size: 0.92rem;
+  color: var(--texto-principal, #334155);
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.select-filtro-tesis:focus {
+  border-color: var(--azul-logo, #1a4484);
+  box-shadow: 0 0 0 3px rgba(26, 68, 132, 0.14);
+  outline: none;
+}
+
+.contador-tesis-badge {
+  font-size: 0.85rem;
+  color: var(--texto-secundario, #64748b);
+  font-weight: 600;
+  background-color: var(--azul-pastel, #f0f7ff);
+  border: 1px solid var(--azul-claro, #daeaf6);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Badges y tarjetas de Tesis */
+.badge-tesis-nivel {
+  background-color: var(--azul-pastel, #f0f7ff);
+  color: var(--azul-logo, #1a4484);
+  border: 1px solid var(--azul-claro, #daeaf6);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.badge-tesis-carrera {
+  background-color: #ffffff;
+  color: var(--texto-secundario, #64748b);
+  border: 1px solid #e2e8f0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.tarjeta-tesis-item {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.tarjeta-tesis-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--sombra-hover, 0 10px 30px rgba(26, 68, 132, 0.14));
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.resumen-caja {
+  background-color: #f8fafc;
+  border-left: 3px solid var(--azul-logo, #1a4484);
+  padding: 0.9rem 1.2rem;
+  border-radius: 0 12px 12px 0;
+  margin-top: 0.75rem;
+}
+
+.texto-resumen {
+  color: var(--texto-principal, #334155);
+  font-size: 0.93rem;
+  line-height: 1.65;
+}
+
+.btn-descarga-tesis {
+  background-color: var(--azul-logo, #1a4484);
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.65rem 1.4rem;
+  border-radius: 12px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(26, 68, 132, 0.18);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-descarga-tesis:hover {
+  background-color: var(--azul-profundo, #0A1E2E);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(26, 68, 132, 0.28);
+}
+
+.empty-tesis-icono i {
+  font-size: 3.5rem;
+  color: var(--azul-logo, #1a4484);
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .tesis-filter-bar {
+    padding: 1.25rem 1.25rem;
+  }
+}

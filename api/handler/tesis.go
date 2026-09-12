@@ -330,3 +330,20 @@ func (h *TesisHandler) API_Read(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, t)
 }
+
+// ViewPublica renderiza la vista pública de tesis en Tesis.html
+func (h *TesisHandler) ViewPublica(c *gin.Context) {
+	lista, err := h.service.GetAll()
+	if err != nil {
+		h.logger.Error("Error al obtener tesis para plantilla Tesis.html", zap.Error(err))
+		lista = []tesis.Tesis{}
+	}
+
+	_, loggedIn := CurrentUserID(c)
+
+	c.HTML(http.StatusOK, "Tesis.html", gin.H{
+		"Tesis":    lista,
+		"LoggedIn": loggedIn,
+	})
+}
+
