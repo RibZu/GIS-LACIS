@@ -4,6 +4,9 @@ import (
 	"PaginaSEG/api/handler"
 	"PaginaSEG/internal/desarrollo"
 	"PaginaSEG/internal/integrante"
+	"PaginaSEG/internal/proyecto"
+	"PaginaSEG/internal/reconocimiento"
+	"PaginaSEG/internal/tesis"
 	"PaginaSEG/internal/usuario"
 	"database/sql"
 	"net/http"
@@ -55,23 +58,53 @@ func InitRoutes(e *gin.Engine) {
 	// Cargar las plantillas HTML
 	e.LoadHTMLGlob("ui/html/**/*.html")
 
-	// RUTAS PARA PÁGINAS WEB (HTML) estatico
+	// INICIALIZACIÓN DE SERVICIOS Y HANDLERS
+	integranteStorage := integrante.NewPostgresStorage(db)
+	integranteService := integrante.NewService(integranteStorage, logger)
+	integranteHandler := handler.NewIntegranteHandler(integranteService, logger)
+
+	tesisStorage := tesis.NewPostgresStorage(db)
+	tesisService := tesis.NewService(tesisStorage, logger)
+	tesisHandler := handler.NewTesisHandler(tesisService, integranteService, logger)
+
+	desarrolloStorage := desarrollo.NewPostgresStorage(db)
+	desarrolloService := desarrollo.NewService(desarrolloStorage, logger)
+	desarrolloHandler := handler.NewDesarrolloHandler(desarrolloService, integranteService, logger)
+
+	usuarioStorage := usuario.NewPostgressStorage(db)
+	usuarioService := usuario.NewService(usuarioStorage, logger)
+	authHandler := handler.NewAuthHandler(usuarioService, integranteService, logger)
+	usuarioHandler := handler.NewUsuarioHandler(usuarioService, logger)
+
+	proyectoStorage := proyecto.NewPostgresStorage(db)
+	proyectoService := proyecto.NewService(proyectoStorage, logger)
+	proyectoHandler := handler.NewProyectoHandler(proyectoService, logger)
+
+	reconocimientoStorage := reconocimiento.NewPostgresStorage(db)
+	reconocimientoService := reconocimiento.NewService(reconocimientoStorage, logger)
+	reconocimientoHandler := handler.NewReconocimientoHandler(reconocimientoService, logger)
+
+	// RUTAS PARA PÁGINAS WEB (HTML)
 
 	// 1. Inicio
 	e.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "index.html", gin.H{"LoggedIn": loggedIn})
 	})
 	// 2. Integrantes
 	e.GET("/integrantes", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "integrantes.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "integrantes.html", gin.H{"LoggedIn": loggedIn})
 	})
 	// 3. LaCIS
 	e.GET("/lacis", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "Lacis.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "Lacis.html", gin.H{"LoggedIn": loggedIn})
 	})
 	// 4. Proyectos
 	e.GET("/proyectos", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "Proyecto.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "Proyecto.html", gin.H{"LoggedIn": loggedIn})
 	})
 	// 5. Posgrado: Doctorado en Ingeniería de Software
 	e.GET("/doctorado-ing-software", func(c *gin.Context) {
@@ -89,26 +122,10 @@ func InitRoutes(e *gin.Engine) {
 	e.GET("/maestria-ing-software", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "MgIngSoft.html", nil)
 	})
-
-	// Al usar plantillas de GO se hace de esta manera
-
-	// RUTAS DE ADMINISTRACIÓN CON PLANTILLAS GO (SERVER-SIDE RENDERED)
-
-	integranteStorage := integrante.NewPostgresStorage(db)
-	integranteService := integrante.NewService(integranteStorage, logger)
-	integranteHandler := handler.NewIntegranteHandler(integranteService, logger)
-
-	desarrolloStorage := desarrollo.NewPostgresStorage(db)
-	desarrolloService := desarrollo.NewService(desarrolloStorage, logger)
-	desarrolloHandler := handler.NewDesarrolloHandler(desarrolloService, integranteService, logger)
-
-	// 4.b Desarrollos (público) — misma fuente de datos que /admin/desarrollos
+	// 9. Desarrollos
 	e.GET("/desarrollos", desarrolloHandler.ViewPublica)
-
-	usuarioStorage := usuario.NewPostgressStorage(db)
-	usuarioService := usuario.NewService(usuarioStorage, logger)
-	authHandler := handler.NewAuthHandler(usuarioService, integranteService, logger)
-	usuarioHandler := handler.NewUsuarioHandler(usuarioService, logger)
+	// 10. Tesis
+	e.GET("/tesis", tesisHandler.ViewPublica)
 
 	e.GET("/login", authHandler.ShowLogin)
 	e.POST("/login", authHandler.ProcessLogin)
@@ -127,6 +144,15 @@ func InitRoutes(e *gin.Engine) {
 	integrantesAdmin.POST("/actualizar-integrante", integranteHandler.Actualizar)
 	integrantesAdmin.GET("/borrar-integrante", integranteHandler.Borrar)
 
+	// Módulo "tesis": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
+	tesisAdmin := v1Admin.Group("")
+	tesisAdmin.Use(handler.RequireModule(usuarioService, "tesis"))
+	tesisAdmin.GET("/tesis", tesisHandler.Lista)
+	tesisAdmin.GET("/crear-tesis", tesisHandler.Crear)
+	tesisAdmin.POST("/insertar-tesis", tesisHandler.Insertar)
+	tesisAdmin.GET("/editar-tesis", tesisHandler.Editar)
+	tesisAdmin.POST("/actualizar-tesis", tesisHandler.Actualizar)
+	tesisAdmin.GET("/borrar-tesis", tesisHandler.Borrar)
 	// Módulo "proyectos": Desarrollos (mismo permiso que Proyectos I+D+i, ver README)
 	desarrollosAdmin := v1Admin.Group("")
 	desarrollosAdmin.Use(handler.RequireModule(usuarioService, "proyectos"))
@@ -152,5 +178,27 @@ func InitRoutes(e *gin.Engine) {
 	v1API := e.Group("/api/v1")
 	v1API.GET("/integrantes", integranteHandler.API_GetAll)
 	v1API.GET("/integrantes/:id", integranteHandler.API_Read)
+	v1API.GET("/tesis", tesisHandler.API_GetAll)
+	v1API.GET("/tesis/:id", tesisHandler.API_Read)
+
+	// Módulo "proyectos": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
+	proyectosAdmin := v1Admin.Group("")
+	proyectosAdmin.Use(handler.RequireModule(usuarioService, "proyectos"))
+	// Vistas HTML Admin para Proyectos (3 Opciones de diseño para el cliente)
+	proyectosAdmin.GET("/proyectos", proyectoHandler.View_ProyectosAdmin)
+
+	// Rutas API públicas de Proyectos y Reconocimientos
+	v1API.GET("/proyectos", proyectoHandler.API_GetAll)
+	v1API.GET("/reconocimientos", reconocimientoHandler.API_GetAll)
+
+	// Rutas API de administración de Proyectos
+	proyectosAPIAdmin := v1API.Group("")
+	proyectosAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "proyectos"))
+	proyectosAPIAdmin.GET("/admin/proyectos-todos", proyectoHandler.API_GetAllAdmin)
+	proyectosAPIAdmin.PATCH("/admin/proyectos/:id/restaurar", proyectoHandler.API_Restaurar)
+	proyectosAPIAdmin.POST("/admin/proyectos", proyectoHandler.API_Create)
+	proyectosAPIAdmin.GET("/admin/proyectos/:id", proyectoHandler.API_Read)
+	proyectosAPIAdmin.PUT("/admin/proyectos/:id", proyectoHandler.API_Update)
+	proyectosAPIAdmin.DELETE("/admin/proyectos/:id", proyectoHandler.API_Delete)
 
 }

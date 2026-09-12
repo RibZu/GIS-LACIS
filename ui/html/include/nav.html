@@ -23,9 +23,10 @@
                     <li class="nav-item"><a class="nav-link" href="/proyectos">Proyectos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/lacis">LaCIS</a></li>
                     <li class="nav-item"><a class="nav-link" href="/desarrollos">Desarrollos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/tesis">Tesis</a></li>
                     <li class="nav-item"><a class="nav-link" href="/integrantes">Integrantes</a></li>
-                    {{ if not .LoggedIn }}
-                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                    {{ if .LoggedIn }}
+                    <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Módulos</a></li>
                     {{ end }}
               </ul>
               <a href="https://www.unsl.edu.ar/#gsc.tab=0"><img src="/ui/static/assets/img-GIS/LogoUnsl.png" class="img-fluid" style="max-height: 50px;" alt="Logo Unsl"></a>
