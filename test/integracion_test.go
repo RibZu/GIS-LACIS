@@ -98,6 +98,42 @@ func TestIntegration_InsertarTesis(t *testing.T) {
 	assert.Equal(t, "/admin/tesis", w.Header().Get("Location"))
 }
 
+func TestIntegration_LoginRedirectsIfAuthenticated(t *testing.T) {
+	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
+	db, err := sql.Open("postgres", dsn)
+	assert.NoError(t, err)
+	defer db.Close()
+
+	r := gin.Default()
+	api.InitRoutes(r)
+
+	req, _ := http.NewRequest("GET", "/login", nil)
+	req.AddCookie(&http.Cookie{Name: "session", Value: "1"})
+
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusFound, w.Code)
+	assert.Equal(t, "/admin/dashboard", w.Header().Get("Location"))
+}
+
+func TestIntegration_LoginShowsFormWithoutSession(t *testing.T) {
+	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
+	db, err := sql.Open("postgres", dsn)
+	assert.NoError(t, err)
+	defer db.Close()
+
+	r := gin.Default()
+	api.InitRoutes(r)
+
+	req, _ := http.NewRequest("GET", "/login", nil)
+
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+}
+
 func TestIntegration_ObtenerTesisJSON(t *testing.T) {
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
@@ -113,4 +149,3 @@ func TestIntegration_ObtenerTesisJSON(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, w.Code)
 }
-

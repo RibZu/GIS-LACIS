@@ -43,8 +43,21 @@ html{
 .grilla {
     display: grid;
     min-height: 100dvh;
-    grid-template-rows: 
+    grid-template-rows:
     auto 1fr auto;
+}
+
+/* .grilla asume 3 hijos directos de <body> (header, main, footer), con la fila
+   central 1fr para que <main> llene el alto disponible. En las pantallas que
+   además tienen el sub-header "volver a Módulos" (Lista.html, ListaTesis.html,
+   ListaDesarrollos.html) hay un 4to hijo entre el header y <main>; sin este
+   ajuste, ese 4to hijo hereda la fila 1fr pensada para <main> y se estira para
+   llenar la pantalla. Esta regla, ligada solo a los <body> que efectivamente
+   tienen el sub-header como hijo directo, redefine las filas para las 4 en el
+   orden real (header, sub-header, main, footer) sin afectar el resto de las
+   páginas .grilla, que conservan su plantilla de 3 filas. */
+body.grilla:has(> .subheader-modulo) {
+  grid-template-rows: auto auto 1fr auto;
 }
 /* Navbar general */
 nav.bg-is {
@@ -92,6 +105,57 @@ nav.bg-is .nav-link:hover::after {
   width: 100%;
   height: 100%;
   margin: 3px;
+}
+
+/* Sub-header "volver a Módulos": bloque separado del header principal (nav.bg-is),
+   presente solo en la pantalla principal de cada módulo.
+
+   El nav principal es fixed-top (no ocupa espacio en el flujo normal), así que es
+   el sub-header quien reserva ese espacio con margin-top (altura real del nav,
+   medida en pantalla ~76px). Las pantallas que ya reservaban ese mismo espacio en
+   <main> (lista.css) o en <body> (usuarios.css) lo anulan más abajo para no
+   duplicarlo. El fondo usa la misma variable --blanco-fondo que nav.bg-is (el
+   header principal), en vez de la variable compartida --azul-pastel-fondo (que
+   distintas hojas de estilo redefinen con valores distintos) o un color propio,
+   para que ambos bloques se vean exactamente del mismo blanco; la separación
+   visual entre ambos queda a cargo del border-bottom. */
+.subheader-modulo {
+  margin-top: 76px;
+  background-color: var(--blanco-fondo, #FDFDFD);
+  border-bottom: 1px solid var(--acento-linea, #C4C4C4);
+  padding: 0.5rem 0;
+}
+
+.subheader-modulo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.9rem;
+  border-radius: 50rem;
+  border: 1px solid var(--azul-logo, #1a4484);
+  color: var(--azul-logo, #1a4484);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.subheader-modulo-link:hover {
+  background-color: var(--azul-logo, #1a4484);
+  color: var(--blanco-fondo, #FDFDFD);
+}
+
+/* Integrantes, Tesis y Desarrollos ya empujaban <main> 100px hacia abajo (lista.css)
+   para despejar el nav fijo; con el sub-header de por medio, ese espacio ahora lo
+   aporta .subheader-modulo, así que <main> solo necesita un respiro chico. */
+.subheader-modulo + main {
+  padding-top: 24px !important;
+}
+
+/* Administración de Usuarios reservaba ese mismo espacio en <body> (usuarios.css)
+   en vez de en <main> — se anula por la misma razón. */
+body:has(> .subheader-modulo) {
+  padding-top: 0 !important;
 }
 
 

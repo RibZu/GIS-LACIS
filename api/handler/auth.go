@@ -26,6 +26,10 @@ func NewAuthHandler(us *usuario.Service, is *integrante.Service, l *zap.Logger) 
 }
 
 func (h *AuthHandler) ShowLogin(c *gin.Context) {
+	if _, ok := CurrentUserID(c); ok {
+		c.Redirect(http.StatusFound, "/admin/dashboard")
+		return
+	}
 	c.HTML(http.StatusOK, "Login.html", gin.H{})
 }
 

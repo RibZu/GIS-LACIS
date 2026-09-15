@@ -219,4 +219,3 @@ func (h *DesarrolloHandler) ViewPublica(c *gin.Context) {
 		"LoggedIn":    loggedIn,
 	})
 }
-
