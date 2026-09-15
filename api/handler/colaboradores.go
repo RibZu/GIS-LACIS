@@ -51,7 +51,7 @@ func (h *ColaboradorHandler) API_GetAllAdmin(c *gin.Context) {
 
 // View_ColaboradoresAdmin renderiza la vista HTML del panel admin de colaboradores
 func (h *ColaboradorHandler) View_ColaboradoresAdmin(c *gin.Context) {
-	c.HTML(http.StatusOK, "EditarColaboradores.html", nil)
+	c.HTML(http.StatusOK, "EditarColaboradores.html", gin.H{"LoggedIn": true})
 }
 
 // Helper to handle file upload

@@ -24,30 +24,15 @@
     <link rel="stylesheet" href="/static/css-GIS/abm-proyectos.css">
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 
-    <!-- NAVBAR ADMIN -->
-    <nav class="navbar navbar-expand-lg admin-header py-3 bg-white border-bottom shadow-sm">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="/admin/dashboard">
-                <img src="/ui/static/assets/img-GIS/gis-logo.png?v=3" alt="Logo SEG" height="38"
-                    onerror="this.style.display='none'">
-                <div>
-                    <span class="fw-bold fs-5 text-dark d-block lh-1">GIS-LACIS <span class="badge bg-primary ms-1"
-                            style="font-size: 0.65rem;">ADMIN</span></span>
-                    <small class="text-muted" style="font-size: 0.75rem;">Gestión de Reconocimientos</small>
-                </div>
-            </a>
-            <div class="d-flex align-items-center gap-3">
-                <a href="/admin/dashboard" class="btn btn-sm btn-outline-secondary rounded-pill px-3"><i
-                        class="bi bi-arrow-left"></i> Volver al Dashboard</a>
-                <a href="/proyectos" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3"><i
-                        class="bi bi-eye"></i> Ver Web Pública</a>
-            </div>
-        </div>
-    </nav>
 
-    <main class="container-fluid px-4 my-4 flex-grow-1">
+    <!-- Header / Navbar Compartido -->
+    <header>
+        {{ template "nav" . }}
+    </header>
+
+    <main class="container-fluid px-4 my-4 flex-grow-1 pt-5">
 
         <!-- BARRA DE FILTROS Y BOTÓN CREAR -->
         <div class="admin-card p-3 mb-4">

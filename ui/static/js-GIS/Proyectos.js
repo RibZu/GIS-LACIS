@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     CargarLista();
     CargarLogros();
+    CargarColaboradores();
     listaResponsive();
 });
 
@@ -138,6 +139,58 @@ function CargarLogros() {
             });
         })
         .catch(err => console.error("Error al cargar logros:", err));
+}
+
+function CargarColaboradores() {
+    const contenedor = document.getElementById("colaboradoresContainer");
+    if (!contenedor) return;
+
+    fetch('/api/v1/colaboradores')
+        .then(response => response.json())
+        .then(data => {
+            contenedor.innerHTML = "";
+            const colaboradores = data || [];
+            if (colaboradores.length === 0) {
+                return;
+            }
+
+            colaboradores.forEach(c => {
+                const container = document.createElement("div");
+                container.className = "col-12 col-sm-6 col-md-4 col-lg-3 mb-4";
+                container.setAttribute('data-aos', 'fade-up');
+
+                const cfp = document.createElement("div");
+                cfp.className = "card-flip card-colaborador-chica mx-auto";
+
+                const cfi = document.createElement("div");
+                cfi.className = "card-flip-inner";
+
+                const cff = document.createElement("div");
+                cff.className = "card-flip-front text-center";
+
+                const img = document.createElement("img");
+                img.src = c.logo_url;
+                img.alt = "Logo " + (c.descripcion || "colaborador");
+
+                const cfb = document.createElement("div");
+                cfb.className = "card-flip-back";
+
+                const desc = document.createElement("p");
+                desc.innerHTML = (c.descripcion || "").replace(/\n/g, '<br>');
+
+                cff.appendChild(img);
+                cfb.appendChild(desc);
+
+                cfi.appendChild(cff);
+                cfi.appendChild(cfb);
+
+                cfp.appendChild(cfi);
+                container.appendChild(cfp);
+
+                contenedor.appendChild(container);
+            });
+        })
+        .catch(err => console.error("Error al cargar colaboradores:", err));
 }
 
 let activo = false;

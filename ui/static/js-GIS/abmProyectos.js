@@ -123,9 +123,9 @@ function renderizarCards() {
                         ${p.descripcion || 'Sin descripción detallada.'}
                     </p>
 
-                    <div class="pt-3 border-top mt-auto d-flex justify-content-between align-items-center">
-                        <small class="text-muted text-truncate me-2" style="max-width: 180px;" title="${p.equipo_historico || ''}">
-                            <i class="bi bi-people-fill text-primary me-1"></i>${p.equipo_historico || 'Sin equipo'}
+                    <div class="pt-3 mt-auto d-flex justify-content-between align-items-center">
+                        <small class="text-muted text-truncate me-2" style="max-width: 180px;">
+                            
                         </small>
                         <div class="btn-group btn-group-sm">
                             ${botonesAccion}

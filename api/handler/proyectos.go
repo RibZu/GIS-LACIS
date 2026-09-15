@@ -134,7 +134,7 @@ func (h *ProyectoHandler) API_Delete(c *gin.Context) {
 
 // View_ProyectosAdmin renderiza la vista de proyectos
 func (h *ProyectoHandler) View_ProyectosAdmin(c *gin.Context) {
-	c.HTML(http.StatusOK, "EditarProyectos.html", nil)
+	c.HTML(http.StatusOK, "EditarProyectos.html", gin.H{"LoggedIn": true})
 }
 
 // API_GetAllAdmin retorna todos los proyectos (incluyendo inactivos) para el panel admin

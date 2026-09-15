@@ -48,7 +48,7 @@ func (h *ReconocimientoHandler) API_GetAllAdmin(c *gin.Context) {
 
 // View_ReconocimientosAdmin renderiza la vista HTML del panel admin de reconocimientos
 func (h *ReconocimientoHandler) View_ReconocimientosAdmin(c *gin.Context) {
-	c.HTML(http.StatusOK, "EditarReconocimientos.html", nil)
+	c.HTML(http.StatusOK, "EditarReconocimientos.html", gin.H{"LoggedIn": true})
 }
 
 // API_Create crea un nuevo reconocimiento desde payload JSON
