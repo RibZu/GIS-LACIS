@@ -127,6 +127,35 @@ body {
   transform: translateY(-2px);
 }
 
+/* Link hacia /desarrollos: mismo verde de marca que los botones del hero,
+   en una pastilla suave (no sólida) para que se note más que un link de
+   texto plano sin llegar a competir con los 3 CTA principales. Va debajo
+   de los 3 botones, alineado a la izquierda con ellos (no flotando a la
+   derecha, que se leía como desconectado del grupo). */
+.hero-link-desarrollos-wrap {
+  display: flex;
+  justify-content: flex-start;
+}
+.hero-link-desarrollos {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  color: #4a7520;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+  background: rgba(90, 138, 42, .1);
+  border: 1px solid rgba(90, 138, 42, .3);
+  border-radius: 999px;
+  padding: .55rem 1.3rem;
+  transition: background-color .2s ease, gap .2s ease, transform .2s ease;
+}
+.hero-link-desarrollos:hover {
+  background: rgba(90, 138, 42, .18);
+  gap: .7rem;
+  transform: translateY(-1px);
+}
+
 .boton-ir-grupo {
   position: relative;
   transition: all 0.3s ease-in-out;

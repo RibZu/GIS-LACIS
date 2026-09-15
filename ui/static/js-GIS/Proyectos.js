@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    if (typeof AOS !== 'undefined') {
+        AOS.init({ duration: 1000, once: false });
+    }
     CargarLista();
     CargarLogros();
     listaResponsive();

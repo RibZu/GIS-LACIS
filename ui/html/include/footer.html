@@ -43,6 +43,9 @@
                         href="https://www.linkedin.com/in/ismael-alexander-farias-7a64b520b" target="_blank"
                         rel="noopener noreferrer">Ismael Farias</a> <a href="">Riberi Simon</a> <a href="">Gonzalez
                         Emanuel</a>
+                {{ if not .LoggedIn }}
+                <p class="text-secondary mb-0"><a href="/login" class="text-secondary">Login</a></p>
+                {{ end }}
             </div>
         </div>
     </div>

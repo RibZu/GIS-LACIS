@@ -107,6 +107,12 @@ filtroBoton.forEach(boton => {
     filtrarCartas(clase);
   });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof AOS !== 'undefined') {
+    AOS.init();
+  }
+});
   
 
   

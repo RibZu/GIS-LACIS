@@ -59,6 +59,11 @@ nav.bg-is .nav-link {
   position: relative;
   transition: color 0.3s;
 
+  /* Tipografía fija del header: no depende de la fuente que cada página
+     elija para su propio <body> (Montserrat en las públicas, Manrope en el
+     panel admin), así el nav se ve siempre igual sin importar en qué
+     pantalla esté embebido. */
+  font-family: 'Montserrat', 'Manrope', sans-serif;
   font-size: 1.1rem;
 
   margin-right: 10px;

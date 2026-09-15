@@ -1,0 +1,142 @@
+/* ==========================================================================
+   GIS-LACIS · Vista pública "Desarrollos" — variante azul + verde
+   Se carga SOLO en Desarrollos.html (después de EProyecto.css), así que
+   estos ajustes no afectan a Proyecto.html ni a ninguna otra página que
+   comparta EProyecto.css. Todo está scoped bajo body.pagina-desarrollos.
+   ========================================================================== */
+
+body.pagina-desarrollos {
+  --pub-blue: var(--azul-logo);
+  --pub-blue-bg: #E7EEFA;
+  --pub-green: #8BC34A;
+  --pub-green-ink: #5C8A2C;
+  --pub-green-bg: #EEF7E1;
+  --pub-green-titulo: #2E7D32;
+}
+
+/* -------- Acentos verdes en el hero (antes 100% azules) -------- */
+body.pagina-desarrollos .hero-eyebrow {
+  color: var(--pub-green-ink);
+}
+
+body.pagina-desarrollos .titulo-seccion-principal span {
+  color: var(--pub-green-titulo);
+}
+
+body.pagina-desarrollos .titulo-seccion-principal span::after {
+  background: var(--pub-green);
+}
+
+body.pagina-desarrollos .hero-divider {
+  background: var(--pub-green);
+}
+
+body.pagina-desarrollos .titulo-seccion-proy::after {
+  background: var(--pub-green);
+}
+
+/* -------- Galería de tarjetas (Opción 1) -------- */
+body.pagina-desarrollos .grilla-desarrollos {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+body.pagina-desarrollos .pub-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: var(--borde-tarjeta);
+  box-shadow: var(--sombra-suave);
+  padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+body.pagina-desarrollos .pub-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--sombra-hover);
+  border-color: rgba(139, 195, 74, 0.35);
+}
+
+body.pagina-desarrollos .pub-tile {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+body.pagina-desarrollos .pub-tile.blue { background: var(--pub-blue); }
+body.pagina-desarrollos .pub-tile.green { background: var(--pub-green); }
+
+body.pagina-desarrollos .pub-year-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--pub-blue-bg);
+  color: var(--pub-blue);
+}
+
+body.pagina-desarrollos .pub-titulo {
+  font-family: var(--fuente-titulos);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--azul-logo);
+  margin: 1rem 0 0.6rem;
+  line-height: 1.3;
+}
+
+body.pagina-desarrollos .pub-descripcion {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--texto-principal);
+}
+
+body.pagina-desarrollos .pub-descripcion strong {
+  color: var(--azul-profundo);
+  font-weight: 600;
+}
+
+body.pagina-desarrollos .clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body.pagina-desarrollos .pub-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--pub-green-ink);
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-bottom: 2px solid var(--pub-green);
+  padding-bottom: 2px;
+  line-height: 1.3;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+body.pagina-desarrollos .pub-cta:hover {
+  color: var(--pub-blue);
+  border-color: var(--pub-blue);
+}
+
+body.pagina-desarrollos .pub-cta i {
+  transition: transform 0.2s ease;
+  font-size: 0.78rem;
+}
+
+body.pagina-desarrollos .pub-cta:hover i {
+  transform: translateX(3px);
+}
+
+@media (max-width: 768px) {
+  body.pagina-desarrollos .pub-card {
+    padding: 1.5rem;
+  }
+}

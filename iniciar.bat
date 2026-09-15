@@ -44,16 +44,33 @@ if not exist "pg_data\" (
     ) >> "pg_data\postgresql.conf"
 
     echo [INFO] Iniciando servidor de base de datos...
-    start /B "" "!PG_PATH!\pg_ctl.exe" -D "pg_data" -l "pg_data\pg.log" start > nul
-    
-    echo Esperando a que el servidor inicie...
-    timeout /t 3 /nobreak > nul
+    "!PG_PATH!\pg_ctl.exe" -D "pg_data" -l "pg_data\pg.log" start > nul
+    if errorlevel 1 (
+        echo [ERROR] PostgreSQL no pudo iniciar.
+        pause
+        exit /b 1
+    )
 
     echo [INFO] Creando base de datos 'lacis' y tablas...
-    "!PG_PATH!\psql.exe" -p 5433 -U postgres -d postgres -c "ALTER USER postgres WITH PASSWORD 'isma_mesa22';" > nul
-    "!PG_PATH!\psql.exe" -p 5433 -U postgres -d postgres -c "CREATE DATABASE lacis;" > nul
-    "!PG_PATH!\psql.exe" -p 5433 -U postgres -d lacis -f "Modelo Base de datos\Modelo Base de datos.sql" > nul
-    
+    "!PG_PATH!\psql.exe" -v ON_ERROR_STOP=1 -p 5433 -U postgres -d postgres -c "ALTER USER postgres WITH PASSWORD 'isma_mesa22';" > nul
+    if errorlevel 1 (
+        echo [ERROR] No se pudo configurar el usuario administrador de PostgreSQL.
+        pause
+        exit /b 1
+    )
+    "!PG_PATH!\psql.exe" -v ON_ERROR_STOP=1 -p 5433 -U postgres -d postgres -c "CREATE DATABASE lacis;" > nul
+    if errorlevel 1 (
+        echo [ERROR] No se pudo crear la base de datos 'lacis'.
+        pause
+        exit /b 1
+    )
+    "!PG_PATH!\psql.exe" -v ON_ERROR_STOP=1 -p 5433 -U postgres -d lacis -f "Modelo Base de datos\Modelo Base de datos.sql" > nul
+    if errorlevel 1 (
+        echo [ERROR] El script de esquema fallo al cargarse ^(revisar Modelo Base de datos.sql^).
+        pause
+        exit /b 1
+    )
+
     echo [INFO] Base de datos creada exitosamente.
 ) else (
     echo [INFO] El cluster de base de datos ya existe. Iniciando servidor...

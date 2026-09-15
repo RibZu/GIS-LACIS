@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Desarrollos - Software Engineering Group</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <link rel="icon" type="image/png" href="../../static/assets/img-GIS/favicon-text.png?v=1">
+  <link rel="stylesheet" type="text/css" href="../../static/css-GIS/EProyecto.css">
+  <link rel="stylesheet" type="text/css" href="../../static/css-GIS/Styleheader.css">
+  <link rel="stylesheet" type="text/css" href="../../static/css-GIS/desarrollos-publico.css">
+</head>
+
+<body class="grilla pagina-desarrollos">
+  <header>
+    {{ template "nav" . }}
+  </header>
+
+  <main class="d-flex flex-column align-items-center py-5 pt-6">
+
+
+    <div class="hero-proyectos blur-in" data-aos="fade-down" data-aos-duration="1000">
+      <span class="hero-eyebrow">Investigación & Desarrollo</span>
+      <h1 class="titulo-seccion-principal"><span>Desarrollos</span> del Laboratorio</h1>
+      <p class="descripcion-seccion">
+        Sistemas, herramientas y productos de software desarrollados por integrantes de LaCIS y del Grupo de
+        Ingeniería de Software, fruto de la transferencia de conocimiento hacia la industria y la comunidad.
+      </p>
+      <div class="hero-divider"></div>
+    </div>
+
+
+    <section class="seccion-extension px-3 px-md-4" data-aos="fade-up" data-aos-duration="1000">
+      <h2 class="titulo-seccion-proy sin-subrayado">Desarrollos Realizados</h2>
+      {{ if .Desarrollos }}
+      <div class="grilla-desarrollos row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4" data-aos="fade-up" data-aos-delay="100">
+        {{ range .Desarrollos }}
+        <div class="col">
+          <div class="pub-card h-100 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="pub-tile"><i class="fa-solid fa-diagram-project"></i></div>
+              <span class="pub-year-pill">{{ .Anio }}</span>
+            </div>
+            <h3 class="pub-titulo">{{ .Titulo }}</h3>
+            {{ if .Contacto }}
+            <p class="pub-descripcion small mb-2"><strong>Contacto:</strong> {{ .Contacto }}</p>
+            {{ end }}
+            <p class="pub-descripcion small clamp-3 mb-3">{{ .Descripcion }}</p>
+            {{ if .URL }}
+            <a href="{{ .URL }}" target="_blank" rel="noopener noreferrer" class="pub-cta mt-auto align-self-start">
+              Visitar desarrollo <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            {{ end }}
+          </div>
+        </div>
+        {{ end }}
+      </div>
+      {{ else }}
+      <p class="text-center text-secondary py-4">Todavía no hay desarrollos cargados.</p>
+      {{ end }}
+
+    </section>
+
+  </main>
+
+  <footer>
+    {{ template "footer" . }}
+  </footer>
+
+  <script>
+    AOS.init({ duration: 1000, once: false });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
