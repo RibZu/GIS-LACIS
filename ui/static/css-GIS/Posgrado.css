@@ -363,3 +363,41 @@
         text-align: left;
     }
 }
+
+/* Botón y tarjeta para sección Tesis en páginas de Posgrado */
+.card-posgrado-tesis {
+    max-width: 750px;
+    background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+    border: 1px solid var(--azul-claro) !important;
+}
+
+.icono-posgrado-tesis {
+    width: 72px;
+    height: 72px;
+    background-color: var(--azul-claro);
+    color: var(--azul-principal);
+}
+
+.btn-posgrado-tesis {
+    background-color: var(--azul-principal);
+    color: #ffffff !important;
+    border: 1px solid var(--azul-principal);
+    border-radius: 30px;
+    padding: 12px 28px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 14px rgba(26, 68, 132, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-posgrado-tesis:hover {
+    background-color: var(--azul-medio);
+    border-color: var(--azul-medio);
+    color: #ffffff !important;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+}

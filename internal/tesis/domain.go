@@ -1,6 +1,8 @@
 package tesis
 
 import (
+	"strings"
+
 	"PaginaSEG/internal/integrante"
 )
 
@@ -30,18 +32,25 @@ type Tesis struct {
 	DirectorNombre       string                 `json:"director_nombre"`
 	CoodirectorNombre    string                 `json:"coodirector_nombre"`
 	IntegrantesIDs       []int                  `json:"integrantes_ids,omitempty"`
+	AutoresSecundarios   string                 `json:"autores_secundarios,omitempty"`
 }
 
-// GetAutorDisplay devuelve el nombre visible del autor (registrado o histórico)
+// GetAutorDisplay devuelve el nombre visible del autor o de todos los autores concatenados
 func (t Tesis) GetAutorDisplay() string {
+	var partes []string
 	if t.AutorNombre != "" {
-		return t.AutorNombre
+		partes = append(partes, t.AutorNombre)
+	} else if t.Autor != nil {
+		partes = append(partes, t.Autor.Nombre+" "+t.Autor.Apellido)
+	}
+	if t.AutoresSecundarios != "" {
+		partes = append(partes, t.AutoresSecundarios)
 	}
 	if t.AutorHistorico != "" {
-		return t.AutorHistorico
+		partes = append(partes, t.AutorHistorico)
 	}
-	if t.Autor != nil {
-		return t.Autor.Nombre + " " + t.Autor.Apellido
+	if len(partes) > 0 {
+		return strings.Join(partes, ", ")
 	}
 	return "No especificado"
 }
