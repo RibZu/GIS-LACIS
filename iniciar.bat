@@ -16,7 +16,6 @@ for /f "tokens=5" %%P in ('netstat -ano ^| findstr ":8080" ^| findstr "LISTENING
 
 timeout /t 1 /nobreak > nul
 
-REM Buscar PostgreSQL en C:\Program Files\PostgreSQL
 set "PG_PATH="
 for /d %%D in ("C:\Program Files\PostgreSQL\*") do (
     if exist "%%D\bin\initdb.exe" (
@@ -33,12 +32,10 @@ if "!PG_PATH!"=="" (
 
 echo [INFO] PostgreSQL encontrado en: !PG_PATH!
 
-REM Verificar si el cluster ya existe
 if not exist "pg_data\" (
     echo [INFO] Inicializando nuevo cluster de base de datos local...
     "!PG_PATH!\initdb.exe" -D "pg_data" -U postgres --auth=trust > nul
-    
-    REM Cambiar puerto a 5433 en postgresql.conf
+
     (
         echo port = 5433
     ) >> "pg_data\postgresql.conf"
@@ -93,4 +90,3 @@ pause > nul
 echo [INFO] Deteniendo base de datos...
 "!PG_PATH!\pg_ctl.exe" -D "pg_data" stop > nul
 taskkill /F /IM postgres.exe /T > nul 2>&1
-

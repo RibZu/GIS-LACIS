@@ -1,14 +1,6 @@
-/**
- * formularioTesis.js - Comportamiento interactivo para los formularios de Crear y Editar Tesis.
- * Manejo de alternancia entre integrantes registrados y autores/directores externos,
- * gestión dinámica de hasta 4 autores para carreras de Grado (y 1 para Posgrado),
- * y validación de extensiones de archivos PDF.
- */
-
 document.addEventListener('DOMContentLoaded', function () {
     const MAX_AUTORES_GRADO = 4;
 
-    // --- 1. Control de Nivel Académico y Multi-Autores ---
     const selectNivel = document.getElementById('nivel');
     const selectCarrera = document.getElementById('carrera_origen');
     const btnAgregarAutor = document.getElementById('btn_agregar_autor');
@@ -17,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const badgeLimiteAutores = document.getElementById('badge_limite_autores');
     const contadorAutoresSpan = document.getElementById('contador_autores');
 
-    // --- Control de Autor 1 (Principal: Registrado vs Externo) ---
     const radAutorRegistrado = document.getElementById('autor_tipo_registrado');
     const radAutorExterno = document.getElementById('autor_tipo_externo');
     const contenedorAutorRegistrado = document.getElementById('contenedor_autor_registrado');
@@ -46,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
         actualizarVisibilidadAutorPrincipal();
     }
 
-    // Configurar comportamiento de una tarjeta de autor adicional (Autor 2, 3 o 4)
     function setupCardAutorAdicional(card, numero) {
         const radReg = card.querySelector('.radio-autor-registrado');
         const radExt = card.querySelector('.radio-autor-externo');
@@ -63,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function () {
             numLabel.textContent = 'Autor(a) ' + numero;
         }
 
-        // Asignar nombres únicos para agrupar radios por tarjeta
         const radioGroupName = 'autor_tipo_' + numero;
         const regId = 'autor_tipo_registrado_' + numero;
         const extId = 'autor_tipo_externo_' + numero;
@@ -148,13 +137,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         } else {
-            // Posgrado (Doctorado, Maestría, Especialización) -> solo 1 autor
+
             if (btnAgregarAutor) btnAgregarAutor.classList.add('d-none');
             if (badgeLimiteAutores) {
                 badgeLimiteAutores.textContent = 'Posgrado: 1 solo autor';
                 badgeLimiteAutores.className = 'badge badge-autores-info badge-posgrado ms-2';
             }
-            // Eliminar autores adicionales si se seleccionó posgrado
+
             cards.forEach(function (card, index) {
                 if (index > 0) {
                     card.remove();
@@ -193,7 +182,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function onNivelChange() {
         actualizarEstadoAutores();
 
-        // Sugerir carrera si está vacía
         if (selectCarrera && selectCarrera.value.trim() === '') {
             const nivelVal = selectNivel ? selectNivel.value : '';
             if (nivelVal === 'Doctorado') {
@@ -213,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function () {
         actualizarEstadoAutores();
     }
 
-    // --- 2. Control de Director (Registrado vs Externo) ---
     const radDirRegistrado = document.getElementById('director_tipo_registrado');
     const radDirExterno = document.getElementById('director_tipo_externo');
     const contenedorDirRegistrado = document.getElementById('contenedor_director_registrado');
@@ -236,7 +223,6 @@ document.addEventListener('DOMContentLoaded', function () {
         actualizarVisibilidadDirector();
     }
 
-    // --- 3. Control de Codirector (Ninguno vs Registrado vs Externo) ---
     const radCoodirNinguno = document.getElementById('coodirector_tipo_ninguno');
     const radCoodirRegistrado = document.getElementById('coodirector_tipo_registrado');
     const radCoodirExterno = document.getElementById('coodirector_tipo_externo');
@@ -264,7 +250,6 @@ document.addEventListener('DOMContentLoaded', function () {
         actualizarVisibilidadCoodirector();
     }
 
-    // --- 4. Validación de archivo PDF ---
     const fileInput = document.getElementById('archivo_pdf');
     if (fileInput) {
         fileInput.addEventListener('change', function () {
@@ -276,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     this.value = '';
                     return;
                 }
-                const maxBytes = 25 * 1024 * 1024; // 25 MB
+                const maxBytes = 25 * 1024 * 1024;
                 if (file.size > maxBytes) {
                     alert('El archivo supera el tamaño máximo permitido de 25 MB.');
                     this.value = '';
@@ -285,4 +270,3 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-

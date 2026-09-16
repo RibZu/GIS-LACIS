@@ -18,7 +18,7 @@ let proyectos = [];
 
         async function cargarDesdeAPI() {
             try {
-                const res = await fetch('/api/v1/admin/proyectos-todos');  // antes: '/api/v1/admin/proyectos'
+                const res = await fetch('/api/v1/admin/proyectos-todos');
                 if (!res.ok) throw new Error('Error de conexión');
                 proyectos = await res.json() || [];
                 renderizarCards();
@@ -36,7 +36,7 @@ let proyectos = [];
                 if (!res.ok) throw new Error('No se pudo restaurar el proyecto');
 
                 mostrarToast('Proyecto restaurado con éxito.', 'success');
-                cargarDesdeAPI(); // Recarga la lista para que vuelva a su estado normal
+                cargarDesdeAPI();
             } catch (err) {
                 mostrarToast(err.message, 'danger');
             }
@@ -53,7 +53,6 @@ let proyectos = [];
             const texto = inputBuscar.value.toLowerCase();
             const orden = selectOrden.value;
 
-            // Filtro solo por búsqueda de texto
             let resultado = proyectos.filter(p => {
                 const matchesText = (p.titulo || '').toLowerCase().includes(texto) ||
                     (p.descripcion || '').toLowerCase().includes(texto) ||
@@ -61,7 +60,6 @@ let proyectos = [];
                 return matchesText;
             });
 
-            // Ordenamiento
             resultado.sort((a, b) => {
                 if (orden === 'recientes') return (b.anio_fin || 0) - (a.anio_fin || 0);
                 if (orden === 'antiguos') return (a.anio_inicio || 0) - (b.anio_inicio || 0);
@@ -86,9 +84,8 @@ let proyectos = [];
             listado.forEach(p => {
                 const anioActual = new Date().getFullYear();
                 const esVigente = (p.anio_fin || 0) >= anioActual;
-                
-                // Validamos si el proyecto está activo (por defecto true si la propiedad no viene)
-                const estaActivo = p.activo !== false; 
+
+                const estaActivo = p.activo !== false;
                 const botonesAccion = estaActivo ? `
                     <button class="btn btn-light border btn-sm" onclick="abrirDrawerEditar(${p.id})" title="Editar"><i class="bi bi-pencil"></i></button>
                     <button class="btn btn-light border text-danger btn-sm" onclick="confirmarEliminar(${p.id})" title="Eliminar"><i class="bi bi-trash"></i></button>
@@ -110,9 +107,9 @@ let proyectos = [];
                                 </span>
                                 ${p.enlace ? `<a href="${p.enlace}" target="_blank" class="text-primary small text-decoration-none"><i class="bi bi-box-arrow-up-right"></i> Web</a>` : ''}
                             </div>
-                            
+
                             <h5 class="fw-bold ${!estaActivo ? 'text-muted text-decoration-line-through' : 'text-dark'} mb-2" style="font-size: 1.05rem; line-height: 1.35;">${p.titulo}</h5>
-                            
+
                             <p class="text-secondary small mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                                 ${p.descripcion || 'Sin descripción detallada.'}
                             </p>
@@ -220,7 +217,7 @@ let proyectos = [];
         });
 
         function configurarEventos() {
-            // Ya no escuchamos a los radio buttons de vigencia, solo al buscador y al selector de orden
+
             inputBuscar.addEventListener('input', () => renderizarCards());
             selectOrden.addEventListener('change', () => renderizarCards());
         }

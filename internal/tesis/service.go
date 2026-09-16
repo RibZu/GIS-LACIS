@@ -67,7 +67,6 @@ func (s *Service) Create(t *Tesis) error {
 		return ErrCarreraRequerida
 	}
 
-	// Validar año si viene provisto
 	if t.Anio != nil {
 		actual := time.Now().Year() + 5
 		if *t.Anio < 1970 || *t.Anio > actual {
@@ -75,7 +74,6 @@ func (s *Service) Create(t *Tesis) error {
 		}
 	}
 
-	// Validar cantidad de autores según nivel académico
 	totalAutores := contarAutores(t.AutorID, t.IntegrantesIDs, t.AutorHistorico)
 	if totalAutores == 0 {
 		return ErrAutorRequerido

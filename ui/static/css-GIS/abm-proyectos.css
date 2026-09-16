@@ -22,7 +22,6 @@ body {
     font-family: 'Cormorant Garamond', Georgia, serif;
 }
 
-/* Selector de Opciones / Switcher de Vistas */
 .vista-switcher {
     background: white;
     padding: 6px;
@@ -53,7 +52,6 @@ body {
     background-color: #f1f5f9;
 }
 
-/* Tarjeta contenedora Admin */
 .admin-card {
     background: white;
     border-radius: 16px;
@@ -62,7 +60,6 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Estilos de Tabla */
 .table-custom {
     border-collapse: separate;
     border-spacing: 0;
@@ -93,7 +90,6 @@ body {
     vertical-align: middle;
 }
 
-/* Badges */
 .badge-vigente {
     background-color: #d1e7dd;
     color: #0f5132;
@@ -118,7 +114,6 @@ body {
     gap: 4px;
 }
 
-/* Tarjetas Grid (Opción 2) */
 .proyecto-card {
     background: white;
     border-radius: 16px;
@@ -146,7 +141,6 @@ body {
     background: #cbd5e1;
 }
 
-/* Split-View (Opción 3) */
 .split-container {
     display: grid;
     grid-template-columns: 1fr 1fr;

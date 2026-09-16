@@ -16,7 +16,6 @@ type UsuarioHandler struct {
 	logger  *zap.Logger
 }
 
-// NewUsuarioHandler crea un nuevo controlador de usuarios gestores
 func NewUsuarioHandler(s *usuario.Service, l *zap.Logger) *UsuarioHandler {
 	return &UsuarioHandler{
 		service: s,
@@ -24,7 +23,6 @@ func NewUsuarioHandler(s *usuario.Service, l *zap.Logger) *UsuarioHandler {
 	}
 }
 
-// 1. Ver Lista de Usuarios Gestores en la Plantilla HTML
 func (h *UsuarioHandler) Lista(c *gin.Context) {
 	usuarios, err := h.service.GetAll()
 	if err != nil {
@@ -42,19 +40,16 @@ func (h *UsuarioHandler) Lista(c *gin.Context) {
 	})
 }
 
-// 2. Mostrar Formulario de Crear
 func (h *UsuarioHandler) Crear(c *gin.Context) {
 	c.HTML(http.StatusOK, "CrearUsuario.html", gin.H{"LoggedIn": true})
 }
 
-// Procesar el Formulario Crear (POST)
 func (h *UsuarioHandler) Insertar(c *gin.Context) {
 	username := c.PostForm("username")
 	password := c.PostForm("password")
 	email := c.PostForm("email")
 	modulos := strings.Join(c.PostFormArray("modulos"), ",")
 
-	// El Rol NO se pide en el form: lo calcula el service a partir de los módulos elegidos.
 	req := usuario.UsuarioGestor{
 		Username:     &username,
 		PasswordHash: &password,
@@ -75,7 +70,6 @@ func (h *UsuarioHandler) Insertar(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/admin/usuarios")
 }
 
-// Mostrar Formulario de Editar precargado
 func (h *UsuarioHandler) Editar(c *gin.Context) {
 	idParam := c.Query("id")
 	id, err := strconv.Atoi(idParam)
@@ -108,7 +102,6 @@ func (h *UsuarioHandler) Editar(c *gin.Context) {
 	})
 }
 
-// Procesar la Actualización (POST)
 func (h *UsuarioHandler) Actualizar(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	if id <= 0 {
@@ -124,14 +117,11 @@ func (h *UsuarioHandler) Actualizar(c *gin.Context) {
 		Email:    &email,
 	}
 
-	// El usuario ADMIN no tiene checkboxes de módulos en el form (ver EditarUsuario.html):
-	// dejamos fields.Modulos en nil para que el service no toque ni módulos ni rol.
 	if c.PostForm("es_admin") != "true" {
 		modulos := strings.Join(c.PostFormArray("modulos"), ",")
 		fields.Modulos = &modulos
 	}
 
-	// La contraseña es opcional al editar: solo se manda (y se hashea en el service) si se tipeó algo.
 	if password := c.PostForm("password"); password != "" {
 		fields.PasswordHash = &password
 	}
@@ -151,7 +141,6 @@ func (h *UsuarioHandler) Actualizar(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/admin/usuarios")
 }
 
-// Eliminar Registro
 func (h *UsuarioHandler) Borrar(c *gin.Context) {
 	idParam := c.Query("id")
 	id, err := strconv.Atoi(idParam)

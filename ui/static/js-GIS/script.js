@@ -37,11 +37,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     tarjetas.forEach(tarjeta => {
         tarjeta.addEventListener('click', function(e) {
-            // Si el usuario hace clic en el enlace de Ver Detalle O en el enlace Mailto, NO giramos la tarjeta
+
             if (e.target.tagName === 'A' || e.target.closest('a')) {
-                return; 
+                return;
             }
-            // Si hace clic en cualquier otra parte del cuerpo trasero/frontal, se voltea
+
             this.classList.toggle('flipped');
         });
     });

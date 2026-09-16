@@ -7,7 +7,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// 1. MockStorage: Simulador de la base de datos PostgreSQL para pruebas unitarias
 type MockStorage struct{}
 
 func (m *MockStorage) Create(i *Integrante) error { return nil }
@@ -27,13 +26,13 @@ func TestCreate_SinNombre_DebeDevolverError(t *testing.T) {
 	service := NewService(mockStorage, logger)
 
 	nuevo := &Integrante{
-		Nombre:                 "",
-		Apellido:               "Abdelahad",
-		RolID:                  1,
-		PerteneceLacis:         true,
-		Especializacion:        "Modelos",
-		Contacto:               "corina@email.unsl.edu.ar",
-		Descripcion:            "Docente",
+		Nombre:          "",
+		Apellido:        "Abdelahad",
+		RolID:           1,
+		PerteneceLacis:  true,
+		Especializacion: "Modelos",
+		Contacto:        "corina@email.unsl.edu.ar",
+		Descripcion:     "Docente",
 	}
 
 	err := service.Create(nuevo)
@@ -59,7 +58,7 @@ func TestCreate_Exitoso(t *testing.T) {
 		Descripcion:            "Docente",
 	}
 	err := service.Create(nuevo)
-	// Esperamos que NO devuelva ningún error (nil)
+
 	assert.NoError(t, err)
 }
 
@@ -70,13 +69,13 @@ func TestCreate_NombreConNumeros_DebeDevolverError(t *testing.T) {
 	service := NewService(mockStorage, logger)
 
 	nuevo := &Integrante{
-		Nombre:                 "Corina123",
-		Apellido:               "Abdelahad",
-		RolID:                  1,
-		PerteneceLacis:         true,
-		Especializacion:        "Modelos",
-		Contacto:               "docenne@gmail.com",
-		Descripcion:            "Docente",
+		Nombre:          "Corina123",
+		Apellido:        "Abdelahad",
+		RolID:           1,
+		PerteneceLacis:  true,
+		Especializacion: "Modelos",
+		Contacto:        "docenne@gmail.com",
+		Descripcion:     "Docente",
 	}
 	err := service.Create(nuevo)
 
@@ -124,13 +123,13 @@ func TestCreate_PerteneceLacisSinRol_DebeDevolverError(t *testing.T) {
 	service := NewService(mockStorage, zap.NewNop())
 
 	nuevo := &Integrante{
-		Nombre:                 "Corina",
-		Apellido:               "Abdelahad",
-		PerteneceLacis:         true,
-		RolLacisID:             nil,
-		Especializacion:        "Modelos",
-		Contacto:               "ismae@gmail.com",
-		Descripcion:            "Docente",
+		Nombre:          "Corina",
+		Apellido:        "Abdelahad",
+		PerteneceLacis:  true,
+		RolLacisID:      nil,
+		Especializacion: "Modelos",
+		Contacto:        "ismae@gmail.com",
+		Descripcion:     "Docente",
 	}
 	err := service.Create(nuevo)
 
@@ -175,7 +174,7 @@ func TestRead_Exitoso(t *testing.T) {
 	mockStorage := &MockStorage{}
 	service := NewService(mockStorage, zap.NewNop())
 
-	IntegranteObj, err := service.Read(1) // valor 1 exitoso
+	IntegranteObj, err := service.Read(1)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, IntegranteObj)
@@ -223,7 +222,7 @@ func TestUpdate_Exitoso(t *testing.T) {
 func TestUpdate_Restringido_Exitoso(t *testing.T) {
 	mockStorage := &MockStorage{}
 	service := NewService(mockStorage, zap.NewNop())
-	
+
 	esp := "Dra. en Computación Avanzada"
 	desc := "Nueva trayectoria y proyectos de investigación"
 	lacisTrue := true
@@ -247,7 +246,7 @@ func TestUpdate_Restringido_Exitoso(t *testing.T) {
 func TestUpdate_RolLacisInvalido_DebeDevolverError(t *testing.T) {
 	mockStorage := &MockStorage{}
 	service := NewService(mockStorage, zap.NewNop())
-	
+
 	lacisTrue := true
 	rolInvalido := 0
 

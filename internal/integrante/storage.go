@@ -7,10 +7,8 @@ import (
 	"fmt"
 )
 
-// ErrNotFound devuelve el error cuando no se encuentra el integrante con el ID proporcionado
 var ErrNotFound = errors.New("integrante no encontrado")
 
-// ErrEmptyID retorna error cuando el ID es inválido
 var ErrEmptyID = errors.New("ID de integrante vacío o inválido")
 
 type Storage interface {
@@ -32,7 +30,7 @@ func NewPostgresStorage(db *sql.DB) *PostgresStorage {
 }
 
 func (c *PostgresStorage) Create(integrante *Integrante) error {
-	// Mantener rol_id con el primer rol disponible para retrocompatibilidad
+
 	if integrante.RolID <= 0 {
 		if integrante.RolLacisID != nil && *integrante.RolLacisID > 0 {
 			integrante.RolID = *integrante.RolLacisID

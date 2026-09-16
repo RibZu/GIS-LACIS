@@ -2,9 +2,8 @@ package usuario
 
 type UsuarioGestor struct {
 	ID int `json:"id"`
-	//Se pone json id como una manera de reformular la la variblae para pasarla en el formato
-	//que debe estar en el json
-	IntegrantesId *int `json:"integrantes_id"` //Con el operador * en este caso lo utilizamos para que go sepa que esa varaible puede estar vacia
+
+	IntegrantesId *int `json:"integrantes_id"`
 
 	Username *string `json:"username"`
 
@@ -23,6 +22,4 @@ type UpdateFieldGestor struct {
 	Email        *string `json:"email"`
 	Rol          *string `json:"rol"`
 	Modulos      *string `json:"modulos"`
-	//En este caso se estan usando punteros en los String ya que estos permiten que el campo sea nulo en go
-	//Es decir que se puede dejar Vacio
 }

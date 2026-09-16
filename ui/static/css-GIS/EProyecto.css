@@ -504,7 +504,6 @@ main {
   right: -15px;
 }
 
-/* Optimización de animación UI: Se elimina el filtro 'blur' pesado en la carga inicial para evitar tirones en el renderizado */
 .blur-in {
   animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   will-change: opacity, transform;

@@ -94,7 +94,6 @@ h1, h2, h3, h4, h5, .form-header-title {
     box-shadow: 0 6px 16px rgba(26, 68, 132, 0.35);
 }
 
-/* ==================== TARJETAS DE PERTENENCIA Y ROLES ==================== */
 .group-card {
     background: #ffffff;
     border: 1.5px solid #e2e8f0;
@@ -138,14 +137,12 @@ h1, h2, h3, h4, h5, .form-header-title {
     border: 1px solid #ede9fe;
 }
 
-/* Switch toggles específicos para tarjetas de grupos (Integrantes) */
 .group-card .form-switch .form-check-input {
     width: 2.7em;
     height: 1.45em;
     cursor: pointer;
 }
 
-/* ==================== SELECTORES TIPO RADIO EN TARJETAS (TESIS) ==================== */
 .group-card .tipo-selector,
 .group-card .mb-2:has(.form-check-inline) {
     display: flex;
@@ -241,7 +238,6 @@ h1, h2, h3, h4, h5, .form-header-title {
     box-shadow: none;
 }
 
-/* ==================== GESTIÓN DINÁMICA DE AUTORES (GRADO) ==================== */
 .autor-item {
     animation: fadeInAuthor 0.25s ease-out;
 }
