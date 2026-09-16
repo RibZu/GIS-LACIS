@@ -40,6 +40,23 @@ func tieneModulo(u *usuario.UsuarioGestor, modulo string) bool {
 	return false
 }
 
+// RequireLogin bloquea la ruta salvo que haya una sesión válida (un usuario logueado que
+// realmente exista). No chequea módulo ni rol: es el gate de entrada del grupo /admin completo,
+// para que ninguna ruta —presente o futura— quede alcanzable sin sesión aunque a alguien se le
+// olvide agregarle RequireModule/RequireAdmin. El chequeo de módulo/rol lo siguen resolviendo
+// esos dos middlewares.
+func RequireLogin(s *usuario.Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		_, ok := currentUsuario(c, s)
+		if !ok {
+			c.Redirect(http.StatusFound, "/login")
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
+
 // RequireModule bloquea la ruta salvo que el usuario logueado tenga ese módulo
 // asignado (o sea ADMIN, que tiene acceso a todo).
 func RequireModule(s *usuario.Service, modulo string) gin.HandlerFunc {
