@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -81,6 +82,42 @@ func (h *TesisHandler) Insertar(c *gin.Context) {
 		}
 	}
 
+	// Autores adicionales (solo permitidos si nivel == "Grado", hasta máx 4 totales)
+	var integrantesIDs []int
+	var autoresHistoricosExtra []string
+
+	if nivel == "Grado" {
+		for i := 2; i <= 4; i++ {
+			tipoKey := fmt.Sprintf("autor_tipo_%d", i)
+			idKey := fmt.Sprintf("autor_id_%d", i)
+			histKey := fmt.Sprintf("autor_historico_%d", i)
+
+			tipo := c.PostForm(tipoKey)
+			if tipo == "" {
+				continue
+			}
+
+			if tipo == "registrado" {
+				if val, err := strconv.Atoi(c.PostForm(idKey)); err == nil && val > 0 {
+					integrantesIDs = append(integrantesIDs, val)
+				}
+			} else if tipo == "externo" {
+				nom := strings.TrimSpace(c.PostForm(histKey))
+				if nom != "" {
+					autoresHistoricosExtra = append(autoresHistoricosExtra, nom)
+				}
+			}
+		}
+	}
+
+	if len(autoresHistoricosExtra) > 0 {
+		if autorHistorico != "" {
+			autorHistorico = autorHistorico + ", " + strings.Join(autoresHistoricosExtra, ", ")
+		} else {
+			autorHistorico = strings.Join(autoresHistoricosExtra, ", ")
+		}
+	}
+
 	var dirIDPtr *int
 	dirTipo := c.PostForm("director_tipo")
 	dirHistorico := strings.TrimSpace(c.PostForm("director_historico"))
@@ -114,6 +151,7 @@ func (h *TesisHandler) Insertar(c *gin.Context) {
 		DirectorHistorico:    dirHistorico,
 		CoodirectorID:        coodirIDPtr,
 		CoodirectorHistorico: coodirHistorico,
+		IntegrantesIDs:       integrantesIDs,
 	}
 
 	// Manejo de archivo PDF
@@ -204,6 +242,42 @@ func (h *TesisHandler) Actualizar(c *gin.Context) {
 		autorIDPtr = &valZero
 	}
 
+	// Autores adicionales (solo permitidos si nivel == "Grado", hasta máx 4 totales)
+	var integrantesIDs []int
+	var autoresHistoricosExtra []string
+
+	if nivel == "Grado" {
+		for i := 2; i <= 4; i++ {
+			tipoKey := fmt.Sprintf("autor_tipo_%d", i)
+			idKey := fmt.Sprintf("autor_id_%d", i)
+			histKey := fmt.Sprintf("autor_historico_%d", i)
+
+			tipo := c.PostForm(tipoKey)
+			if tipo == "" {
+				continue
+			}
+
+			if tipo == "registrado" {
+				if val, err := strconv.Atoi(c.PostForm(idKey)); err == nil && val > 0 {
+					integrantesIDs = append(integrantesIDs, val)
+				}
+			} else if tipo == "externo" {
+				nom := strings.TrimSpace(c.PostForm(histKey))
+				if nom != "" {
+					autoresHistoricosExtra = append(autoresHistoricosExtra, nom)
+				}
+			}
+		}
+	}
+
+	if len(autoresHistoricosExtra) > 0 {
+		if autorHistorico != "" {
+			autorHistorico = autorHistorico + ", " + strings.Join(autoresHistoricosExtra, ", ")
+		} else {
+			autorHistorico = strings.Join(autoresHistoricosExtra, ", ")
+		}
+	}
+
 	dirTipo := c.PostForm("director_tipo")
 	dirHistorico := strings.TrimSpace(c.PostForm("director_historico"))
 	var dirIDPtr *int
@@ -243,6 +317,7 @@ func (h *TesisHandler) Actualizar(c *gin.Context) {
 		DirectorHistorico:    &dirHistorico,
 		CoodirectorID:        coodirIDPtr,
 		CoodirectorHistorico: &coodirHistorico,
+		IntegrantesIDs:       integrantesIDs,
 	}
 
 	// Si se subió un nuevo PDF

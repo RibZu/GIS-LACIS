@@ -9,6 +9,7 @@ import (
 	"PaginaSEG/internal/tesis"
 	"PaginaSEG/internal/usuario"
 	"database/sql"
+	"html/template"
 	"net/http"
 	"time"
 
@@ -55,7 +56,10 @@ func InitRoutes(e *gin.Engine) {
 	// Servir archivos estáticos (CSS, JS, Imágenes)
 	e.Static("/static", "ui/static")
 	e.Static("/ui/static", "ui/static")
-	// Cargar las plantillas HTML
+	// Cargar las plantillas HTML con funciones de utilidad
+	e.SetFuncMap(template.FuncMap{
+		"add": func(a, b int) int { return a + b },
+	})
 	e.LoadHTMLGlob("ui/html/**/*.html")
 
 	// INICIALIZACIÓN DE SERVICIOS Y HANDLERS
@@ -96,11 +100,8 @@ func InitRoutes(e *gin.Engine) {
 		_, loggedIn := handler.CurrentUserID(c)
 		c.HTML(http.StatusOK, "integrantes.html", gin.H{"LoggedIn": loggedIn})
 	})
-	// 3. LaCIS
-	e.GET("/lacis", func(c *gin.Context) {
-		_, loggedIn := handler.CurrentUserID(c)
-		c.HTML(http.StatusOK, "Lacis.html", gin.H{"LoggedIn": loggedIn})
-	})
+	// 3. LaCIS (incluye la sección de productos de software, alimentada por desarrolloHandler)
+	e.GET("/lacis", desarrolloHandler.ViewLacis)
 	// 4. Proyectos
 	e.GET("/proyectos", func(c *gin.Context) {
 		_, loggedIn := handler.CurrentUserID(c)
@@ -108,22 +109,29 @@ func InitRoutes(e *gin.Engine) {
 	})
 	// 5. Posgrado: Doctorado en Ingeniería de Software
 	e.GET("/doctorado-ing-software", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "DrIngSoft.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "DrIngSoft.html", gin.H{"LoggedIn": loggedIn})
 	})
 	// 6. Posgrado: Especialización en Ingeniería de Software
 	e.GET("/especializacion-ing-software", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "EspIngSoft.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "EspIngSoft.html", gin.H{"LoggedIn": loggedIn})
 	})
 	// 7. Posgrado: Maestría en Calidad de Software
 	e.GET("/maestria-calidad-software", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "MgCalSoft.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "MgCalSoft.html", gin.H{"LoggedIn": loggedIn})
 	})
 	// 8. Posgrado: Maestría en Ingeniería de Software
 	e.GET("/maestria-ing-software", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "MgIngSoft.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "MgIngSoft.html", gin.H{"LoggedIn": loggedIn})
 	})
-	// 9. Desarrollos
-	e.GET("/desarrollos", desarrolloHandler.ViewPublica)
+	// 9. Desarrollos: la página independiente se eliminó (ahora es una sección de /lacis); esta
+	// dirección se conserva como redirección permanente para no romper enlaces ya compartidos.
+	e.GET("/desarrollos", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "/lacis#productos-software")
+	})
 	// 10. Tesis
 	e.GET("/tesis", tesisHandler.ViewPublica)
 
@@ -131,7 +139,12 @@ func InitRoutes(e *gin.Engine) {
 	e.POST("/login", authHandler.ProcessLogin)
 	e.GET("/logout", authHandler.Logout)
 
-	v1Admin := e.Group("/admin")
+	// El gate de sesión se pasa como argumento de Group, no con un Use(...) posterior: en Gin
+	// los subgrupos copian la cadena de middlewares del padre en el momento de crearse, así que
+	// un Use() tardío no alcanzaría a los subgrupos que se derivan más abajo (integrantesAdmin,
+	// tesisAdmin, etc.). Así, toda ruta colgada de /admin —presente o futura— exige sesión antes
+	// de llegar a los controles de módulo/rol de cada subgrupo.
+	v1Admin := e.Group("/admin", handler.RequireLogin(usuarioService))
 	v1Admin.GET("/dashboard", authHandler.ShowDashboard)
 
 	// Módulo "integrantes": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)

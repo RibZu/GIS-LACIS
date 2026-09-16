@@ -222,3 +222,75 @@ func TestDelete_Exitoso(t *testing.T) {
 	err := srv.Delete(1)
 	assert.NoError(t, err)
 }
+
+func TestCreate_Grado_Hasta4Autores_Exitoso(t *testing.T) {
+	mock := &MockStorage{}
+	srv := NewService(mock, zap.NewNop())
+	anio := 2025
+	autorID := 1
+
+	tesis := &Tesis{
+		Titulo:         "Sistema Inteligente para Monitoreo de Software",
+		Nivel:          "Grado",
+		CarreraOrigen:  "Ingeniería en Informática",
+		Anio:           &anio,
+		AutorID:        &autorID,
+		IntegrantesIDs: []int{2, 3},
+		AutorHistorico: "Alumno Externo", // 1 + 2 + 1 = 4 autores
+	}
+
+	err := srv.Create(tesis)
+	assert.NoError(t, err)
+}
+
+func TestCreate_Grado_MasDe4Autores_DebeDevolverError(t *testing.T) {
+	mock := &MockStorage{}
+	srv := NewService(mock, zap.NewNop())
+	anio := 2025
+	autorID := 1
+
+	tesis := &Tesis{
+		Titulo:         "Sistema Inteligente para Monitoreo de Software",
+		Nivel:          "Grado",
+		CarreraOrigen:  "Ingeniería en Informática",
+		Anio:           &anio,
+		AutorID:        &autorID,
+		IntegrantesIDs: []int{2, 3, 4},
+		AutorHistorico: "Alumno Externo", // 1 + 3 + 1 = 5 autores -> excede máx 4
+	}
+
+	err := srv.Create(tesis)
+	assert.Error(t, err)
+	assert.Equal(t, ErrMaxAutoresExcedido, err)
+}
+
+func TestCreate_Posgrado_MasDe1Autor_DebeDevolverError(t *testing.T) {
+	mock := &MockStorage{}
+	srv := NewService(mock, zap.NewNop())
+	anio := 2025
+	autorID := 1
+
+	tesis := &Tesis{
+		Titulo:         "Tesis Doctoral Avanzada",
+		Nivel:          "Doctorado",
+		CarreraOrigen:  "Doctorado en Ingeniería Informática",
+		Anio:           &anio,
+		AutorID:        &autorID,
+		IntegrantesIDs: []int{2}, // 2 autores en posgrado -> no permitido
+	}
+
+	err := srv.Create(tesis)
+	assert.Error(t, err)
+	assert.Equal(t, ErrMaxAutoresExcedido, err)
+}
+
+func TestGetAutorDisplay_MultiplesAutores(t *testing.T) {
+	tesis := &Tesis{
+		AutorNombre:        "Juan Pérez",
+		AutoresSecundarios: "Lucas Gómez, Ana Torres",
+		AutorHistorico:     "Martín Rossi",
+	}
+
+	display := tesis.GetAutorDisplay()
+	assert.Equal(t, "Juan Pérez, Lucas Gómez, Ana Torres, Martín Rossi", display)
+}

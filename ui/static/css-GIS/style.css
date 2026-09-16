@@ -227,6 +227,27 @@ h1, h2, h3, h4, h5 {
     color: var(--azul-profundo);
 }
 
+.boton-tesis {
+    border: 1px solid var(--azul-logo);
+    background-color: var(--azul-logo);
+    color: #ffffff !important;
+    font-weight: 500;
+    transition: all 0.25s ease-in-out;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+}
+
+.boton-tesis:hover {
+    background-color: var(--azul-profundo);
+    border-color: var(--azul-profundo);
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(11, 46, 107, 0.25);
+}
+
 @media (max-width: 950px) {
     .seccion-principal {
         background: var(--azul-logo);
