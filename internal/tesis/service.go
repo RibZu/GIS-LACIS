@@ -10,17 +10,38 @@ import (
 )
 
 var (
-	ErrTituloRequerido  = errors.New("el título de la tesis es obligatorio")
-	ErrNivelRequerido   = errors.New("debes seleccionar el nivel académico de la tesis")
-	ErrCarreraRequerida = errors.New("debes indicar la carrera o posgrado de origen")
-	ErrAnioInvalido     = errors.New("el año debe ser un número válido de 4 dígitos")
-	ErrAutorRequerido   = errors.New("debes indicar o seleccionar un autor para la tesis")
-	ErrIDInvalido       = errors.New("el ID debe ser mayor a 0")
+	ErrTituloRequerido    = errors.New("el título de la tesis es obligatorio")
+	ErrNivelRequerido     = errors.New("debes seleccionar el nivel académico de la tesis")
+	ErrCarreraRequerida   = errors.New("debes indicar la carrera o posgrado de origen")
+	ErrAnioInvalido       = errors.New("el año debe ser un número válido de 4 dígitos")
+	ErrAutorRequerido     = errors.New("debes indicar o seleccionar un autor para la tesis")
+	ErrIDInvalido         = errors.New("el ID debe ser mayor a 0")
+	ErrMaxAutoresExcedido = errors.New("límite de autores excedido: posgrado admite 1 solo autor y grado hasta un máximo de 4 autores")
 )
 
 type Service struct {
 	storage Storage
 	logger  *zap.Logger
+}
+
+func contarAutores(autorID *int, integrantesIDs []int, autorHistorico string) int {
+	total := 0
+	if autorID != nil && *autorID > 0 {
+		total++
+	}
+	for _, id := range integrantesIDs {
+		if id > 0 {
+			total++
+		}
+	}
+	if strings.TrimSpace(autorHistorico) != "" {
+		for _, part := range strings.Split(autorHistorico, ",") {
+			if strings.TrimSpace(part) != "" {
+				total++
+			}
+		}
+	}
+	return total
 }
 
 func NewService(s Storage, l *zap.Logger) *Service {
@@ -54,11 +75,16 @@ func (s *Service) Create(t *Tesis) error {
 		}
 	}
 
-	// Validar que exista al menos un autor (por ID o texto histórico)
-	tieneAutorID := t.AutorID != nil && *t.AutorID > 0
-	tieneAutorHist := strings.TrimSpace(t.AutorHistorico) != ""
-	if !tieneAutorID && !tieneAutorHist {
+	// Validar cantidad de autores según nivel académico
+	totalAutores := contarAutores(t.AutorID, t.IntegrantesIDs, t.AutorHistorico)
+	if totalAutores == 0 {
 		return ErrAutorRequerido
+	}
+	if t.Nivel != "Grado" && totalAutores > 1 {
+		return ErrMaxAutoresExcedido
+	}
+	if t.Nivel == "Grado" && totalAutores > 4 {
+		return ErrMaxAutoresExcedido
 	}
 
 	err := s.storage.Create(t)

@@ -114,3 +114,39 @@ func TestIntegration_ObtenerTesisJSON(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 }
 
+func TestIntegration_InsertarTesisGrado_MultiplesAutores(t *testing.T) {
+	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
+	db, err := sql.Open("postgres", dsn)
+	assert.NoError(t, err)
+	defer db.Close()
+
+	r := gin.Default()
+	api.InitRoutes(r)
+
+	formData := url.Values{}
+	formData.Set("titulo", "Proyecto Final de Carrera Grado")
+	formData.Set("nivel", "Grado")
+	formData.Set("carrera_origen", "Ingeniería en Informática")
+	formData.Set("anio", "2026")
+	formData.Set("autor_tipo", "externo")
+	formData.Set("autor_historico", "Autor Uno")
+	formData.Set("autor_tipo_2", "externo")
+	formData.Set("autor_historico_2", "Autor Dos")
+	formData.Set("autor_tipo_3", "externo")
+	formData.Set("autor_historico_3", "Autor Tres")
+	formData.Set("autor_tipo_4", "externo")
+	formData.Set("autor_historico_4", "Autor Cuatro")
+	formData.Set("director_tipo", "externo")
+	formData.Set("director_historico", "Director Guía")
+
+	req, _ := http.NewRequest("POST", "/admin/insertar-tesis", strings.NewReader(formData.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.AddCookie(&http.Cookie{Name: "session", Value: "1"})
+
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusSeeOther, w.Code)
+	assert.Equal(t, "/admin/tesis", w.Header().Get("Location"))
+}
+

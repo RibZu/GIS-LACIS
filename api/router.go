@@ -9,6 +9,7 @@ import (
 	"PaginaSEG/internal/tesis"
 	"PaginaSEG/internal/usuario"
 	"database/sql"
+	"html/template"
 	"net/http"
 	"time"
 
@@ -55,7 +56,10 @@ func InitRoutes(e *gin.Engine) {
 	// Servir archivos estáticos (CSS, JS, Imágenes)
 	e.Static("/static", "ui/static")
 	e.Static("/ui/static", "ui/static")
-	// Cargar las plantillas HTML
+	// Cargar las plantillas HTML con funciones de utilidad
+	e.SetFuncMap(template.FuncMap{
+		"add": func(a, b int) int { return a + b },
+	})
 	e.LoadHTMLGlob("ui/html/**/*.html")
 
 	// INICIALIZACIÓN DE SERVICIOS Y HANDLERS
