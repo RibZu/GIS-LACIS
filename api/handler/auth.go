@@ -26,6 +26,10 @@ func NewAuthHandler(us *usuario.Service, is *integrante.Service, l *zap.Logger) 
 }
 
 func (h *AuthHandler) ShowLogin(c *gin.Context) {
+	if _, ok := CurrentUserID(c); ok {
+		c.Redirect(http.StatusFound, "/admin/dashboard")
+		return
+	}
 	c.HTML(http.StatusOK, "Login.html", gin.H{})
 }
 
@@ -71,6 +75,10 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 }
 
 func (h *AuthHandler) ShowDashboard(c *gin.Context) {
+	// La autorización de esta ruta ya la resuelve RequireLogin, registrado en el grupo /admin
+	// (api/router.go): sin sesión válida no se llega hasta acá. currentUsuario se sigue llamando
+	// igual porque el handler necesita el *usuario.UsuarioGestor para calcular EsAdmin/TieneX; el
+	// "if !ok" que sigue es una guarda defensiva, no la autorización.
 	u, ok := currentUsuario(c, h.usuarioService)
 	if !ok {
 		c.Redirect(http.StatusFound, "/login")

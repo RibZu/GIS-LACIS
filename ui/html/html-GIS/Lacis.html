@@ -41,8 +41,8 @@
                             <a href="#contactos" class="hero-btn-outline">Contáctanos</a>
                         </div>
                         <div class="hero-link-desarrollos-wrap mt-3">
-                            <a href="/desarrollos" class="hero-link-desarrollos">
-                                <i class="ti ti-arrow-narrow-right"></i> Conocé los desarrollos del laboratorio
+                            <a href="#productos-software" class="hero-link-desarrollos">
+                                <i class="ti ti-arrow-narrow-right"></i> Conocé los productos de software del laboratorio
                             </a>
                         </div>
                     </div>
@@ -365,7 +365,47 @@
                 </div>
             </div>
         </section>
-     
+
+        <section id="productos-software" class="py-5">
+            <div class="container my-5">
+                <div class="text-center mb-5">
+                    <h2 class="titulo-seccion fs-2 fw-bold d-inline-block mb-3 text-dark">Productos de <span class="text-secondary texto-verde">Software</span></h2>
+                    <p class="descripcion-seccion fs-6 text-muted mx-auto mt-3" style="max-width: 600px;">Sistemas, herramientas y productos de software desarrollados por integrantes de LaCIS y del Grupo de Ingeniería de Software.</p>
+                </div>
+
+                {{ if .Desarrollos }}
+                <div class="row g-4 justify-content-center" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
+                    {{ range .Desarrollos }}
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="lacis-card lacis-card-producto h-100 shadow-sm">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="card-icon-container">
+                                        <i class="ti ti-code"></i>
+                                    </div>
+                                    <span class="producto-year-pill">{{ .Anio }}</span>
+                                </div>
+                                <h5 class="card-title fw-bold mb-2">{{ .Titulo }}</h5>
+                                {{ if .Contacto }}
+                                <p class="card-text small text-muted mb-1"><strong>Contacto:</strong> {{ .Contacto }}</p>
+                                {{ end }}
+                                <p class="card-text text-muted flex-grow-1">{{ .Descripcion }}</p>
+                                {{ if .URL }}
+                                <a href="{{ .URL }}" target="_blank" rel="noopener noreferrer" class="producto-cta mt-auto align-self-start">
+                                    Visitar producto <i class="ti ti-arrow-narrow-right"></i>
+                                </a>
+                                {{ end }}
+                            </div>
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+                {{ else }}
+                <p class="text-center text-muted py-4">Todavía no hay productos de software cargados.</p>
+                {{ end }}
+            </div>
+        </section>
+
 <!-- ══ FIN SECCIÓN INTEGRANTES ══ -->
     </main>
 <footer id="contactos" class="text-white pb-4 bg-dark"><!--footer-->

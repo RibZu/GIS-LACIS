@@ -431,6 +431,71 @@ body {
   max-width: 600px; font-size: 1.05rem; line-height: 1.8;
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+   SECCIÓN "Productos de Software" (antes página independiente /desarrollos,
+   ver 010-posgrado-header-productos-software). Estilos propios de LaCIS,
+   en el mismo lenguaje visual que .lacis-card — no se importa el CSS de la
+   página vieja para no restilizar el resto de esta página (ver research.md D4).
+   ══════════════════════════════════════════════════════════════════════ */
+
+#productos-software {
+  /* Para que el navbar fixed-top no tape el título al llegar por el ancla del hero. */
+  scroll-margin-top: 90px;
+}
+
+.lacis-card-producto {
+  text-align: left;
+  min-height: auto;
+}
+
+.lacis-card-producto .card-body {
+  text-align: left;
+}
+
+.lacis-card-producto .card-icon-container {
+  width: 50px;
+  height: 50px;
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.producto-year-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: rgba(139, 195, 74, .15);
+  color: var(--color-principal);
+}
+
+.producto-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.75rem;
+  color: var(--lacis-primary);
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-bottom: 2px solid var(--color-secundario);
+  padding-bottom: 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.producto-cta:hover {
+  color: var(--color-principal);
+  border-color: var(--color-principal);
+}
+
+.producto-cta i {
+  font-size: 0.78rem;
+  transition: transform 0.2s ease;
+}
+
+.producto-cta:hover i {
+  transform: translateX(3px);
+}
+
 /* TERMINA LACIS */
 
 
