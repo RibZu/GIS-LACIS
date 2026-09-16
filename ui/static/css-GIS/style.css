@@ -12,8 +12,6 @@ main {
     background: linear-gradient(to bottom, var(--blanco-fondo) 0%, var(--blanco-fondo) 60%, var(--azul-pastel-fondo) 100%);
 }
 
-
-
 h1, h2, h3, h4, h5 {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 600;
@@ -51,10 +49,6 @@ h1, h2, h3, h4, h5 {
     transition: color 1.5s ease-in-out;
 }
 
-/* Línea institucional (Departamento de Informática · UNSL) debajo del
-   título: arranca invisible y solo se revela cuando la sección pasa a
-   fondo azul por scroll (misma transición de 1.5s que ya usa el
-   título/párrafo al cambiar a blanco, para que entren juntos). */
 .eyebrow-institucional {
     font-family: 'Montserrat', sans-serif;
     font-size: .8rem;
@@ -251,7 +245,7 @@ h1, h2, h3, h4, h5 {
 @media (max-width: 950px) {
     .seccion-principal {
         background: var(--azul-logo);
-        transition: none; 
+        transition: none;
         flex-direction: column;
     }
     .encabezado-seccion {
@@ -262,16 +256,16 @@ h1, h2, h3, h4, h5 {
     .seccion-principal p {
         color: var(--blanco-fondo) !important;
     }
-    
+
     blockquote {
         display: none;
     }
-    
+
     h3 {
         text-align: center;
         text-decoration: underline;
     }
-    
+
     .vision p {
         text-align: center;
     }
@@ -279,14 +273,14 @@ h1, h2, h3, h4, h5 {
     .mision p {
         text-align: center;
     }
-    
+
     .vision {
         margin-top: -10px;
     }
 }
 @media (max-width: 580px){
     body, html {
-    overflow-x: hidden; 
+    overflow-x: hidden;
 }
 
 }

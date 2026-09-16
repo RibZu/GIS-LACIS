@@ -2,7 +2,7 @@ package handler
 
 import (
 	"PaginaSEG/internal/integrante"
-	"PaginaSEG/internal/usuario" // Importamos tu nuevo paquete de usuarios
+	"PaginaSEG/internal/usuario"
 	"net/http"
 	"strconv"
 
@@ -75,10 +75,7 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 }
 
 func (h *AuthHandler) ShowDashboard(c *gin.Context) {
-	// La autorización de esta ruta ya la resuelve RequireLogin, registrado en el grupo /admin
-	// (api/router.go): sin sesión válida no se llega hasta acá. currentUsuario se sigue llamando
-	// igual porque el handler necesita el *usuario.UsuarioGestor para calcular EsAdmin/TieneX; el
-	// "if !ok" que sigue es una guarda defensiva, no la autorización.
+
 	u, ok := currentUsuario(c, h.usuarioService)
 	if !ok {
 		c.Redirect(http.StatusFound, "/login")

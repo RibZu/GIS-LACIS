@@ -5,7 +5,6 @@ import (
 	"fmt"
 )
 
-// Storage defines the data access methods for reconocimiento.
 type Storage interface {
 	GetAll() ([]Reconocimiento, error)
 	GetAllAdmin() ([]Reconocimiento, error)
@@ -53,7 +52,6 @@ func (s *PostgresStorage) GetAll() ([]Reconocimiento, error) {
 	return reconocimientos, nil
 }
 
-// GetAllAdmin trae TODOS los reconocimientos, incluidos los inactivos
 func (s *PostgresStorage) GetAllAdmin() ([]Reconocimiento, error) {
 	query := `SELECT id, titulo, descripcion, activo FROM reconocimientos ORDER BY id ASC`
 	rows, err := s.db.Query(query)
@@ -137,7 +135,7 @@ func (s *PostgresStorage) Update(id int, fields UpdateFields) error {
 	if len(args) == 0 {
 		return nil
 	}
-	// Trim trailing comma and space
+
 	query = query[:len(query)-2] + fmt.Sprintf(" WHERE id = $%d", argID)
 	args = append(args, id)
 	_, err := s.db.Exec(query, args...)
@@ -145,7 +143,7 @@ func (s *PostgresStorage) Update(id int, fields UpdateFields) error {
 }
 
 func (s *PostgresStorage) Delete(id int) error {
-	// Logical delete: set activo to false
+
 	query := `UPDATE reconocimientos SET activo = false WHERE id = $1`
 	res, err := s.db.Exec(query, id)
 	if err != nil {

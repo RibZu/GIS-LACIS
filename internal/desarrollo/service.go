@@ -31,9 +31,6 @@ func anioValido(anio int) bool {
 	return anio >= 1990 && anio <= limite
 }
 
-// normalizarURL le agrega "https://" a los enlaces que el usuario cargó sin
-// protocolo (ej: "hola.com.ar"), para que el <a href="..."> de la lista
-// funcione como link externo real y no como ruta relativa del propio sitio.
 func normalizarURL(url string) string {
 	url = strings.TrimSpace(url)
 	if url == "" {
@@ -121,8 +118,6 @@ func (s *Service) Delete(id int) error {
 	return nil
 }
 
-// -------- Vínculo con integrantes registrados (desarrollo_integrantes) --------
-
 func (s *Service) VincularIntegrantes(desarrolloID int, integranteIDs []int) error {
 	if desarrolloID <= 0 {
 		return ErrIDInvalido
@@ -136,8 +131,6 @@ func (s *Service) ObtenerIntegrantes(desarrolloID int) ([]integrante.Integrante,
 	}
 	return s.storage.GetIntegrantes(desarrolloID)
 }
-
-// -------- Participantes externos (participante_externo) --------
 
 func (s *Service) VincularParticipantesExternos(desarrolloID int, nombres []string) error {
 	if desarrolloID <= 0 {

@@ -21,17 +21,15 @@ type PostgressStorage struct {
 	db *sql.DB
 }
 
-func NewPostgressStorage(db *sql.DB) *PostgressStorage /*<-- indica que tipo de dato entrega la funcion al terminar */ {
+func NewPostgressStorage(db *sql.DB) *PostgressStorage {
 	return &PostgressStorage{
-		db: db, //Aaca se esta asignando
+		db: db,
 	}
 }
-func (c *PostgressStorage) Create(u *UsuarioGestor) error { /*En este caso Postgreetorage se utiliza utilizar siempre la mimsa conexxion a la base de datos*/
+func (c *PostgressStorage) Create(u *UsuarioGestor) error {
 	query := `INSERT INTO usuario_gestor(integrante_id, username, password_hash, email, rol, modulos) VALUES ($1, $2, $3, $4, $5,$6) RETURNING id`
 	err := c.db.QueryRow(query, u.IntegrantesId, u.Username, u.PasswordHash, u.Email, u.Rol, u.Modulos).Scan(&u.ID)
 
-	//En este caso el uso de los asterisoc viene dado ya que con c, se evita copiar toda la coenxion a al base de datos
-	//Cada vez que se llama un metodo y con u se
 	if err != nil {
 		return fmt.Errorf("Error al insertar usuario en PostgreSQL: %w", err)
 	}
@@ -98,7 +96,7 @@ func (c *PostgressStorage) GetAll() ([]UsuarioGestor, error) {
 	var usuarios []UsuarioGestor
 	for rows.Next() {
 		var u UsuarioGestor
-		err := rows.Scan(&u.ID, &u.Username, &u.PasswordHash, &u.Email, &u.UltimoAcceso, &u.Rol, &u.Modulos) /*Vos al scan le podes pasar tantos parametros como direcciones recibe la consulta*/
+		err := rows.Scan(&u.ID, &u.Username, &u.PasswordHash, &u.Email, &u.UltimoAcceso, &u.Rol, &u.Modulos)
 		if err != nil {
 			return nil, err
 		}
@@ -127,8 +125,8 @@ func (c *PostgressStorage) Delete(id int) error {
 }
 func (c *PostgressStorage) Update(id int, fields *UpdateFieldGestor) error {
 	query := `UPDATE usuario_gestor SET `
-	var args []interface{} /*Esto sirve para guardar datos de diferentes tipos, ya que go cuando uno define un slice en go solo puede guardar
-	valores de un tipo pero si lo definimos como interface/any le decimos que puede recibir varios tipos de valores*/
+	var args []interface{}
+
 	argID := 1
 	if fields.Username != nil {
 		query += fmt.Sprintf("username=$%d, ", argID)

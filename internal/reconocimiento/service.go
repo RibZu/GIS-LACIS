@@ -32,7 +32,6 @@ func (s *Service) GetAll() ([]Reconocimiento, error) {
 	return reconocimientos, nil
 }
 
-// GetAllAdmin retorna todos los reconocimientos (incluyendo inactivos) para el panel admin
 func (s *Service) GetAllAdmin() ([]Reconocimiento, error) {
 	reconocimientos, err := s.storage.GetAllAdmin()
 	if err != nil {
@@ -76,7 +75,6 @@ func (s *Service) Update(id int, fields UpdateFields) error {
 	return nil
 }
 
-// Delete realiza baja lógica (activo = false)
 func (s *Service) Delete(id int) error {
 	if err := s.storage.Delete(id); err != nil {
 		if err.Error() == "reconocimiento no encontrado" {
@@ -88,7 +86,6 @@ func (s *Service) Delete(id int) error {
 	return nil
 }
 
-// Restaurar activa un reconocimiento dado de baja lógica
 func (s *Service) Restaurar(id int) error {
 	activo := true
 	return s.Update(id, UpdateFields{Activo: &activo})

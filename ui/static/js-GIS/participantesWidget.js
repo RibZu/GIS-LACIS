@@ -1,18 +1,3 @@
-/*
- * Buscador de "Integrantes Participantes" para Crear/Editar Desarrollo.
- * Busca entre los integrantes activos (pasados desde el template Go) y,
- * si no encuentra a nadie, ofrece agregar el nombre como "participante
- * externo" (participante sin ficha de integrante).
- *
- * Genera dos cosas por cada persona seleccionada:
- *   1. un chip visual (para que se vea quién está cargado)
- *   2. un <input type="hidden"> dentro del <form>, para que viaje en el
- *      POST tal cual espera el handler:
- *        - integrante registrado -> name="integrantes" value="<ID>"
- *        - participante externo  -> name="externos"    value="<nombre>"
- *
- * Uso: crearWidgetParticipantes({ ...ids..., integrantesActivos, seleccionInicial })
- */
 function crearWidgetParticipantes(config) {
     var seleccionados = (config.seleccionInicial || []).slice();
     var integrantesActivos = config.integrantesActivos || [];
@@ -45,7 +30,6 @@ function crearWidgetParticipantes(config) {
                 '<button type="button" class="chip-remove" data-idx="' + idx + '" aria-label="Quitar ' + p.nombre + '">&times;</button></span>';
         }).join('');
 
-        // Inputs ocultos que realmente viajan en el POST del <form>.
         hiddenBox.innerHTML = seleccionados.map(function (p) {
             if (p.tipo === 'integrante') {
                 return '<input type="hidden" name="integrantes" value="' + p.id + '">';
@@ -109,11 +93,6 @@ function crearWidgetParticipantes(config) {
         if (!e.target.closest('#' + config.wrapId)) cerrarDropdown();
     });
 
-    // -------- Agregar participante externo de forma directa --------
-    // Además de la sugerencia que aparece cuando la búsqueda no encuentra a
-    // nadie, este botón deja sumar un externo en cualquier momento (por
-    // ejemplo alguien que también SÍ podría estar en la lista de activos,
-    // pero se lo quiere cargar como externo igual).
     var btnManual = config.btnManualId ? document.getElementById(config.btnManualId) : null;
     var wrapManual = config.manualWrapId ? document.getElementById(config.manualWrapId) : null;
     var inputManual = config.manualInputId ? document.getElementById(config.manualInputId) : null;

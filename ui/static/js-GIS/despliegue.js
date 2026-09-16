@@ -1,6 +1,5 @@
-
 function despliegue_cartas(icono) {
-  
+
   let carta=icono.closest(".carta-director, .carta-integrantes");
 
   if(carta.classList.contains("expandir")){
@@ -14,4 +13,3 @@ function despliegue_cartas(icono) {
   }
 
 }
-

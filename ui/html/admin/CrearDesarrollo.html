@@ -15,7 +15,6 @@
 </head>
 <body class="grilla">
 
-    <!-- Header / Navbar Compartido -->
     <header>
         {{ template "nav" . }}
     </header>
@@ -25,7 +24,6 @@
 
             <div class="form-card">
 
-                <!-- Encabezado del Formulario -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4 gap-2">
                     <div>
                         <h3 class="form-header-title mb-1">
@@ -45,10 +43,8 @@
                 </div>
                 {{ end }}
 
-                <!-- Formulario -->
                 <form action="/admin/insertar-desarrollo" method="POST">
 
-                    <!-- SECCIÓN 1: DATOS DEL PRODUCTO DE SOFTWARE -->
                     <div class="form-section-subtitle">
                         <i class="bi bi-card-heading me-2" style="color: var(--azul-logo);"></i>1. Datos del Producto
                     </div>
@@ -86,7 +82,6 @@
                         </div>
                     </div>
 
-                    <!-- SECCIÓN 2: INTEGRANTES PARTICIPANTES -->
                     <div class="form-section-subtitle mt-4">
                         <i class="bi bi-people-fill me-2" style="color: var(--azul-logo);"></i>2. Integrantes Participantes
                     </div>
@@ -114,7 +109,6 @@
                     <div class="d-flex flex-wrap gap-2 mt-3" id="chipsParticipantes"></div>
                     <div id="hiddenParticipantes"></div>
 
-                    <!-- Botones de Acción -->
                     <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
                         <a href="/admin/desarrollos" class="btn btn-outline-secondary px-4 rounded-pill">
                             <i class="bi bi-x-circle me-1"></i> Cancelar
@@ -130,7 +124,6 @@
         </div>
     </main>
 
-    <!-- Footer Compartido -->
     <footer>
         {{ template "footer" . }}
     </footer>
@@ -138,8 +131,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/ui/static/js-GIS/participantesWidget.js"></script>
     <script>
-        // Solo integrantes ACTIVOS entran al buscador (filtrado acá porque
-        // el handler pasa .Integrantes con todos, activos e inactivos).
         var INTEGRANTES_ACTIVOS = [
             {{ range .Integrantes }}{{ if .Activo }}{ id: {{ .ID }}, nombre: "{{ .Nombre }} {{ .Apellido }}" },
             {{ end }}{{ end }}

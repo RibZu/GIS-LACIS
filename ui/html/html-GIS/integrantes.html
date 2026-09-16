@@ -11,7 +11,6 @@
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
 
-
   <link rel="stylesheet" href="../../static/css-GIS/estilosIntegrantes.css">
   <link rel="icon" type="image/png" href="../../static/assets/img-GIS/favicon-text.png?v=1">
   <link rel="stylesheet" href="../../static/css-GIS/Styleheader.css">
@@ -20,14 +19,11 @@
 </head>
 
 <body>
-   
 
     <header>
         {{ template "nav" . }}
     </header>
 
-
-    <!-- secccion de filtros y buscadores -->
     <main>
       <section>
       <div class="container my-1 display-1 titulo ">
@@ -70,7 +66,6 @@
           </div>
         </div>
 
-
         <div class="d-block d-md-none">
           <button class="btn btn-filtros-moderno" type="button" data-bs-toggle="offcanvas"
             data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">☰ Filtros</button>
@@ -104,18 +99,13 @@
         </div>
       </section>
 
-
-
-
-      <!-- secccion de cartas -->
       <section>
         <div class="container">
           <div class="container my-5 subtitulo titulo-director" >
             <h2 class="text-center ">DIRECTORES</h2>
           </div>
 
-
-          <div class="row" id="contenedor-director"> <!--  row-cols-lg-2 en caso de que en el diseño se requira , colocar dos cartas como director/es--> 
+          <div class="row" id="contenedor-director">
           </div>
 
           <div class="row text-center row-cols-md-1  row-cols-lg-2  row-cols-sm-1   justify-content-center my-5 "
@@ -134,21 +124,10 @@
       </section>
     </main>
 
-
-
-<footer class="text-white pb-4 bg-dark"><!--footer-->
+<footer class="text-white pb-4 bg-dark">
   {{ template "footer" . }}
 </footer>
 
-
-
-
-
-
-
-
-
-    <!-- SCRIPTS de JS para la funcionalidad de la pagina -->
     <script src="../../static/js-GIS/ingresarNuevoIntegrante.js?v=2"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
@@ -157,10 +136,6 @@
     <script src="../../static/js-GIS/interacion.js"></script>
     <script src="../../static/js-GIS/filtrado.js"></script>
 
-
-
-
 </body>
-
 
 </html>

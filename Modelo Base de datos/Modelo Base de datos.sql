@@ -1,14 +1,4 @@
--- =============================================================================
--- Script DDL para PostgreSQL
--- Basado en el Diagrama UML del Sistema
--- =============================================================================
-
--- Desactivar salidas intermedias y configurar manejo de transacciones
 BEGIN;
-
--- -----------------------------------------------------------------------------
--- 1. PAQUETE: NÚCLEO Y ROLES
--- -----------------------------------------------------------------------------
 
 CREATE TABLE rol (
     id SERIAL PRIMARY KEY,
@@ -17,10 +7,10 @@ CREATE TABLE rol (
 
 CREATE TABLE integrante (
     id SERIAL PRIMARY KEY,
-    rol_id INT REFERENCES rol(id) ON DELETE SET NULL, -- Rol general / legado
-    rol_lacis_id INT REFERENCES rol(id) ON DELETE SET NULL, -- Rol específico en LaCIS
-    rol_software_id INT REFERENCES rol(id) ON DELETE SET NULL, -- Rol específico en Grupo Software (GIS)
-    activo BOOLEAN NOT NULL DEFAULT TRUE, -- Baja lógica
+    rol_id INT REFERENCES rol(id) ON DELETE SET NULL,
+    rol_lacis_id INT REFERENCES rol(id) ON DELETE SET NULL,
+    rol_software_id INT REFERENCES rol(id) ON DELETE SET NULL,
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
     titulo_especializacion VARCHAR(255),
@@ -33,24 +23,20 @@ CREATE TABLE integrante (
     pertenece_grupo_software BOOLEAN NOT NULL DEFAULT FALSE
 );
 
--- -----------------------------------------------------------------------------
--- 2. PAQUETE: GESTIÓN E INFRAESTRUCTURA
--- -----------------------------------------------------------------------------
-
 CREATE TABLE usuario_gestor (
     id SERIAL PRIMARY KEY,
-    integrante_id INT UNIQUE REFERENCES integrante(id) ON DELETE SET NULL, -- Relación 0..1 opcional
+    integrante_id INT UNIQUE REFERENCES integrante(id) ON DELETE SET NULL,
     username VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     ultimo_acceso TIMESTAMP WITH TIME ZONE,
-    rol VARCHAR(50) NOT NULL DEFAULT 'GESTOR', -- Calculado: ADMIN, nombre de módulo, o GESTOR si tiene 2+ módulos
-    modulos VARCHAR(255) NOT NULL DEFAULT '' -- Lista de módulos separados por coma, ej: "integrantes,proyectos"
+    rol VARCHAR(50) NOT NULL DEFAULT 'GESTOR',
+    modulos VARCHAR(255) NOT NULL DEFAULT ''
 );
 
 CREATE TABLE configuracion_sitio (
     id SERIAL PRIMARY KEY,
-    usuario_gestor_id INT REFERENCES usuario_gestor(id) ON DELETE SET NULL, -- Modificado por
+    usuario_gestor_id INT REFERENCES usuario_gestor(id) ON DELETE SET NULL,
     telefono_footer VARCHAR(50),
     email_footer VARCHAR(255),
     direccion VARCHAR(255)
@@ -63,10 +49,6 @@ CREATE TABLE colaboradores (
     logo_url VARCHAR(500)
 );
 
--- -----------------------------------------------------------------------------
--- 3. PAQUETE: PROYECTOS Y DESARROLLOS
--- -----------------------------------------------------------------------------
-
 CREATE TABLE proyecto (
     id SERIAL PRIMARY KEY,
     titulo TEXT NOT NULL,
@@ -75,7 +57,7 @@ CREATE TABLE proyecto (
     equipo_historico TEXT,
     anio_inicio INT,
     anio_fin INT,
-    activo BOOLEAN DEFAULT TRUE 
+    activo BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE desarrollo (
@@ -127,10 +109,6 @@ CREATE TABLE desarrollo_reconocimientos (
     CONSTRAINT uq_desarrollo_reconocimiento UNIQUE (desarrollo_id, reconocimiento_id)
 );
 
--- -----------------------------------------------------------------------------
--- 4. PAQUETE: PRODUCCIÓN ACADÉMICA
--- -----------------------------------------------------------------------------
-
 CREATE TABLE tesis (
     id SERIAL PRIMARY KEY,
     autor_id INT REFERENCES integrante(id) ON DELETE SET NULL,
@@ -156,10 +134,6 @@ CREATE TABLE integrantes_tesis (
     CONSTRAINT uq_tesis_integrante UNIQUE (tesis_id, integrante_id)
 );
 
--- -----------------------------------------------------------------------------
--- 5. PAQUETE: INSTITUCIONAL (LACIS)
--- -----------------------------------------------------------------------------
-
 CREATE TABLE lacis (
     id SERIAL PRIMARY KEY,
     proyecto_id INT REFERENCES proyecto(id) ON DELETE SET NULL,
@@ -173,10 +147,6 @@ CREATE TABLE integrantes_lacis (
     integrante_id INT NOT NULL REFERENCES integrante(id) ON DELETE CASCADE,
     CONSTRAINT uq_lacis_integrante UNIQUE (lacis_id, integrante_id)
 );
-
--- -----------------------------------------------------------------------------
--- ÍNDICES PARA MEJORA DE RENDIMIENTO EN CLAVES FORÁNEAS
--- -----------------------------------------------------------------------------
 
 CREATE INDEX idx_integrante_rol ON integrante(rol_id);
 CREATE INDEX idx_integrante_rol_lacis ON integrante(rol_lacis_id);
@@ -205,12 +175,6 @@ CREATE INDEX idx_proyecto_reconocimientos_rec ON proyecto_reconocimientos(recono
 CREATE INDEX idx_desarrollo_reconocimientos_des ON desarrollo_reconocimientos(desarrollo_id);
 CREATE INDEX idx_desarrollo_reconocimientos_rec ON desarrollo_reconocimientos(reconocimiento_id);
 
--- -----------------------------------------------------------------------------
--- DATOS POR DEFECTO
--- -----------------------------------------------------------------------------
--- Catálogo de roles de integrante: los IDs 1-4 están hardcodeados en el <select>
--- del formulario "Crear Integrante" (ui/html/admin/Crear.html), así que deben
--- coincidir exactamente.
 INSERT INTO rol (id, nombre) VALUES
     (1, 'Director / Co-Director'),
     (2, 'Investigador'),
@@ -218,9 +182,6 @@ INSERT INTO rol (id, nombre) VALUES
     (4, 'Estudiante / Becario');
 SELECT setval('rol_id_seq', (SELECT MAX(id) FROM rol));
 
--- Creamos el usuario administrador por defecto para poder iniciar sesión
--- password_hash es el hash bcrypt de "admin123" (generado con golang.org/x/crypto/bcrypt,
--- la misma librería que usa auth.go para validar el login). Nunca guardar la contraseña en texto plano.
 INSERT INTO usuario_gestor (username, password_hash, email, rol)
 VALUES ('admin', '$2a$10$0GSeTb6bSZBT1/kZbrf41.giDbz3GaU2ABeL20lew0NdX5dDw2cSK', 'admin@lacis.com', 'ADMIN');
 

@@ -20,16 +20,11 @@ body {
     padding-top: 80px;
 }
 
-/* El sitio público usa serif (Cormorant Garamond, style.css) para h1-h5;
-   en el panel admin usamos la misma tipografía que ya tiene el header (Montserrat)
-   para que los títulos se sientan parte del mismo sistema. */
 h1, h2, h3, h4, h5 {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
 }
 
-/* El sitio público usa un degradé azul en <main> (style.css); en el panel admin
-   lo pisamos por un fondo plano de borde a borde, sin la caja angosta del degradé. */
 main {
     background: var(--adm-bg) !important;
 }
@@ -216,7 +211,6 @@ main {
     box-shadow: 0 6px 16px rgba(16, 24, 40, .12);
 }
 
-/* Tile de ícono cuadrado por módulo (Estilo 2 · Panel Moderno) */
 .dash-modtile {
     width: 46px;
     height: 46px;
@@ -229,7 +223,6 @@ main {
     flex-shrink: 0;
 }
 
-/* Fila de indicadores (KPIs) del Dashboard */
 .dash-stat {
     background: #fff;
     border: 1px solid var(--adm-border);

@@ -1,7 +1,5 @@
-
 let claseTituloIntegrantes = document.querySelector(".titulo-integrantes");
 let claseTituloDirector = document.querySelector(".titulo-director");
-
 
 function AjustarColumnasDirectoresDeLinea(cantidad) {
   const contenedor = document.getElementById("contenedor-directores-deLinea");
@@ -10,7 +8,7 @@ function AjustarColumnasDirectoresDeLinea(cantidad) {
 }
 
 function filtrarCartas(clase) {
-  
+
   contenedorPrincipalDeDirector.innerHTML = "";
   contenedorPrincipalDeDirectoresDeLinea.innerHTML = "";
   contenedorPrincipalDeIntegrantes.innerHTML = "";
@@ -18,7 +16,6 @@ function filtrarCartas(clase) {
   let filtradosIntegrantes;
   let filtradosDirectores;
   let filtradosDirector;
-
 
   if(clase==="todas"){
      filtradosIntegrantes=todos_los_integrantes;
@@ -30,9 +27,7 @@ function filtrarCartas(clase) {
     filtradosDirectores = todos_los_directoresLacis;
     filtradosIntegrantes= todos_los_integrantes_lacis;
 
-  
    } else{
-
 
     filtradosIntegrantes= todos_los_integrantes.filter(p=> p.clase_rol===clase);
     filtradosDirectores=todos_los_directores.filter(p=> p.clase_rol===clase);
@@ -40,19 +35,14 @@ function filtrarCartas(clase) {
 
   }
 
-  
-  
-
- 
   CrearCartaIntegrantes(filtradosIntegrantes);
   CrearCartaDirectores(filtradosDirectores);
   CrearCartaDirector(filtradosDirector);
-  
-  AjustarColumnasDirectoresDeLinea(filtradosDirectores.length); 
- 
-  AOS.refreshHard(); /* se actualizan las animaciones cuando se filtra */
-}
 
+  AjustarColumnasDirectoresDeLinea(filtradosDirectores.length);
+
+  AOS.refreshHard();
+}
 
 let filtroBoton=document.querySelectorAll(".filtro-btn");
 
@@ -62,7 +52,6 @@ filtroBoton.forEach(boton => {
 
     let id = boton.id;
     let clase = "";
-    
 
     switch (id) {
       case "todos":
@@ -79,25 +68,25 @@ filtroBoton.forEach(boton => {
         clase = "director";
         claseTituloIntegrantes.style.display="none";
         claseTituloDirector.style.display="block";
-       
+
         break;
       case "investigador":
         clase = "investigador";
         claseTituloDirector.style.display="none";
         claseTituloIntegrantes.style.display="block";
-       
+
         break;
       case "estudiante":
         clase = "estudiante";
         claseTituloDirector.style.display="none";
         claseTituloIntegrantes.style.display="block";
-       
+
         break;
       case "asesorExterno":
         clase = "asesor-externo";
         claseTituloDirector.style.display="none";
         claseTituloIntegrantes.style.display="block";
-     
+
         break;
     }
 
@@ -113,10 +102,3 @@ document.addEventListener('DOMContentLoaded', () => {
     AOS.init();
   }
 });
-  
-
-  
-
-
-
-

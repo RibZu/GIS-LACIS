@@ -1,8 +1,3 @@
-/**
- * lista.js - Control de búsqueda, filtrado, paginación en tiempo real y modal de detalles
- * para la vista de Gestión de Integrantes en el Panel de Administración.
- */
-
 document.addEventListener('DOMContentLoaded', function () {
     const buscador = document.getElementById('buscadorInput');
     const filterPills = document.querySelectorAll('.filter-pill');
@@ -27,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Botón Anterior
         const prevLi = document.createElement('li');
         prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
         prevLi.innerHTML = `<a class="page-link" href="#" aria-label="Anterior"><i class="bi bi-chevron-left"></i> Anterior</a>`;
@@ -40,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         paginationControls.appendChild(prevLi);
 
-        // Botones Numéricos
         for (let i = 1; i <= totalPages; i++) {
             const pageLi = document.createElement('li');
             pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
@@ -53,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationControls.appendChild(pageLi);
         }
 
-        // Botón Siguiente
         const nextLi = document.createElement('li');
         nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
         nextLi.innerHTML = `<a class="page-link" href="#" aria-label="Siguiente">Siguiente <i class="bi bi-chevron-right"></i></a>`;
@@ -71,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!buscador) return;
         const searchText = buscador.value.toLowerCase().trim();
 
-        // 1. Filtrar filas
         const matchingRows = rows.filter(row => {
             const rowName = row.getAttribute('data-nombre') ? row.getAttribute('data-nombre').toLowerCase() : '';
             const tituloElem = row.querySelector('.titulo-integrante');
@@ -100,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
         const endIndex = startIndex + ITEMS_PER_PAGE;
 
-        // 2. Ocultar todas y mostrar solo la página activa
         rows.forEach(row => {
             row.style.display = 'none';
         });
@@ -113,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // 3. Texto del contador y mensaje vacío
         if (totalFiltered === 0) {
             if (noResultsMsg) noResultsMsg.classList.remove('d-none');
             if (contadorRegistros) contadorRegistros.textContent = '0 integrantes encontrados';
@@ -126,11 +115,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // 4. Renderizar controles
         renderPagination(totalFiltered, totalPages);
     }
 
-    // Eventos
     if (buscador) {
         buscador.addEventListener('input', function() {
             currentPage = 1;
@@ -158,11 +145,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Inicializar al cargar
     applyFiltersAndPagination();
 });
 
-// Función para abrir el modal con los detalles completos del integrante
 function verDetalles(nombre, titulo, rol, descripcion, email, linkedin, pertenencia) {
     const modalNombre = document.getElementById('modalNombre');
     const modalTitulo = document.getElementById('modalTituloJerarquia');
@@ -176,7 +161,6 @@ function verDetalles(nombre, titulo, rol, descripcion, email, linkedin, pertenen
     if (modalEmail) modalEmail.textContent = email || '';
     if (modalPertenencia) modalPertenencia.textContent = pertenencia || '';
 
-    // Iniciales avatar
     const avatarElem = document.getElementById('modalAvatar');
     if (avatarElem && nombre) {
         const partes = nombre.replace(/^(Dr\.|Dra\.|Lic\.|Ing\.|Est\.|Mg\.|Esp\.)\s+/, '').split(' ');
@@ -189,7 +173,6 @@ function verDetalles(nombre, titulo, rol, descripcion, email, linkedin, pertenen
         avatarElem.textContent = iniciales;
     }
 
-    // Badge Rol
     const rolBadge = document.getElementById('modalRolBadge');
     if (rolBadge) {
         rolBadge.className = 'badge';
@@ -200,7 +183,6 @@ function verDetalles(nombre, titulo, rol, descripcion, email, linkedin, pertenen
         rolBadge.textContent = rol;
     }
 
-    // LinkedIn
     const linkedinWrapper = document.getElementById('modalLinkedinWrapper');
     const linkedinLink = document.getElementById('modalLinkedin');
     if (linkedinWrapper && linkedinLink) {
@@ -219,5 +201,4 @@ function verDetalles(nombre, titulo, rol, descripcion, email, linkedin, pertenen
     }
 }
 
-// Exponer en window por compatibilidad con llamadas onclick
 window.verDetalles = verDetalles;

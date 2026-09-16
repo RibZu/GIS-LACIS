@@ -16,11 +16,11 @@ func (m *MockStorage) Create(t *Tesis) error {
 func (m *MockStorage) Read(id int) (*Tesis, error) {
 	anio := 2024
 	return &Tesis{
-		ID:            id,
-		Titulo:        "Optimización de Procesos de Calidad de Software",
-		Nivel:         "Doctorado",
-		CarreraOrigen: "Doctorado en Ingeniería Informática",
-		Anio:          &anio,
+		ID:             id,
+		Titulo:         "Optimización de Procesos de Calidad de Software",
+		Nivel:          "Doctorado",
+		CarreraOrigen:  "Doctorado en Ingeniería Informática",
+		Anio:           &anio,
 		AutorHistorico: "Ing. Juan Pérez",
 	}, nil
 }
@@ -30,11 +30,11 @@ func (m *MockStorage) GetAll() ([]Tesis, error) {
 	anio := 2024
 	return []Tesis{
 		{
-			ID:            1,
-			Titulo:        "Optimización de Procesos de Calidad de Software",
-			Nivel:         "Doctorado",
-			CarreraOrigen: "Doctorado en Ingeniería Informática",
-			Anio:          &anio,
+			ID:             1,
+			Titulo:         "Optimización de Procesos de Calidad de Software",
+			Nivel:          "Doctorado",
+			CarreraOrigen:  "Doctorado en Ingeniería Informática",
+			Anio:           &anio,
 			AutorHistorico: "Ing. Juan Pérez",
 		},
 	}, nil
@@ -236,7 +236,7 @@ func TestCreate_Grado_Hasta4Autores_Exitoso(t *testing.T) {
 		Anio:           &anio,
 		AutorID:        &autorID,
 		IntegrantesIDs: []int{2, 3},
-		AutorHistorico: "Alumno Externo", // 1 + 2 + 1 = 4 autores
+		AutorHistorico: "Alumno Externo",
 	}
 
 	err := srv.Create(tesis)
@@ -256,7 +256,7 @@ func TestCreate_Grado_MasDe4Autores_DebeDevolverError(t *testing.T) {
 		Anio:           &anio,
 		AutorID:        &autorID,
 		IntegrantesIDs: []int{2, 3, 4},
-		AutorHistorico: "Alumno Externo", // 1 + 3 + 1 = 5 autores -> excede máx 4
+		AutorHistorico: "Alumno Externo",
 	}
 
 	err := srv.Create(tesis)
@@ -276,7 +276,7 @@ func TestCreate_Posgrado_MasDe1Autor_DebeDevolverError(t *testing.T) {
 		CarreraOrigen:  "Doctorado en Ingeniería Informática",
 		Anio:           &anio,
 		AutorID:        &autorID,
-		IntegrantesIDs: []int{2}, // 2 autores en posgrado -> no permitido
+		IntegrantesIDs: []int{2},
 	}
 
 	err := srv.Create(tesis)

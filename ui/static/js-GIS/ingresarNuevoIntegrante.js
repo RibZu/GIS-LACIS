@@ -1,6 +1,3 @@
-
-
-/* arreglos para colocar los datos de los miembros del grupo */
 let director=[];
 let todos_los_integrantes=[];
 let todos_los_directores=[];
@@ -9,18 +6,9 @@ let directorLacis=[];
 let todos_los_directoresLacis=[];
 let  todos_los_integrantes_lacis=[];
 
-
-
-/* contenedores padres para colocar las cartas dentro */
 let contenedorPrincipalDeDirector=document.getElementById('contenedor-director');
 let contenedorPrincipalDeIntegrantes=document.getElementById('contenedor-cartas-integrantes');
 let contenedorPrincipalDeDirectoresDeLinea=document.getElementById('contenedor-directores-deLinea');
-
-
-
-
-
- /* funcion para crear cartas de director */
 
 function CrearCartaDirector(datos){
 
@@ -28,13 +16,13 @@ function CrearCartaDirector(datos){
 
     datos.forEach(director=>{
 
-      let contenedor_director=document.createElement('div');                      /*creacion de un contenedor div para colocar las cartas */
-      contenedor_director.setAttribute("class", "col-md-12 mx-auto text-center"); /* asignacion de atributos (clases) al contenedor */
+      let contenedor_director=document.createElement('div');
+      contenedor_director.setAttribute("class", "col-md-12 mx-auto text-center");
 
       if(director.mail){
 
             contenedor_director.innerHTML+=`
-      
+
           ${ director.rol==="CO-DIRECTOR" ? ` <div class="container my-5" data-aos="fade-right" data-aos-duration="1000">
               <h2 class="directores text-center">CO-DIRECTOR</h2>
             </div> `
@@ -42,18 +30,18 @@ function CrearCartaDirector(datos){
              `<div class="container my-5" data-aos="fade-right" data-aos-duration="1000">
               <h2 class="directores text-center">DIRECTOR</h2>
             </div>` }
-             
+
             <div class=" card text-center mx-auto shadow p-3 mb-5 bg-body-tertiary rounded-4 carta-director ${director.clase_rol}"
               data-aos="fade-up" data-aos-duration="500">
-              
+
               <h4 class=" titulo-principal border-primary-subtle card-title border-bottom border-2 py-2">${director.rol}</h4>
               <div class="my-2">
                 ${!director.imagen ? `<img src="../../static/assets/img-GIS/IMGIntegrantes/default.png"
-                  class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="..."> ` 
+                  class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="..."> `
                   :
                     ` <img src="${director.imagen}"
                   class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="...">` }
-               
+
               </div>
 
               <div class="card-body">
@@ -72,27 +60,22 @@ function CrearCartaDirector(datos){
               </div>
             </div>
 
-
-          
-
-
       `
 
       }else if(director.linkedin){
 
          contenedor_director.innerHTML+=`
-      
-       
+
              <div class="container my-5" data-aos="fade-right" data-aos-duration="1000">
               <h2 class="directores text-center">DIRECTOR</h2>
             </div>
             <div class=" card text-center mx-auto shadow p-3 mb-5 bg-body-tertiary rounded-4 carta-director ${director.clase_rol}"
               data-aos="fade-up" data-aos-duration="500">
-              
+
               <h4 class=" titulo-principal border-primary-subtle card-title border-bottom border-2 py-2">${director.rol}</h4>
               <div class="my-2">
                  ${!director.imagen ? `<img src="../../static/assets/img-GIS/IMGIntegrantes/default.png"
-                  class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="..."> ` 
+                  class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="..."> `
                   :
                     ` <img src="${director.imagen}"
                   class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="...">` }
@@ -113,47 +96,33 @@ function CrearCartaDirector(datos){
               </div>
             </div>
 
-
-          
-
-
       `
 
       }
 
-     
-      
-      contenedorPrincipalDeDirector.appendChild(contenedor_director); /* Este método inserta el elemento como hijo de un elemento existente padre */
-    
+      contenedorPrincipalDeDirector.appendChild(contenedor_director);
 
     })
-
-
-    
 
   }
 
 }
 
-/* funcion para crear cartas de los directores en linea */
-
 function CrearCartaDirectores(datos){
 
 if(datos.length>0){
-  
 
   datos.forEach(directores=>{
 
-    let contenedorCartaDirectoresDeLinea=document.createElement('div'); /*creacion de un contenedor div para colocar las cartas */
-    contenedorCartaDirectoresDeLinea.setAttribute("class", "col-sm-7  mb-3 mb-sm-0 text-center");/* asignacion de atributos (clases) al contenedor */
-     
+    let contenedorCartaDirectoresDeLinea=document.createElement('div');
+    contenedorCartaDirectoresDeLinea.setAttribute("class", "col-sm-7  mb-3 mb-sm-0 text-center");
+
     if(directores.grupo==="lacis"){
 
-      
     if(directores.mail){
 
           contenedorCartaDirectoresDeLinea.innerHTML+=`
-      
+
              <div class="container my-5" data-aos="fade-right" data-aos-duration="1000">
               <h2 class="directores text-center">MIEMBRO DE COMITE</h2>
             </div>
@@ -163,11 +132,11 @@ if(datos.length>0){
               <div class="my-2">
                 ${!directores.imagen ? `<img src="../../static/assets/img-GIS/IMGintegrantes/default.png"
                   class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="...">`
-                   : 
+                   :
                    `<img src="${directores.imagen}"
                   class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="...">`
                 }
-                
+
               </div>
               <div class="card-body">
                 <h5 class="nombre card-title">${directores.nombre}</h5>
@@ -186,13 +155,11 @@ if(datos.length>0){
               </div>
             </div>
 
-
           `
-      
 
     }else if(directores.linkedin){
       contenedorCartaDirectoresDeLinea.innerHTML+=`
-      
+
              <div class="container my-5" data-aos="fade-right" data-aos-duration="1000">
               <h2 class="directores text-center">MIEMBRO DE COMITE</h2>
             </div>
@@ -202,7 +169,7 @@ if(datos.length>0){
               <div class="my-2">
                  ${!directores.imagen ? `<img src="../../static/assets/img-GIS/IMGintegrantes/default.png"
                   class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="...">`
-                   : 
+                   :
                    `<img src="${directores.imagen}"
                   class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="...">`
                 }
@@ -224,27 +191,18 @@ if(datos.length>0){
               </div>
             </div>
 
-
       `
-      
 
     }
 
-     
-    
-    
-    contenedorPrincipalDeDirectoresDeLinea.appendChild(contenedorCartaDirectoresDeLinea);/* Este método inserta el elemento como hijo de un elemento existente padre */
-   
-    
-     
+    contenedorPrincipalDeDirectoresDeLinea.appendChild(contenedorCartaDirectoresDeLinea);
 
     }else if(directores.grupo!=="lacis"){
-     
 
     if(directores.mail){
 
           contenedorCartaDirectoresDeLinea.innerHTML+=`
-      
+
              <div class="container my-5" data-aos="fade-right" data-aos-duration="1000">
               <h2 class="directores text-center">DIRECTOR DE LINEA </h2>
             </div>
@@ -254,11 +212,11 @@ if(datos.length>0){
               <div class="my-2">
                 ${!directores.imagen ? `<img src="../../static/assets/img-GIS/IMGintegrantes/default.png"
                   class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="...">`
-                   : 
+                   :
                    `<img src="${directores.imagen}"
                   class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="...">`
                 }
-                
+
               </div>
               <div class="card-body">
                 <h5 class="nombre card-title">${directores.nombre}</h5>
@@ -277,13 +235,11 @@ if(datos.length>0){
               </div>
             </div>
 
-
           `
-      
 
     }else if(directores.linkedin){
       contenedorCartaDirectoresDeLinea.innerHTML+=`
-      
+
              <div class="container my-5" data-aos="fade-right" data-aos-duration="1000">
               <h2 class="directores text-center">DIRECTOR DE LINEA </h2>
             </div>
@@ -293,7 +249,7 @@ if(datos.length>0){
               <div class="my-2">
                  ${!directores.imagen ? `<img src="../../static/assets/img-GIS/IMGintegrantes/default.png"
                   class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="...">`
-                   : 
+                   :
                    `<img src="${directores.imagen}"
                   class="card-img-top  rounded-circle border border-white border-5 imagen-integrantes " alt="...">`
                 }
@@ -315,49 +271,32 @@ if(datos.length>0){
               </div>
             </div>
 
-
       `
-      
 
     }
 
-     
-    
-    
-    contenedorPrincipalDeDirectoresDeLinea.appendChild(contenedorCartaDirectoresDeLinea);/* Este método inserta el elemento como hijo de un elemento existente padre */
-   
-    
+    contenedorPrincipalDeDirectoresDeLinea.appendChild(contenedorCartaDirectoresDeLinea);
 
     }
-   
+
   });
- 
-    
-  
 
 }
 
-
 }
- 
-
-/* funcion para crear cartas de los integrantes */
 
 function CrearCartaIntegrantes(datos){
-
-    
 
     if(datos.length>0){
 
       datos.forEach(integrante => {
-        let contenedorCartaIntegrantes=document.createElement('div');/*creacion de un contenedor div para colocar las cartas (Este método crea un nuevo objeto del tipo especificado por el atributo pasado por parametro)*/
-        contenedorCartaIntegrantes.setAttribute("class","col my-4");/* asignacion de atributos (clases) al contenedor */
+        let contenedorCartaIntegrantes=document.createElement('div');
+        contenedorCartaIntegrantes.setAttribute("class","col my-4");
 
         if(integrante.linkedin){
 
-
           contenedorCartaIntegrantes.innerHTML +=`
-        
+
         <div class="card mx-auto shadow p-3 mb-5 bg-body-tertiary rounded-4 carta-integrantes ${integrante.clase_rol}"
               data-aos="fade-up" data-aos-duration="10000">
               <h5 class="titulo-principal border-primary-subtle card-title border-bottom border-2 py-2">${integrante.rol}
@@ -387,9 +326,7 @@ function CrearCartaIntegrantes(datos){
               </div>
           </div>
 
-        
         `
-        
 
         }else if(integrante.mail){
 
@@ -423,74 +360,53 @@ function CrearCartaIntegrantes(datos){
               </div>
           </div>
 
-          
         `
-        
 
         }
 
-       
-        contenedorPrincipalDeIntegrantes.appendChild(contenedorCartaIntegrantes);/* Este método inserta el elemento como hijo de un elemento existente padre */
-        
-       
-        
-        
-        
-      
-  
+        contenedorPrincipalDeIntegrantes.appendChild(contenedorCartaIntegrantes);
 
       });
-      
-    
-    
+
     }
 
-    
-
 }
- 
-
-
- /* Codigo para cargar datos desde el JSON a JS */
 
 fetch('../../static/json-GIS/director.json')
   .then(response => response.json())
   .then(data => {
     director=data;
-    CrearCartaDirector(director); /* invocacion de funcion a cargar carta director */
-    if (typeof AOS !== 'undefined') AOS.refreshHard(); /* las cartas se agregan despues de que AOS ya escaneo la pagina, sin esto quedan invisibles */
+    CrearCartaDirector(director);
+    if (typeof AOS !== 'undefined') AOS.refreshHard();
 
   })
 
   fetch('../../static/json-GIS/directorLacis.json')
   .then(response => response.json())
   .then(data => {
-    directorLacis = data; 
+    directorLacis = data;
   })
 
    fetch('../../static/json-GIS/directoresLacis.json')
   .then(response => response.json())
   .then(data => {
-    todos_los_directoresLacis = data; 
+    todos_los_directoresLacis = data;
   })
-
 
  fetch('../../static/json-GIS/directores.json')
   .then(response => response.json())
   .then(data => {
     todos_los_directores=data;
-    CrearCartaDirectores(todos_los_directores); /* invocacion de funcion a cargar carta directores de linea */
+    CrearCartaDirectores(todos_los_directores);
     if (typeof AOS !== 'undefined') AOS.refreshHard();
 
   })
-
-    
 
   fetch('../../static/json-GIS/integrantes.json')
   .then(response => response.json())
   .then(data => {
     todos_los_integrantes=data;
-    CrearCartaIntegrantes(todos_los_integrantes); /* invocacion de funcion a cargar carta integrantes */
+    CrearCartaIntegrantes(todos_los_integrantes);
     if (typeof AOS !== 'undefined') AOS.refreshHard();
 
   })
@@ -499,10 +415,5 @@ fetch('../../static/json-GIS/director.json')
   .then(response => response.json())
   .then(data => {
     todos_los_integrantes_lacis=data;
-    
+
   })
-
-
-
- 
-

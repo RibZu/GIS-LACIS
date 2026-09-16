@@ -1,4 +1,3 @@
-/*variables*/
 :root {
   --primary-color: #007bff;
   --secondary-color: #28a745;
@@ -13,7 +12,7 @@
   --gris-texto: #4A4A4A;
   --acento-linea: #C4C4C4;
   --azul-pastel-fondo: #E0F2F7;;
-  --color-principal: #1a4484; 
+  --color-principal: #1a4484;
   --color-secundario: #8BC34A;
   --color-fondo-claro: #e6f4f1;
   --color-texto-oscuro: #333333;
@@ -32,7 +31,6 @@
 --lacis-pulso-inicio: rgba(90, 138, 42, 0.4);
 --lacis-pulso-fin: rgba(90, 138, 42, 0);
 }
-/*estilos*/
 
 footer{
   color: var(--secondary-color);
@@ -47,35 +45,21 @@ html{
     auto 1fr auto;
 }
 
-/* .grilla asume 3 hijos directos de <body> (header, main, footer), con la fila
-   central 1fr para que <main> llene el alto disponible. En las pantallas que
-   además tienen el sub-header "volver a Módulos" (Lista.html, ListaTesis.html,
-   ListaDesarrollos.html) hay un 4to hijo entre el header y <main>; sin este
-   ajuste, ese 4to hijo hereda la fila 1fr pensada para <main> y se estira para
-   llenar la pantalla. Esta regla, ligada solo a los <body> que efectivamente
-   tienen el sub-header como hijo directo, redefine las filas para las 4 en el
-   orden real (header, sub-header, main, footer) sin afectar el resto de las
-   páginas .grilla, que conservan su plantilla de 3 filas. */
 body.grilla:has(> .subheader-modulo) {
   grid-template-rows: auto auto 1fr auto;
 }
-/* Navbar general */
+
 nav.bg-is {
   background-color: var(--blanco-fondo);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   transition: background-color 0.3s ease;
 }
 
-/* Enlaces */
 nav.bg-is .nav-link {
   color: var(--azul-logo);
   position: relative;
   transition: color 0.3s;
 
-  /* Tipografía fija del header: no depende de la fuente que cada página
-     elija para su propio <body> (Montserrat en las públicas, Manrope en el
-     panel admin), así el nav se ve siempre igual sin importar en qué
-     pantalla esté embebido. */
   font-family: 'Montserrat', 'Manrope', sans-serif;
   font-size: 1.1rem;
 
@@ -100,25 +84,13 @@ nav.bg-is .nav-link::after {
 nav.bg-is .nav-link:hover::after {
   width: 100%;
 }
-/*Mapa footer*/
+
 #mapa{
   width: 100%;
   height: 100%;
   margin: 3px;
 }
 
-/* Sub-header "volver a Módulos": bloque separado del header principal (nav.bg-is),
-   presente solo en la pantalla principal de cada módulo.
-
-   El nav principal es fixed-top (no ocupa espacio en el flujo normal), así que es
-   el sub-header quien reserva ese espacio con margin-top (altura real del nav,
-   medida en pantalla ~76px). Las pantallas que ya reservaban ese mismo espacio en
-   <main> (lista.css) o en <body> (usuarios.css) lo anulan más abajo para no
-   duplicarlo. El fondo usa la misma variable --blanco-fondo que nav.bg-is (el
-   header principal), en vez de la variable compartida --azul-pastel-fondo (que
-   distintas hojas de estilo redefinen con valores distintos) o un color propio,
-   para que ambos bloques se vean exactamente del mismo blanco; la separación
-   visual entre ambos queda a cargo del border-bottom. */
 .subheader-modulo {
   margin-top: 76px;
   background-color: var(--blanco-fondo, #FDFDFD);
@@ -145,20 +117,10 @@ nav.bg-is .nav-link:hover::after {
   color: var(--blanco-fondo, #FDFDFD);
 }
 
-/* Integrantes, Tesis y Desarrollos ya empujaban <main> 100px hacia abajo (lista.css)
-   para despejar el nav fijo; con el sub-header de por medio, ese espacio ahora lo
-   aporta .subheader-modulo, así que <main> solo necesita un respiro chico. */
 .subheader-modulo + main {
   padding-top: 24px !important;
 }
 
-/* Administración de Usuarios reservaba ese mismo espacio en <body> (usuarios.css)
-   en vez de en <main> — se anula por la misma razón. */
 body:has(> .subheader-modulo) {
   padding-top: 0 !important;
 }
-
-
-
-
-

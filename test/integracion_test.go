@@ -150,11 +150,6 @@ func TestIntegration_ObtenerTesisJSON(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 }
 
-// TestIntegration_PosgradoUsaEncabezadoYPieCompartidos verifica que las 4 páginas públicas de
-// carreras de posgrado usan el mismo encabezado y el mismo pie que el resto del sitio (US1,
-// FR-001/FR-002/FR-003): deben incluir pestañas que hoy sólo tiene el encabezado compartido
-// (como "Tesis") y el botón "Iniciar Sesión" del pie compartido, que sus copias manuales no
-// tienen.
 func TestIntegration_PosgradoUsaEncabezadoYPieCompartidos(t *testing.T) {
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
@@ -185,10 +180,6 @@ func TestIntegration_PosgradoUsaEncabezadoYPieCompartidos(t *testing.T) {
 	}
 }
 
-// TestIntegration_AdminSinSesionRedirigeALogin verifica que ninguna dirección del panel de
-// administración —incluida la pantalla principal de módulos y las que crean o modifican
-// contenido— muestre datos ni ejecute acciones sin una sesión iniciada (US2, FR-005/FR-006):
-// todas deben redirigir a /login, y el POST no debe insertar ninguna fila.
 func TestIntegration_AdminSinSesionRedirigeALogin(t *testing.T) {
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
@@ -213,7 +204,6 @@ func TestIntegration_AdminSinSesionRedirigeALogin(t *testing.T) {
 		assert.Equal(t, "/login", w.Header().Get("Location"), "ruta: %s", ruta)
 	}
 
-	// El POST tampoco debe pasar, y no debe insertar nada.
 	var countAntes int
 	err = db.QueryRow("SELECT COUNT(*) FROM integrante").Scan(&countAntes)
 	assert.NoError(t, err)
@@ -240,8 +230,6 @@ func TestIntegration_AdminSinSesionRedirigeALogin(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, countAntes, countDespues, "no debe haberse insertado ninguna fila sin sesión")
 
-	// Una marca de sesión que no corresponde a ningún usuario existente se trata como ausencia
-	// de sesión (FR-010).
 	req2, _ := http.NewRequest("GET", "/admin/dashboard", nil)
 	req2.AddCookie(&http.Cookie{Name: "session", Value: "999999"})
 	w2 := httptest.NewRecorder()
@@ -251,9 +239,6 @@ func TestIntegration_AdminSinSesionRedirigeALogin(t *testing.T) {
 	assert.Equal(t, "/login", w2.Header().Get("Location"))
 }
 
-// TestIntegration_AdminAPISinSesionDevuelve401 verifica que la API de administración exige el
-// mismo control de acceso que las pantallas, respondiendo con una negativa explícita en vez de
-// datos (US2, FR-007).
 func TestIntegration_AdminAPISinSesionDevuelve401(t *testing.T) {
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
@@ -271,8 +256,6 @@ func TestIntegration_AdminAPISinSesionDevuelve401(t *testing.T) {
 	assert.Contains(t, w.Body.String(), "No autenticado")
 }
 
-// TestIntegration_PaginasPublicasSiguenAbiertasSinSesion es un test de regresión de FR-011: el
-// endurecimiento del panel de administración no debe cerrar ninguna página pública.
 func TestIntegration_PaginasPublicasSiguenAbiertasSinSesion(t *testing.T) {
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
@@ -297,9 +280,6 @@ func TestIntegration_PaginasPublicasSiguenAbiertasSinSesion(t *testing.T) {
 	}
 }
 
-// TestIntegration_DesarrollosRedirigeALacisProductos verifica que la dirección pública anterior
-// de la página de desarrollos siga funcionando, redirigiendo a la nueva sección dentro de LaCIS
-// en vez de servir la página vieja (US3, FR-016).
 func TestIntegration_DesarrollosRedirigeALacisProductos(t *testing.T) {
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
@@ -317,8 +297,6 @@ func TestIntegration_DesarrollosRedirigeALacisProductos(t *testing.T) {
 	assert.Equal(t, "/lacis#productos-software", w.Header().Get("Location"))
 }
 
-// TestIntegration_LacisMuestraProductosDeSoftware verifica que la página de LaCIS incluye la
-// sección de productos de software, con su ancla y su título nuevo (US3 FR-012, US4 FR-018).
 func TestIntegration_LacisMuestraProductosDeSoftware(t *testing.T) {
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
@@ -335,8 +313,7 @@ func TestIntegration_LacisMuestraProductosDeSoftware(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 	body := w.Body.String()
 	assert.Contains(t, body, `id="productos-software"`)
-	// El título resalta la última palabra en un <span> (mismo patrón que "Fines" y "Servicios"
-	// en esta página), así que se verifica en dos partes en vez de como una sola frase contigua.
+
 	assert.Contains(t, body, "Productos de")
 	assert.Contains(t, body, ">Software</span>")
 }

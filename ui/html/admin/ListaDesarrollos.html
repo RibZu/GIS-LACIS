@@ -15,7 +15,6 @@
 </head>
 <body class="grilla">
 
-    <!-- Header / Navbar Compartido -->
     <header>
         {{ template "nav" . }}
     </header>
@@ -25,7 +24,6 @@
     <main class="admin-main py-4">
         <div class="container">
 
-            <!-- Encabezado y Navegación rápida -->
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                 <div>
                     <h2 class="admin-header-title mb-1">
@@ -42,7 +40,6 @@
                 </div>
             </div>
 
-            <!-- Barra de Búsqueda -->
             <div class="filter-container mb-3">
                 <div class="input-group search-input-group">
                     <input type="text" id="buscadorInput" class="form-control" placeholder="Buscar por título...">
@@ -50,7 +47,6 @@
                 </div>
             </div>
 
-            <!-- Acordeón de Desarrollos -->
             <div id="listaDesarrollos">
                 {{ range .Desarrollos }}
                 <div class="des-accordion-item" data-titulo="{{ .Titulo }}">
@@ -120,7 +116,6 @@
                 {{ end }}
             </div>
 
-            <!-- Mensaje cuando no hay resultados de búsqueda -->
             <div id="noResultsMsg" class="text-center py-5 d-none text-muted">
                 <i class="bi bi-search fs-2 d-block mb-2 text-secondary"></i>
                 No se encontraron productos de software que coincidan con la búsqueda.
@@ -129,7 +124,6 @@
         </div>
     </main>
 
-    <!-- Footer Compartido -->
     <footer>
         {{ template "footer" . }}
     </footer>
@@ -142,7 +136,6 @@
             });
         });
 
-        // Búsqueda en vivo por título (client-side, sin recargar la página).
         var buscador = document.getElementById('buscadorInput');
         var items = Array.prototype.slice.call(document.querySelectorAll('#listaDesarrollos .des-accordion-item'));
         var noResultsMsg = document.getElementById('noResultsMsg');

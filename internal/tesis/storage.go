@@ -75,7 +75,6 @@ func (s *PostgresStorage) Create(t *Tesis) error {
 		return fmt.Errorf("error al insertar tesis en PostgreSQL: %w", err)
 	}
 
-	// Insertar integrantes secundarios en integrantes_tesis si existen
 	if len(t.IntegrantesIDs) > 0 {
 		for _, intID := range t.IntegrantesIDs {
 			if intID > 0 {
@@ -172,7 +171,6 @@ func (s *PostgresStorage) Read(id int) (*Tesis, error) {
 		t.ProyectoID = &val
 	}
 
-	// Cargar integrantes_tesis vinculados
 	intRows, err := s.db.Query(`SELECT integrante_id FROM integrantes_tesis WHERE tesis_id = $1`, id)
 	if err == nil {
 		defer intRows.Close()
@@ -184,7 +182,6 @@ func (s *PostgresStorage) Read(id int) (*Tesis, error) {
 		}
 	}
 
-	// Cargar nombres de integrantes_tesis vinculados
 	if len(t.IntegrantesIDs) > 0 {
 		secRows, errSec := s.db.Query(`
 			SELECT i.nombre || ' ' || i.apellido 
@@ -654,7 +651,6 @@ func (s *PostgresStorage) Update(id int, fields UpdateFields) error {
 		return ErrNotFound
 	}
 
-	// Si se enviaron IntegrantesIDs, sincronizar tabla intermedia
 	if fields.IntegrantesIDs != nil {
 		_, _ = s.db.Exec(`DELETE FROM integrantes_tesis WHERE tesis_id = $1`, id)
 		for _, intID := range fields.IntegrantesIDs {

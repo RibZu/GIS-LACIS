@@ -30,7 +30,6 @@ func NewTesisHandler(s *tesis.Service, is *integrante.Service, l *zap.Logger) *T
 	}
 }
 
-// 1. Ver Lista de Tesis en la Plantilla HTML
 func (h *TesisHandler) Lista(c *gin.Context) {
 	lista, err := h.service.GetAll()
 	if err != nil {
@@ -45,7 +44,6 @@ func (h *TesisHandler) Lista(c *gin.Context) {
 	})
 }
 
-// 2. Mostrar Formulario de Crear
 func (h *TesisHandler) Crear(c *gin.Context) {
 	integrantes, err := h.integranteService.GetAll()
 	if err != nil {
@@ -59,7 +57,6 @@ func (h *TesisHandler) Crear(c *gin.Context) {
 	})
 }
 
-// 3. Procesar el Formulario Crear (POST)
 func (h *TesisHandler) Insertar(c *gin.Context) {
 	titulo := strings.TrimSpace(c.PostForm("titulo"))
 	nivel := strings.TrimSpace(c.PostForm("nivel"))
@@ -82,7 +79,6 @@ func (h *TesisHandler) Insertar(c *gin.Context) {
 		}
 	}
 
-	// Autores adicionales (solo permitidos si nivel == "Grado", hasta máx 4 totales)
 	var integrantesIDs []int
 	var autoresHistoricosExtra []string
 
@@ -154,7 +150,6 @@ func (h *TesisHandler) Insertar(c *gin.Context) {
 		IntegrantesIDs:       integrantesIDs,
 	}
 
-	// Manejo de archivo PDF
 	if filePDF, err := c.FormFile("archivo_pdf"); err == nil && filePDF != nil {
 		destDir := "ui/static/assets/tesis-GIS"
 		_ = os.MkdirAll(destDir, os.ModePerm)
@@ -183,7 +178,6 @@ func (h *TesisHandler) Insertar(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/admin/tesis")
 }
 
-// 4. Mostrar Formulario de Editar
 func (h *TesisHandler) Editar(c *gin.Context) {
 	idParam := c.Query("id")
 	id, err := strconv.Atoi(idParam)
@@ -207,7 +201,6 @@ func (h *TesisHandler) Editar(c *gin.Context) {
 	})
 }
 
-// 5. Procesar la Actualización (POST)
 func (h *TesisHandler) Actualizar(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	if id <= 0 {
@@ -242,7 +235,6 @@ func (h *TesisHandler) Actualizar(c *gin.Context) {
 		autorIDPtr = &valZero
 	}
 
-	// Autores adicionales (solo permitidos si nivel == "Grado", hasta máx 4 totales)
 	var integrantesIDs []int
 	var autoresHistoricosExtra []string
 
@@ -320,7 +312,6 @@ func (h *TesisHandler) Actualizar(c *gin.Context) {
 		IntegrantesIDs:       integrantesIDs,
 	}
 
-	// Si se subió un nuevo PDF
 	if filePDF, err := c.FormFile("archivo_pdf"); err == nil && filePDF != nil {
 		destDir := "ui/static/assets/tesis-GIS"
 		_ = os.MkdirAll(destDir, os.ModePerm)
@@ -349,7 +340,6 @@ func (h *TesisHandler) Actualizar(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/admin/tesis")
 }
 
-// 6. Eliminar Registro
 func (h *TesisHandler) Borrar(c *gin.Context) {
 	idParam := c.Query("id")
 	id, err := strconv.Atoi(idParam)
@@ -362,7 +352,6 @@ func (h *TesisHandler) Borrar(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/admin/tesis")
 }
 
-// REST API JSON ENDPOINTS
 func (h *TesisHandler) API_GetAll(c *gin.Context) {
 	carrera := c.Query("carrera")
 	nivel := c.Query("nivel")
@@ -406,7 +395,6 @@ func (h *TesisHandler) API_Read(c *gin.Context) {
 	c.JSON(http.StatusOK, t)
 }
 
-// ViewPublica renderiza la vista pública de tesis en Tesis.html
 func (h *TesisHandler) ViewPublica(c *gin.Context) {
 	lista, err := h.service.GetAll()
 	if err != nil {
@@ -421,4 +409,3 @@ func (h *TesisHandler) ViewPublica(c *gin.Context) {
 		"LoggedIn": loggedIn,
 	})
 }
-
