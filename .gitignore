@@ -18,5 +18,9 @@ Thumbs.db
 # Carpeta personal de ejercicios para aprender Go (no forma parte del proyecto)
 /go-learning/
 
-# Configuración local personal de Claude Code (no compartir con el equipo)
-.claude/settings.local.json
+# Herramientas de IA (Claude Code / Spec Kit): configuración, andamiaje y specs
+# generadas localmente, no se comparten vía git
+/.claude/
+/.specify/
+/specs/
+/CLAUDE.md

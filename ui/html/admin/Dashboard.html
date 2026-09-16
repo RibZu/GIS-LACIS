@@ -32,33 +32,6 @@
                 </a>
             </div>
 
-            <div class="row row-cols-2 row-cols-md-4 g-2 mb-4">
-                <div class="col">
-                    <div class="dash-stat">
-                        <div class="text-secondary small">Usuarios</div>
-                        <div class="dash-stat-num">{{ .NumUsuarios }}</div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="dash-stat">
-                        <div class="text-secondary small">Admins</div>
-                        <div class="dash-stat-num">{{ .NumAdmins }}</div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="dash-stat">
-                        <div class="text-secondary small">Módulos activos</div>
-                        <div class="dash-stat-num">{{ .NumModulosActivos }}</div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="dash-stat">
-                        <div class="text-secondary small">Integrantes</div>
-                        <div class="dash-stat-num">{{ .NumIntegrantes }}</div>
-                    </div>
-                </div>
-            </div>
-
             <div class="row g-4 mt-2">
                 {{ if .TieneIntegrantes }}
                 <div class="col-md-6 col-lg-4">

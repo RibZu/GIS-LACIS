@@ -77,22 +77,6 @@ func (h *AuthHandler) ShowDashboard(c *gin.Context) {
 		return
 	}
 
-	numUsuarios := 0
-	numAdmins := 0
-	if usuarios, err := h.usuarioService.GetAll(); err == nil {
-		numUsuarios = len(usuarios)
-		for _, us := range usuarios {
-			if us.Rol != nil && *us.Rol == "ADMIN" {
-				numAdmins++
-			}
-		}
-	}
-
-	numIntegrantes := 0
-	if integrantes, err := h.integranteService.GetAll(); err == nil {
-		numIntegrantes = len(integrantes)
-	}
-
 	c.HTML(http.StatusOK, "Dashboard.html", gin.H{
 		"LoggedIn":             true,
 		"EsAdmin":              esAdmin(u),
@@ -101,11 +85,5 @@ func (h *AuthHandler) ShowDashboard(c *gin.Context) {
 		"TieneProyectos":       tieneModulo(u, "proyectos"),
 		"TieneReconocimientos": tieneModulo(u, "reconocimientos"),
 		"TieneEmpresas":        tieneModulo(u, "empresas"),
-		"NumUsuarios":          numUsuarios,
-		"NumAdmins":            numAdmins,
-		"NumIntegrantes":       numIntegrantes,
-		// Módulos realmente activos hoy: Integrantes y Administradores.
-		// Proyectos, Reconocimientos y Empresas siguen "Próximamente".
-		"NumModulosActivos": 2,
 	})
 }
