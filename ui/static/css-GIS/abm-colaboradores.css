@@ -1,0 +1,207 @@
+:root {
+    --azul-logo: #1a4484;
+    --azul-profundo: #0A1E2E;
+    --azul-pastel-fondo: #f0f6fa;
+    --azul-hover: #133261;
+    --celeste-acento: #0dcaf0;
+    --verde-acento: #198754;
+    --rojo-peligro: #dc3545;
+    --gris-borde: #e2e8f0;
+    --sombra-suave: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --sombra-hover: 0 8px 30px rgba(26, 68, 132, 0.12);
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--azul-pastel-fondo);
+    color: #334155;
+    min-height: 100vh;
+}
+
+.admin-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--gris-borde);
+}
+
+/* Contenedor Admin de Colaborador */
+.colaborador-card-wrapper {
+    background: #ffffff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 20px;
+    padding: 1.25rem;
+    box-shadow: var(--sombra-suave);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    height: 100%;
+}
+
+.colaborador-card-wrapper:hover {
+    box-shadow: var(--sombra-hover);
+    transform: translateY(-3px);
+}
+
+.colaborador-card-wrapper.inactivo {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+    opacity: 0.8;
+}
+
+.colaborador-card-wrapper.inactivo .card-flip-front img {
+    filter: grayscale(100%);
+}
+
+/* Barra de controles superiores */
+.card-header-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* FLIP CARD IDÉNTICA A PROYECTO.HTML / EPROYECTO.CSS */
+.card-flip {
+    background: transparent;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 250px;
+    height: 270px;
+    perspective: 1000px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.card-flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.card-flip:hover .card-flip-inner,
+.card-flip.flipped .card-flip-inner {
+    transform: rotateY(180deg);
+}
+
+.card-flip-front,
+.card-flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    box-sizing: border-box;
+}
+
+.card-flip-front {
+    background-color: #ffffff;
+    color: var(--azul-profundo);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card-flip:hover .card-flip-front {
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.card-flip-front img {
+    max-height: 120px;
+    max-width: 85%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.card-flip:hover .card-flip-front img {
+    transform: scale(1.06);
+}
+
+.card-flip-front .logo-placeholder {
+    width: 90px;
+    height: 90px;
+    border-radius: 16px;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+}
+
+.card-flip-front .empresa-nombre {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--azul-profundo);
+    margin-top: 0.75rem;
+    text-align: center;
+    line-height: 1.25;
+}
+
+.card-flip-front .flip-hint {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    margin-top: auto;
+}
+
+.card-flip-back {
+    background: linear-gradient(145deg, var(--azul-logo) 0%, var(--azul-profundo) 100%);
+    color: #ffffff;
+    transform: rotateY(180deg);
+    text-align: center;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    box-shadow: 0 8px 25px rgba(10, 30, 46, 0.25);
+    overflow-y: auto;
+}
+
+.card-flip-back p {
+    margin-bottom: 0;
+    color: #f8fafc;
+    max-height: 100%;
+}
+
+.card-flip-back .dorso-titulo {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    color: #38bdf8;
+}
+
+/* Badge personalizado */
+.badge-vigente {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50rem;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.badge-inactivo {
+    background-color: #f1f5f9;
+    color: #64748b;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50rem;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}

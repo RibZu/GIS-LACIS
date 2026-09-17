@@ -46,7 +46,8 @@ CREATE TABLE colaboradores (
     id BIGSERIAL PRIMARY KEY,
     usuario_gestor_id INT REFERENCES usuario_gestor(id) ON DELETE SET NULL,
     descripcion TEXT,
-    logo_url VARCHAR(500)
+    logo_url VARCHAR(500),
+    activo BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE proyecto (
@@ -72,7 +73,8 @@ CREATE TABLE desarrollo (
 CREATE TABLE reconocimientos (
     id BIGSERIAL PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
-    descripcion TEXT
+    descripcion TEXT,
+    activo BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE participante_externo (
@@ -85,6 +87,7 @@ CREATE TABLE proyecto_integrantes (
     id SERIAL PRIMARY KEY,
     integrante_id INT NOT NULL REFERENCES integrante(id) ON DELETE CASCADE,
     proyecto_id INT NOT NULL REFERENCES proyecto(id) ON DELETE CASCADE,
+    rol_en_proyecto VARCHAR(150),
     CONSTRAINT uq_proyecto_integrante UNIQUE (proyecto_id, integrante_id)
 );
 

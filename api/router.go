@@ -2,6 +2,7 @@ package api
 
 import (
 	"PaginaSEG/api/handler"
+	"PaginaSEG/internal/colaborador"
 	"PaginaSEG/internal/desarrollo"
 	"PaginaSEG/internal/integrante"
 	"PaginaSEG/internal/proyecto"
@@ -128,6 +129,10 @@ func InitRoutes(e *gin.Engine) {
 
 	e.GET("/tesis", tesisHandler.ViewPublica)
 
+	colaboradorStorage := colaborador.NewPostgresStorage(db)
+	colaboradorService := colaborador.NewService(colaboradorStorage, logger)
+	colaboradorHandler := handler.NewColaboradorHandler(colaboradorService, logger)
+
 	e.GET("/login", authHandler.ShowLogin)
 	e.POST("/login", authHandler.ProcessLogin)
 	e.GET("/logout", authHandler.Logout)
@@ -184,6 +189,7 @@ func InitRoutes(e *gin.Engine) {
 
 	v1API.GET("/proyectos", proyectoHandler.API_GetAll)
 	v1API.GET("/reconocimientos", reconocimientoHandler.API_GetAll)
+	v1API.GET("/colaboradores", colaboradorHandler.API_GetAll)
 
 	proyectosAPIAdmin := v1API.Group("")
 	proyectosAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "proyectos"))
@@ -193,5 +199,45 @@ func InitRoutes(e *gin.Engine) {
 	proyectosAPIAdmin.GET("/admin/proyectos/:id", proyectoHandler.API_Read)
 	proyectosAPIAdmin.PUT("/admin/proyectos/:id", proyectoHandler.API_Update)
 	proyectosAPIAdmin.DELETE("/admin/proyectos/:id", proyectoHandler.API_Delete)
+	proyectosAPIAdmin.POST("/admin/proyectos/:id/equipo", proyectoHandler.API_AgregarMiembro)
+	proyectosAPIAdmin.DELETE("/admin/proyectos/:id/equipo/:integrante_id", proyectoHandler.API_QuitarMiembro)
+
+	// Módulo "reconocimientos": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
+	reconocimientosAdmin := v1Admin.Group("")
+	reconocimientosAdmin.Use(handler.RequireModule(usuarioService, "reconocimientos"))
+	reconocimientosAdmin.GET("/reconocimientos", reconocimientoHandler.View_ReconocimientosAdmin)
+
+	// Rutas API de administración de Reconocimientos (CRUD placeholders)
+	reconocimientosAPIAdmin := v1API.Group("")
+	reconocimientosAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "reconocimientos"))
+	reconocimientosAPIAdmin.GET("/admin/reconocimientos-todos", reconocimientoHandler.API_GetAllAdmin)
+	reconocimientosAPIAdmin.POST("/admin/reconocimientos", reconocimientoHandler.API_Create)
+	reconocimientosAPIAdmin.GET("/admin/reconocimientos/:id", reconocimientoHandler.API_Read)
+	reconocimientosAPIAdmin.PUT("/admin/reconocimientos/:id", reconocimientoHandler.API_Update)
+	reconocimientosAPIAdmin.DELETE("/admin/reconocimientos/:id", reconocimientoHandler.API_Delete)
+	reconocimientosAPIAdmin.PATCH("/admin/reconocimientos/:id/restaurar", reconocimientoHandler.API_Restaurar)
+
+	// Módulo "empresas" (Colaboradores): requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
+	colaboradoresAdmin := v1Admin.Group("")
+	colaboradoresAdmin.Use(handler.RequireModule(usuarioService, "empresas"))
+	colaboradoresAdmin.GET("/colaboradores", colaboradorHandler.View_ColaboradoresAdmin)
+
+	// Rutas API de administración de Colaboradores
+	colaboradoresAPIAdmin := v1API.Group("")
+	colaboradoresAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "empresas"))
+	colaboradoresAPIAdmin.GET("/admin/colaboradores-todos", colaboradorHandler.API_GetAllAdmin)
+	colaboradoresAPIAdmin.POST("/admin/colaboradores", colaboradorHandler.API_Create)
+	colaboradoresAPIAdmin.GET("/admin/colaboradores/:id", colaboradorHandler.API_Read)
+	colaboradoresAPIAdmin.PUT("/admin/colaboradores/:id", colaboradorHandler.API_Update)
+	colaboradoresAPIAdmin.DELETE("/admin/colaboradores/:id", colaboradorHandler.API_Delete)
+	colaboradoresAPIAdmin.PATCH("/admin/colaboradores/:id/restaurar", colaboradorHandler.API_Restaurar)
+
+	// Público: consultar equipo de un proyecto
+	v1API.GET("/proyectos/:id/equipo", proyectoHandler.API_GetEquipo)
+
+	// Nuevo grupo admin para integrantes
+	integrantesAPIAdmin := v1API.Group("")
+	integrantesAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "integrantes"))
+	integrantesAPIAdmin.POST("/admin/integrantes/mini", integranteHandler.API_CreateMinimo)
 
 }
