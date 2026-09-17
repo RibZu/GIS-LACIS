@@ -23,7 +23,6 @@ func NewProyectoHandler(s *proyecto.Service, l *zap.Logger) *ProyectoHandler {
 	}
 }
 
-// API_GetAll retorna la lista de proyectos en JSON
 func (h *ProyectoHandler) API_GetAll(c *gin.Context) {
 	proyectos, err := h.service.GetAll()
 	if err != nil {
@@ -34,7 +33,6 @@ func (h *ProyectoHandler) API_GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, proyectos)
 }
 
-// API_Create crea un nuevo proyecto desde payload JSON
 func (h *ProyectoHandler) API_Create(c *gin.Context) {
 	var p proyecto.Proyecto
 	if err := c.ShouldBindJSON(&p); err != nil {
@@ -52,7 +50,6 @@ func (h *ProyectoHandler) API_Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, p)
 }
 
-// API_Read obtiene un proyecto por ID
 func (h *ProyectoHandler) API_Read(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -75,7 +72,6 @@ func (h *ProyectoHandler) API_Read(c *gin.Context) {
 	c.JSON(http.StatusOK, p)
 }
 
-// API_Update actualiza campos de un proyecto por ID
 func (h *ProyectoHandler) API_Update(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -108,7 +104,6 @@ func (h *ProyectoHandler) API_Update(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"mensaje": "proyecto actualizado exitosamente"})
 }
 
-// API_Delete elimina un proyecto por ID
 func (h *ProyectoHandler) API_Delete(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -130,14 +125,10 @@ func (h *ProyectoHandler) API_Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"mensaje": "proyecto eliminado exitosamente"})
 }
 
-// Vistas HTML para el Panel de Administración
-
-// View_ProyectosAdmin renderiza la vista de proyectos
 func (h *ProyectoHandler) View_ProyectosAdmin(c *gin.Context) {
 	c.HTML(http.StatusOK, "EditarProyectos.html", gin.H{"LoggedIn": true})
 }
 
-// API_GetAllAdmin retorna todos los proyectos (incluyendo inactivos) para el panel admin
 func (h *ProyectoHandler) API_GetAllAdmin(c *gin.Context) {
 	proyectos, err := h.service.GetAllAdmin()
 	if err != nil {
@@ -148,7 +139,6 @@ func (h *ProyectoHandler) API_GetAllAdmin(c *gin.Context) {
 	c.JSON(http.StatusOK, proyectos)
 }
 
-// API_Restaurar vuelve a activar un proyecto dado de baja lógica
 func (h *ProyectoHandler) API_Restaurar(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)

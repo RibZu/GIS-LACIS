@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', function () {
   const cards = Array.from(document.querySelectorAll('.tesis-card-item'));
   const inputPalabra = document.getElementById('filtroPalabraClave');
@@ -14,12 +12,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (!cards.length && !contadorBadge) return;
 
-  let activeTipo = 'all'; 
+  let activeTipo = 'all';
   let activeAnio = 'all';
   let activeCarrera = 'all';
   let activePalabra = '';
 
- 
   if (selectAnio) {
     const aniosSet = new Set();
     cards.forEach(card => {
@@ -37,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
       selectAnio.appendChild(opt);
     });
   }
-
 
   if (selectCarrera) {
     const carrerasSet = new Set();
@@ -57,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-
   function aplicarFiltros() {
     let visibles = 0;
     const palabraNorm = activePalabra.toLowerCase().trim();
@@ -73,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
       const palabrasClave = (card.dataset.palabras || '').toLowerCase();
       const resumen = (card.dataset.resumen || '').toLowerCase();
 
-   
       let cumpleTipo = true;
       if (activeTipo === 'posgrado') {
         cumpleTipo = (tipo === 'posgrado') || (nivel !== 'grado' && !nivel.includes('grado'));
@@ -81,19 +75,16 @@ document.addEventListener('DOMContentLoaded', function () {
         cumpleTipo = (tipo === 'grado') || (nivel === 'grado' || nivel.includes('grado'));
       }
 
-    
       let cumpleAnio = true;
       if (activeAnio !== 'all') {
         cumpleAnio = (anio === activeAnio);
       }
 
-    
       let cumpleCarrera = true;
       if (activeCarrera !== 'all') {
         cumpleCarrera = (carrera.toLowerCase() === activeCarrera.toLowerCase());
       }
 
-   
       let cumplePalabra = true;
       if (palabraNorm) {
         const bolsaTexto = `${titulo} ${palabrasClave} ${autor} ${director} ${carrera} ${resumen}`;
@@ -109,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
-   
     if (contadorBadge) {
       if (cards.length === 0) {
         contadorBadge.textContent = '0 tesis disponibles';
@@ -120,23 +110,19 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-  
     if (noResultsMsg) {
       noResultsMsg.style.display = (visibles === 0 && cards.length > 0) ? '' : 'none';
     }
 
-   
     const hayFiltrosActivos = (activeTipo !== 'all' || activeAnio !== 'all' || activeCarrera !== 'all' || activePalabra !== '');
     if (btnLimpiarWrap) {
       btnLimpiarWrap.style.display = hayFiltrosActivos ? '' : 'none';
     }
 
-
     if (window.AOS && typeof window.AOS.refresh === 'function') {
       window.AOS.refresh();
     }
   }
-
 
   function restablecerFiltros() {
     activeTipo = 'all';
@@ -154,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     aplicarFiltros();
   }
-
 
   tipoBtns.forEach(btn => {
     btn.addEventListener('click', function () {
@@ -194,7 +179,6 @@ document.addEventListener('DOMContentLoaded', function () {
     btnResetDesdeVacio.addEventListener('click', restablecerFiltros);
   }
 
-  
   const urlParams = new URLSearchParams(window.location.search);
   const paramTipo = urlParams.get('tipo');
   const paramAnio = urlParams.get('anio');
@@ -218,6 +202,5 @@ document.addEventListener('DOMContentLoaded', function () {
     inputPalabra.value = paramPalabra;
   }
 
-  
   aplicarFiltros();
 });

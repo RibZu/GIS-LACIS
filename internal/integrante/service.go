@@ -10,7 +10,6 @@ import (
 
 var regexSoloLetras = regexp.MustCompile(`^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\.\-']+$`)
 
-// Errores de validación de negocio
 var (
 	ErrNombreRequerido          = errors.New("el nombre es obligatorio")
 	ErrApellidoRequerido        = errors.New("el apellido es obligatorio")
@@ -26,13 +25,11 @@ var (
 	ErrIDInvalido               = errors.New("el ID debe ser mayor a 0")
 )
 
-// Service contiene la lógica de negocio e interactúa con Storage y Logger
 type Service struct {
 	storage Storage
 	logger  *zap.Logger
 }
 
-// NewService es el constructor del servicio
 func NewService(s Storage, l *zap.Logger) *Service {
 	return &Service{
 		storage: s,
@@ -67,12 +64,10 @@ func (s *Service) Create(integrante *Integrante) error {
 		return ErrDescripcionRequerida
 	}
 
-	// Si no tiene ningún grupo seleccionado
 	if !integrante.PerteneceLacis && !integrante.PerteneceGrupoSoftware {
 		return ErrPertenenciaRequerida
 	}
 
-	// Asignar rol general si viene RolID legacy
 	if integrante.RolID > 0 {
 		if integrante.PerteneceLacis && integrante.RolLacisID == nil {
 			val := integrante.RolID
@@ -84,7 +79,6 @@ func (s *Service) Create(integrante *Integrante) error {
 		}
 	}
 
-	// Validar rol de LaCIS si pertenece
 	if integrante.PerteneceLacis {
 		if integrante.RolLacisID == nil || *integrante.RolLacisID <= 0 {
 			return ErrRolLacisRequerido
@@ -93,7 +87,6 @@ func (s *Service) Create(integrante *Integrante) error {
 		integrante.RolLacisID = nil
 	}
 
-	// Validar rol de Grupo Software si pertenece
 	if integrante.PerteneceGrupoSoftware {
 		if integrante.RolSoftwareID == nil || *integrante.RolSoftwareID <= 0 {
 			return ErrRolSoftwareRequerido
@@ -102,7 +95,6 @@ func (s *Service) Create(integrante *Integrante) error {
 		integrante.RolSoftwareID = nil
 	}
 
-	// Asegurar RolID para retrocompatibilidad
 	if integrante.RolID <= 0 {
 		if integrante.RolLacisID != nil {
 			integrante.RolID = *integrante.RolLacisID
@@ -150,7 +142,6 @@ func (s *Service) Update(id int, fields UpdateFields) error {
 		return ErrDescripcionRequerida
 	}
 
-	// Validaciones de roles por grupo si se envían
 	if fields.PerteneceLacis != nil && *fields.PerteneceLacis {
 		if fields.RolLacisID != nil && *fields.RolLacisID <= 0 {
 			return ErrRolLacisRequerido

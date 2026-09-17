@@ -49,7 +49,8 @@ El proyecto sigue una **arquitectura en capas** clásica (MVC / Clean Architectu
 
 Cada dominio principal de la base de datos tiene su propio espacio. Aquí es donde debes colocar cada cosa según lo que vayas a programar:
 
-1. **Proyectos y Desarrollos**
+1. **Proyectos y Productos de Software** (antes "Desarrollos" — el nombre visible cambió, el módulo de
+   permisos sigue llamándose `proyectos` y el paquete Go sigue siendo `internal/desarrollo`)
    - Backend: `internal/proyecto/` (Lógica en Go, consultas SQL).
    - Frontend: `ui/html/admin/proyecto/` (Vistas HTML y Panel).
 

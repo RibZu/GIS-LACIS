@@ -10,6 +10,7 @@ import (
 	"PaginaSEG/internal/tesis"
 	"PaginaSEG/internal/usuario"
 	"database/sql"
+	"html/template"
 	"net/http"
 	"time"
 
@@ -33,14 +34,13 @@ func InitRoutes(e *gin.Engine) {
 
 	logger, err := zap.NewProduction()
 	defer logger.Sync()
-	//  Conexión a PostgreSQL
+
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		logger.Fatal("No se pudo abrir conexión a PostgreSQL", zap.Error(err))
 	}
 
-	// Reintentar conexión hasta 20 veces (esperando a que inicie la DB tras crash recovery)
 	for i := 0; i < 20; i++ {
 		err = db.Ping()
 		if err == nil {
@@ -53,13 +53,14 @@ func InitRoutes(e *gin.Engine) {
 		logger.Fatal("No se pudo hacer Ping a PostgreSQL después de varios intentos", zap.Error(err))
 	}
 
-	// Servir archivos estáticos (CSS, JS, Imágenes)
 	e.Static("/static", "ui/static")
 	e.Static("/ui/static", "ui/static")
-	// Cargar las plantillas HTML
+
+	e.SetFuncMap(template.FuncMap{
+		"add": func(a, b int) int { return a + b },
+	})
 	e.LoadHTMLGlob("ui/html/**/*.html")
 
-	// INICIALIZACIÓN DE SERVICIOS Y HANDLERS
 	integranteStorage := integrante.NewPostgresStorage(db)
 	integranteService := integrante.NewService(integranteStorage, logger)
 	integranteHandler := handler.NewIntegranteHandler(integranteService, logger)
@@ -85,47 +86,47 @@ func InitRoutes(e *gin.Engine) {
 	reconocimientoService := reconocimiento.NewService(reconocimientoStorage, logger)
 	reconocimientoHandler := handler.NewReconocimientoHandler(reconocimientoService, logger)
 
-	// RUTAS PARA PÁGINAS WEB (HTML)
-
-	// 1. Inicio
 	e.GET("/", func(c *gin.Context) {
 		_, loggedIn := handler.CurrentUserID(c)
 		c.HTML(http.StatusOK, "index.html", gin.H{"LoggedIn": loggedIn})
 	})
-	// 2. Integrantes
+
 	e.GET("/integrantes", func(c *gin.Context) {
 		_, loggedIn := handler.CurrentUserID(c)
 		c.HTML(http.StatusOK, "integrantes.html", gin.H{"LoggedIn": loggedIn})
 	})
-	// 3. LaCIS
-	e.GET("/lacis", func(c *gin.Context) {
-		_, loggedIn := handler.CurrentUserID(c)
-		c.HTML(http.StatusOK, "Lacis.html", gin.H{"LoggedIn": loggedIn})
-	})
-	// 4. Proyectos
+
+	e.GET("/lacis", desarrolloHandler.ViewLacis)
+
 	e.GET("/proyectos", func(c *gin.Context) {
 		_, loggedIn := handler.CurrentUserID(c)
 		c.HTML(http.StatusOK, "Proyecto.html", gin.H{"LoggedIn": loggedIn})
 	})
-	// 5. Posgrado: Doctorado en Ingeniería de Software
+
 	e.GET("/doctorado-ing-software", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "DrIngSoft.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "DrIngSoft.html", gin.H{"LoggedIn": loggedIn})
 	})
-	// 6. Posgrado: Especialización en Ingeniería de Software
+
 	e.GET("/especializacion-ing-software", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "EspIngSoft.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "EspIngSoft.html", gin.H{"LoggedIn": loggedIn})
 	})
-	// 7. Posgrado: Maestría en Calidad de Software
+
 	e.GET("/maestria-calidad-software", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "MgCalSoft.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "MgCalSoft.html", gin.H{"LoggedIn": loggedIn})
 	})
-	// 8. Posgrado: Maestría en Ingeniería de Software
+
 	e.GET("/maestria-ing-software", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "MgIngSoft.html", nil)
+		_, loggedIn := handler.CurrentUserID(c)
+		c.HTML(http.StatusOK, "MgIngSoft.html", gin.H{"LoggedIn": loggedIn})
 	})
-	// 9. Desarrollos
-	e.GET("/desarrollos", desarrolloHandler.ViewPublica)
-	// 10. Tesis
+
+	e.GET("/desarrollos", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "/lacis#productos-software")
+	})
+
 	e.GET("/tesis", tesisHandler.ViewPublica)
 
 	colaboradorStorage := colaborador.NewPostgresStorage(db)
@@ -136,10 +137,9 @@ func InitRoutes(e *gin.Engine) {
 	e.POST("/login", authHandler.ProcessLogin)
 	e.GET("/logout", authHandler.Logout)
 
-	v1Admin := e.Group("/admin")
+	v1Admin := e.Group("/admin", handler.RequireLogin(usuarioService))
 	v1Admin.GET("/dashboard", authHandler.ShowDashboard)
 
-	// Módulo "integrantes": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
 	integrantesAdmin := v1Admin.Group("")
 	integrantesAdmin.Use(handler.RequireModule(usuarioService, "integrantes"))
 	integrantesAdmin.GET("/integrantes", integranteHandler.Lista)
@@ -149,7 +149,6 @@ func InitRoutes(e *gin.Engine) {
 	integrantesAdmin.POST("/actualizar-integrante", integranteHandler.Actualizar)
 	integrantesAdmin.GET("/borrar-integrante", integranteHandler.Borrar)
 
-	// Módulo "tesis": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
 	tesisAdmin := v1Admin.Group("")
 	tesisAdmin.Use(handler.RequireModule(usuarioService, "tesis"))
 	tesisAdmin.GET("/tesis", tesisHandler.Lista)
@@ -158,7 +157,7 @@ func InitRoutes(e *gin.Engine) {
 	tesisAdmin.GET("/editar-tesis", tesisHandler.Editar)
 	tesisAdmin.POST("/actualizar-tesis", tesisHandler.Actualizar)
 	tesisAdmin.GET("/borrar-tesis", tesisHandler.Borrar)
-	// Módulo "proyectos": Desarrollos (mismo permiso que Proyectos I+D+i, ver README)
+
 	desarrollosAdmin := v1Admin.Group("")
 	desarrollosAdmin.Use(handler.RequireModule(usuarioService, "proyectos"))
 	desarrollosAdmin.GET("/desarrollos", desarrolloHandler.Lista)
@@ -168,7 +167,6 @@ func InitRoutes(e *gin.Engine) {
 	desarrollosAdmin.POST("/actualizar-desarrollo", desarrolloHandler.Actualizar)
 	desarrollosAdmin.GET("/borrar-desarrollo", desarrolloHandler.Borrar)
 
-	// Módulo "administradores": reservado a rol ADMIN, nunca asignable como módulo suelto
 	usuariosAdmin := v1Admin.Group("")
 	usuariosAdmin.Use(handler.RequireAdmin(usuarioService))
 	usuariosAdmin.GET("/usuarios", usuarioHandler.Lista)
@@ -178,26 +176,21 @@ func InitRoutes(e *gin.Engine) {
 	usuariosAdmin.POST("/actualizar-usuario", usuarioHandler.Actualizar)
 	usuariosAdmin.GET("/borrar-usuario", usuarioHandler.Borrar)
 
-	// RUTAS PARA LA API REST JSON (OPCIONALES PARA POSTMAN),
-
 	v1API := e.Group("/api/v1")
 	v1API.GET("/integrantes", integranteHandler.API_GetAll)
 	v1API.GET("/integrantes/:id", integranteHandler.API_Read)
 	v1API.GET("/tesis", tesisHandler.API_GetAll)
 	v1API.GET("/tesis/:id", tesisHandler.API_Read)
 
-	// Módulo "proyectos": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
 	proyectosAdmin := v1Admin.Group("")
 	proyectosAdmin.Use(handler.RequireModule(usuarioService, "proyectos"))
-	// Vistas HTML Admin para Proyectos (3 Opciones de diseño para el cliente)
+
 	proyectosAdmin.GET("/proyectos", proyectoHandler.View_ProyectosAdmin)
 
-	// Rutas API públicas de Proyectos, Reconocimientos y Colaboradores
 	v1API.GET("/proyectos", proyectoHandler.API_GetAll)
 	v1API.GET("/reconocimientos", reconocimientoHandler.API_GetAll)
 	v1API.GET("/colaboradores", colaboradorHandler.API_GetAll)
 
-	// Rutas API de administración de Proyectos
 	proyectosAPIAdmin := v1API.Group("")
 	proyectosAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "proyectos"))
 	proyectosAPIAdmin.GET("/admin/proyectos-todos", proyectoHandler.API_GetAllAdmin)

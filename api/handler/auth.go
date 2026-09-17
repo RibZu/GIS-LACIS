@@ -2,7 +2,7 @@ package handler
 
 import (
 	"PaginaSEG/internal/integrante"
-	"PaginaSEG/internal/usuario" // Importamos tu nuevo paquete de usuarios
+	"PaginaSEG/internal/usuario"
 	"net/http"
 	"strconv"
 
@@ -26,6 +26,10 @@ func NewAuthHandler(us *usuario.Service, is *integrante.Service, l *zap.Logger) 
 }
 
 func (h *AuthHandler) ShowLogin(c *gin.Context) {
+	if _, ok := CurrentUserID(c); ok {
+		c.Redirect(http.StatusFound, "/admin/dashboard")
+		return
+	}
 	c.HTML(http.StatusOK, "Login.html", gin.H{})
 }
 
@@ -71,6 +75,7 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 }
 
 func (h *AuthHandler) ShowDashboard(c *gin.Context) {
+
 	u, ok := currentUsuario(c, h.usuarioService)
 	if !ok {
 		c.Redirect(http.StatusFound, "/login")

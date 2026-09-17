@@ -40,8 +40,18 @@ func tieneModulo(u *usuario.UsuarioGestor, modulo string) bool {
 	return false
 }
 
-// RequireModule bloquea la ruta salvo que el usuario logueado tenga ese módulo
-// asignado (o sea ADMIN, que tiene acceso a todo).
+func RequireLogin(s *usuario.Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		_, ok := currentUsuario(c, s)
+		if !ok {
+			c.Redirect(http.StatusFound, "/login")
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
+
 func RequireModule(s *usuario.Service, modulo string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		u, ok := currentUsuario(c, s)
@@ -59,8 +69,6 @@ func RequireModule(s *usuario.Service, modulo string) gin.HandlerFunc {
 	}
 }
 
-// RequireAdmin bloquea la ruta salvo que el usuario logueado tenga rol ADMIN.
-// Se usa para /admin/usuarios*, ya que "administradores" nunca es un módulo asignable.
 func RequireAdmin(s *usuario.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		u, ok := currentUsuario(c, s)

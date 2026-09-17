@@ -1,5 +1,5 @@
 :root {
-    /* Paleta Técnica Normativa */
+
     --azul-principal: #1a4484;
     --azul-medio: #3b82f6;
     --azul-claro: #daeaf6;
@@ -12,14 +12,11 @@
     --fuente-cuerpo: 'Montserrat', sans-serif;
 }
 
-/* Animación con nombre específico para evitar conflictos */
 @keyframes posgrado-blur-in {
     from { filter: blur(5px); opacity: 0; }
     to { filter: blur(0); opacity: 1; }
 }
 
-/* --- ENCAPSULAMIENTO PRINCIPAL --- */
-/* En lugar de aplicar al body, aplicamos el fondo y fuentes al contenedor de la página */
 .seccion-posgrado {
     background: linear-gradient(to right, var(--azul-claro), var(--azul-pastel));
     font-family: var(--fuente-cuerpo);
@@ -30,7 +27,6 @@
     padding-top: 3rem;
 }
 
-/* Asegura que los enlaces dentro de posgrado hereden la tipografía */
 .seccion-posgrado a {
     color: var(--azul-medio);
     text-decoration: none;
@@ -43,7 +39,6 @@
     text-decoration: underline;
 }
 
-/* --- ELEMENTOS DE CONTENIDO --- */
 .seccion-posgrado .titulo-seccion {
     font-family: var(--fuente-titulos);
     font-size: 2.75rem;
@@ -91,7 +86,7 @@
 
 .seccion-posgrado > *:last-child {
     margin-bottom: 0 !important;
-    padding-bottom: 4rem; /* Si necesitas espacio visual, usa padding en su lugar */
+    padding-bottom: 4rem;
 }
 
 .seccion-posgrado .hero-posgrado {
@@ -125,7 +120,6 @@
     font-size: clamp(0.575rem, 2.5vw, 1.25rem);
 }
 
-/* Pestañas */
 .seccion-posgrado #posgradoTab.nav-tabs {
     border-bottom: 1px solid var(--azul-claro);
     gap: 10px;
@@ -151,7 +145,6 @@
     border-bottom: 3px solid var(--azul-principal) !important;
 }
 
-/* Tablas */
 .seccion-posgrado .tabla-plan thead th {
     background-color: var(--azul-claro);
     color: var(--azul-principal);
@@ -169,7 +162,6 @@
     font-size: 1.05rem;
 }
 
-/* Listas Limpias */
 .seccion-posgrado .lista-limpia .list-group-item {
     background: transparent;
     border: none;
@@ -206,9 +198,6 @@
 .seccion-posgrado .caja-autoridades ul li {
     margin-bottom: 0.4rem;
 }
-
-
-/* --- RESPONSIVE / MEDIA QUERIES --- */
 
 @media (max-width: 768px) {
     .seccion-posgrado {
@@ -329,7 +318,7 @@
         margin: 10px 0;
     }
 
-    .seccion-posgrado .tabla-plan th, 
+    .seccion-posgrado .tabla-plan th,
     .seccion-posgrado .tabla-plan td {
         padding: 0.6rem;
         font-size: 0.95rem;
@@ -362,4 +351,41 @@
     .seccion-posgrado .contacto-grid .caja-autoridades {
         text-align: left;
     }
+}
+
+.card-posgrado-tesis {
+    max-width: 750px;
+    background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+    border: 1px solid var(--azul-claro) !important;
+}
+
+.icono-posgrado-tesis {
+    width: 72px;
+    height: 72px;
+    background-color: var(--azul-claro);
+    color: var(--azul-principal);
+}
+
+.btn-posgrado-tesis {
+    background-color: var(--azul-principal);
+    color: #ffffff !important;
+    border: 1px solid var(--azul-principal);
+    border-radius: 30px;
+    padding: 12px 28px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 14px rgba(26, 68, 132, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-posgrado-tesis:hover {
+    background-color: var(--azul-medio);
+    border-color: var(--azul-medio);
+    color: #ffffff !important;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
 }

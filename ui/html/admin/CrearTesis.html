@@ -4,26 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ingresar Nueva Tesis - Admin GIS-LACIS</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.12.1/font/bootstrap-icons.min.css">
-    
+
     <link rel="stylesheet" href="/ui/static/css-GIS/Styleheader.css">
-    <link rel="stylesheet" href="/ui/static/css-GIS/admin.css">
+    <link rel="stylesheet" href="/ui/static/css-GIS/admin.css?v=1.2">
 </head>
 <body class="grilla">
 
-    <!-- Header / Navbar Compartido -->
     <header>
         {{ template "nav" . }}
     </header>
 
     <main class="admin-main py-4">
         <div class="container">
-            
+
             <div class="form-card">
-                
-                <!-- Encabezado del Formulario -->
+
                 <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4 gap-2">
                     <div>
                         <h3 class="form-header-title mb-1">
@@ -43,10 +41,8 @@
                 </div>
                 {{ end }}
 
-                <!-- Formulario -->
                 <form action="/admin/insertar-tesis" method="POST" enctype="multipart/form-data">
-                    
-                    <!-- SECCIÓN 1: INFORMACIÓN ACADÉMICA -->
+
                     <div class="form-section-subtitle">
                         <i class="bi bi-mortarboard-fill me-2" style="color: var(--azul-logo);"></i>1. Información General de la Tesis
                     </div>
@@ -93,51 +89,109 @@
                         </div>
                     </div>
 
-                    <!-- SECCIÓN 2: AUTORÍA Y DIRECCIÓN -->
-                    <div class="form-section-subtitle mt-4">
-                        <i class="bi bi-people-fill me-2" style="color: var(--azul-logo);"></i>2. Autoría y Dirección Académica
+                    <div class="form-section-subtitle mt-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div>
+                            <i class="bi bi-people-fill me-2" style="color: var(--azul-logo);"></i>2. Autoría y Dirección Académica
+                        </div>
                     </div>
 
-                    <div class="row g-3 mb-3">
-                        <!-- Tarjeta Autor -->
-                        <div class="col-md-4">
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                            <label class="form-label fw-semibold mb-0">
+                                Autor(es) de la Tesis <span class="text-danger">*</span>
+                                <span id="badge_limite_autores" class="badge badge-autores-info badge-posgrado ms-2">Posgrado: 1 solo autor</span>
+                            </label>
+                            <button type="button" id="btn_agregar_autor" class="btn btn-outline-primary btn-sm btn-agregar-autor d-none">
+                                <i class="bi bi-person-plus-fill me-1"></i> Agregar autor (<span id="contador_autores">1</span>/4)
+                            </button>
+                        </div>
+
+                        <div id="contenedor_autores" class="row g-3">
+
+                            <div class="col-md-6 col-12 autor-item" id="autor_item_1">
+                                <div class="group-card h-100 active-group">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div class="group-icon-badge badge-lacis-icon">
+                                            <i class="bi bi-person-fill"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0 text-dark autor-numero-label">Autor(a) 1 (Principal) <span class="text-danger">*</span></h6>
+                                            <small class="text-muted">Estudiante o Investigador</small>
+                                        </div>
+                                    </div>
+                                    <div class="tipo-selector mb-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="autor_tipo" id="autor_tipo_registrado" value="registrado" checked>
+                                            <label class="form-check-label small" for="autor_tipo_registrado">Registrado</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="autor_tipo" id="autor_tipo_externo" value="externo">
+                                            <label class="form-check-label small" for="autor_tipo_externo">Externo / Histórico</label>
+                                        </div>
+                                    </div>
+
+                                    <div id="contenedor_autor_registrado" class="box-autor-registrado">
+                                        <select class="form-select form-select-sm select-autor-id" id="autor_id" name="autor_id">
+                                            <option value="" disabled selected>Seleccionar integrante...</option>
+                                            {{ range .Integrantes }}
+                                            <option value="{{ .ID }}">{{ .Nombre }} {{ .Apellido }} ({{ .Especializacion }})</option>
+                                            {{ end }}
+                                        </select>
+                                    </div>
+                                    <div id="contenedor_autor_externo" class="box-autor-externo" style="display: none;">
+                                        <input type="text" class="form-control form-control-sm input-autor-externo" id="autor_historico" name="autor_historico" placeholder="Nombre completo del autor">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <template id="template_autor_item">
+                        <div class="col-md-6 col-12 autor-item">
                             <div class="group-card h-100 active-group">
-                                <div class="d-flex align-items-center gap-2 mb-2">
-                                    <div class="group-icon-badge badge-lacis-icon">
-                                        <i class="bi bi-person-fill"></i>
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="group-icon-badge badge-lacis-icon">
+                                            <i class="bi bi-person-fill"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0 text-dark autor-numero-label">Autor(a)</h6>
+                                            <small class="text-muted">Estudiante o Investigador</small>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h6 class="fw-bold mb-0 text-dark">Autor(a) de la Tesis <span class="text-danger">*</span></h6>
-                                        <small class="text-muted">Estudiante o Investigador</small>
-                                    </div>
+                                    <button type="button" class="btn-quitar-autor" title="Eliminar este autor">
+                                        <i class="bi bi-trash3-fill me-1"></i>Quitar
+                                    </button>
                                 </div>
                                 <div class="tipo-selector mb-2">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="autor_tipo" id="autor_tipo_registrado" value="registrado" checked>
-                                        <label class="form-check-label small" for="autor_tipo_registrado">Registrado</label>
+                                        <input class="form-check-input radio-autor-registrado" type="radio" value="registrado" checked>
+                                        <label class="form-check-label small label-autor-registrado">Registrado</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="autor_tipo" id="autor_tipo_externo" value="externo">
-                                        <label class="form-check-label small" for="autor_tipo_externo">Externo / Histórico</label>
+                                        <input class="form-check-input radio-autor-externo" type="radio" value="externo">
+                                        <label class="form-check-label small label-autor-externo">Externo / Histórico</label>
                                     </div>
                                 </div>
 
-                                <div id="contenedor_autor_registrado">
-                                    <select class="form-select form-select-sm" id="autor_id" name="autor_id">
+                                <div class="box-autor-registrado">
+                                    <select class="form-select form-select-sm select-autor-id">
                                         <option value="" disabled selected>Seleccionar integrante...</option>
                                         {{ range .Integrantes }}
                                         <option value="{{ .ID }}">{{ .Nombre }} {{ .Apellido }} ({{ .Especializacion }})</option>
                                         {{ end }}
                                     </select>
                                 </div>
-                                <div id="contenedor_autor_externo" style="display: none;">
-                                    <input type="text" class="form-control form-control-sm" id="autor_historico" name="autor_historico" placeholder="Nombre completo del autor">
+                                <div class="box-autor-externo" style="display: none;">
+                                    <input type="text" class="form-control form-control-sm input-autor-externo" placeholder="Nombre completo del autor">
                                 </div>
                             </div>
                         </div>
+                    </template>
 
-                        <!-- Tarjeta Director -->
-                        <div class="col-md-4">
+                    <div class="row g-3 mb-3">
+
+                        <div class="col-md-6">
                             <div class="group-card h-100 active-group">
                                 <div class="d-flex align-items-center gap-2 mb-2">
                                     <div class="group-icon-badge badge-gis-icon">
@@ -173,8 +227,7 @@
                             </div>
                         </div>
 
-                        <!-- Tarjeta Co-Director -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="group-card h-100">
                                 <div class="d-flex align-items-center gap-2 mb-2">
                                     <div class="group-icon-badge badge-lacis-icon">
@@ -215,7 +268,6 @@
                         </div>
                     </div>
 
-                    <!-- SECCIÓN 3: DOCUMENTO ADJUNTO (PDF) -->
                     <div class="form-section-subtitle mt-4">
                         <i class="bi bi-file-earmark-pdf-fill me-2" style="color: var(--azul-logo);"></i>3. Documento de Tesis en PDF
                     </div>
@@ -228,7 +280,6 @@
                         </div>
                     </div>
 
-                    <!-- SECCIÓN 4: RESUMEN / ABSTRACT -->
                     <div class="form-section-subtitle mt-4">
                         <i class="bi bi-card-text me-2" style="color: var(--azul-logo);"></i>4. Resumen / Abstract
                     </div>
@@ -240,7 +291,6 @@
                         </div>
                     </div>
 
-                    <!-- Botones de Acción -->
                     <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
                         <a href="/admin/tesis" class="btn btn-outline-secondary px-4 rounded-pill">
                             <i class="bi bi-x-circle me-1"></i> Cancelar
@@ -256,13 +306,11 @@
         </div>
     </main>
 
-    <!-- Footer Compartido -->
     <footer>
         {{ template "footer" . }}
     </footer>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/ui/static/js-GIS/formularioTesis.js"></script>
+    <script src="/ui/static/js-GIS/formularioTesis.js?v=1.2"></script>
 </body>
 </html>

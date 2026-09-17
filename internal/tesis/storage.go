@@ -75,7 +75,6 @@ func (s *PostgresStorage) Create(t *Tesis) error {
 		return fmt.Errorf("error al insertar tesis en PostgreSQL: %w", err)
 	}
 
-	// Insertar integrantes secundarios en integrantes_tesis si existen
 	if len(t.IntegrantesIDs) > 0 {
 		for _, intID := range t.IntegrantesIDs {
 			if intID > 0 {
@@ -172,7 +171,6 @@ func (s *PostgresStorage) Read(id int) (*Tesis, error) {
 		t.ProyectoID = &val
 	}
 
-	// Cargar integrantes_tesis vinculados
 	intRows, err := s.db.Query(`SELECT integrante_id FROM integrantes_tesis WHERE tesis_id = $1`, id)
 	if err == nil {
 		defer intRows.Close()
@@ -181,6 +179,26 @@ func (s *PostgresStorage) Read(id int) (*Tesis, error) {
 			if errScan := intRows.Scan(&iID); errScan == nil {
 				t.IntegrantesIDs = append(t.IntegrantesIDs, iID)
 			}
+		}
+	}
+
+	if len(t.IntegrantesIDs) > 0 {
+		secRows, errSec := s.db.Query(`
+			SELECT i.nombre || ' ' || i.apellido 
+			FROM integrantes_tesis it 
+			JOIN integrante i ON it.integrante_id = i.id 
+			WHERE it.tesis_id = $1 
+			ORDER BY it.id`, id)
+		if errSec == nil {
+			defer secRows.Close()
+			var secNombres []string
+			for secRows.Next() {
+				var sn string
+				if errScan := secRows.Scan(&sn); errScan == nil && sn != "" {
+					secNombres = append(secNombres, sn)
+				}
+			}
+			t.AutoresSecundarios = strings.Join(secNombres, ", ")
 		}
 	}
 
@@ -207,11 +225,18 @@ func (s *PostgresStorage) GetAll() ([]Tesis, error) {
 			t.proyecto_id,
 			COALESCE(ia.nombre || ' ' || ia.apellido, ''),
 			COALESCE(id_dir.nombre || ' ' || id_dir.apellido, ''),
-			COALESCE(ic.nombre || ' ' || ic.apellido, '')
+			COALESCE(ic.nombre || ' ' || ic.apellido, ''),
+			COALESCE(sec.nombres, '')
 		FROM tesis t
 		LEFT JOIN integrante ia ON t.autor_id = ia.id
 		LEFT JOIN integrante id_dir ON t.director_id = id_dir.id
 		LEFT JOIN integrante ic ON t.coodirector_id = ic.id
+		LEFT JOIN (
+			SELECT it.tesis_id, string_agg(i.nombre || ' ' || i.apellido, ', ' ORDER BY it.id) as nombres
+			FROM integrantes_tesis it
+			JOIN integrante i ON it.integrante_id = i.id
+			GROUP BY it.tesis_id
+		) sec ON t.id = sec.tesis_id
 		ORDER BY t.anio DESC NULLS LAST, t.id DESC`
 
 	rows, err := s.db.Query(query)
@@ -225,7 +250,7 @@ func (s *PostgresStorage) GetAll() ([]Tesis, error) {
 		var t Tesis
 		var anioVal sql.NullInt64
 		var autorID, dirID, coodirID, proyID sql.NullInt64
-		var autorNom, dirNom, coodirNom string
+		var autorNom, dirNom, coodirNom, secNom string
 
 		errScan := rows.Scan(
 			&t.ID,
@@ -246,6 +271,7 @@ func (s *PostgresStorage) GetAll() ([]Tesis, error) {
 			&autorNom,
 			&dirNom,
 			&coodirNom,
+			&secNom,
 		)
 		if errScan != nil {
 			return nil, fmt.Errorf("error al escanear tesis: %w", errScan)
@@ -274,6 +300,7 @@ func (s *PostgresStorage) GetAll() ([]Tesis, error) {
 			val := int(proyID.Int64)
 			t.ProyectoID = &val
 		}
+		t.AutoresSecundarios = secNom
 
 		lista = append(lista, t)
 	}
@@ -305,11 +332,18 @@ func (s *PostgresStorage) GetByCarrera(carrera string) ([]Tesis, error) {
 			t.proyecto_id,
 			COALESCE(ia.nombre || ' ' || ia.apellido, ''),
 			COALESCE(id_dir.nombre || ' ' || id_dir.apellido, ''),
-			COALESCE(ic.nombre || ' ' || ic.apellido, '')
+			COALESCE(ic.nombre || ' ' || ic.apellido, ''),
+			COALESCE(sec.nombres, '')
 		FROM tesis t
 		LEFT JOIN integrante ia ON t.autor_id = ia.id
 		LEFT JOIN integrante id_dir ON t.director_id = id_dir.id
 		LEFT JOIN integrante ic ON t.coodirector_id = ic.id
+		LEFT JOIN (
+			SELECT it.tesis_id, string_agg(i.nombre || ' ' || i.apellido, ', ' ORDER BY it.id) as nombres
+			FROM integrantes_tesis it
+			JOIN integrante i ON it.integrante_id = i.id
+			GROUP BY it.tesis_id
+		) sec ON t.id = sec.tesis_id
 		WHERE LOWER(t.carrera_origen) = LOWER($1)
 		ORDER BY t.anio DESC NULLS LAST, t.id DESC`
 
@@ -324,7 +358,7 @@ func (s *PostgresStorage) GetByCarrera(carrera string) ([]Tesis, error) {
 		var t Tesis
 		var anioVal sql.NullInt64
 		var autorID, dirID, coodirID, proyID sql.NullInt64
-		var autorNom, dirNom, coodirNom string
+		var autorNom, dirNom, coodirNom, secNom string
 
 		errScan := rows.Scan(
 			&t.ID,
@@ -345,6 +379,7 @@ func (s *PostgresStorage) GetByCarrera(carrera string) ([]Tesis, error) {
 			&autorNom,
 			&dirNom,
 			&coodirNom,
+			&secNom,
 		)
 		if errScan != nil {
 			return nil, fmt.Errorf("error al escanear tesis: %w", errScan)
@@ -373,6 +408,7 @@ func (s *PostgresStorage) GetByCarrera(carrera string) ([]Tesis, error) {
 			val := int(proyID.Int64)
 			t.ProyectoID = &val
 		}
+		t.AutoresSecundarios = secNom
 
 		lista = append(lista, t)
 	}
@@ -400,11 +436,18 @@ func (s *PostgresStorage) GetByNivel(nivel string) ([]Tesis, error) {
 			t.proyecto_id,
 			COALESCE(ia.nombre || ' ' || ia.apellido, ''),
 			COALESCE(id_dir.nombre || ' ' || id_dir.apellido, ''),
-			COALESCE(ic.nombre || ' ' || ic.apellido, '')
+			COALESCE(ic.nombre || ' ' || ic.apellido, ''),
+			COALESCE(sec.nombres, '')
 		FROM tesis t
 		LEFT JOIN integrante ia ON t.autor_id = ia.id
 		LEFT JOIN integrante id_dir ON t.director_id = id_dir.id
 		LEFT JOIN integrante ic ON t.coodirector_id = ic.id
+		LEFT JOIN (
+			SELECT it.tesis_id, string_agg(i.nombre || ' ' || i.apellido, ', ' ORDER BY it.id) as nombres
+			FROM integrantes_tesis it
+			JOIN integrante i ON it.integrante_id = i.id
+			GROUP BY it.tesis_id
+		) sec ON t.id = sec.tesis_id
 		WHERE LOWER(t.nivel) = LOWER($1)
 		ORDER BY t.anio DESC NULLS LAST, t.id DESC`
 
@@ -419,7 +462,7 @@ func (s *PostgresStorage) GetByNivel(nivel string) ([]Tesis, error) {
 		var t Tesis
 		var anioVal sql.NullInt64
 		var autorID, dirID, coodirID, proyID sql.NullInt64
-		var autorNom, dirNom, coodirNom string
+		var autorNom, dirNom, coodirNom, secNom string
 
 		errScan := rows.Scan(
 			&t.ID,
@@ -440,6 +483,7 @@ func (s *PostgresStorage) GetByNivel(nivel string) ([]Tesis, error) {
 			&autorNom,
 			&dirNom,
 			&coodirNom,
+			&secNom,
 		)
 		if errScan != nil {
 			return nil, fmt.Errorf("error al escanear tesis: %w", errScan)
@@ -468,6 +512,7 @@ func (s *PostgresStorage) GetByNivel(nivel string) ([]Tesis, error) {
 			val := int(proyID.Int64)
 			t.ProyectoID = &val
 		}
+		t.AutoresSecundarios = secNom
 
 		lista = append(lista, t)
 	}
@@ -606,7 +651,6 @@ func (s *PostgresStorage) Update(id int, fields UpdateFields) error {
 		return ErrNotFound
 	}
 
-	// Si se enviaron IntegrantesIDs, sincronizar tabla intermedia
 	if fields.IntegrantesIDs != nil {
 		_, _ = s.db.Exec(`DELETE FROM integrantes_tesis WHERE tesis_id = $1`, id)
 		for _, intID := range fields.IntegrantesIDs {

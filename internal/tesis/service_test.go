@@ -16,11 +16,11 @@ func (m *MockStorage) Create(t *Tesis) error {
 func (m *MockStorage) Read(id int) (*Tesis, error) {
 	anio := 2024
 	return &Tesis{
-		ID:            id,
-		Titulo:        "Optimización de Procesos de Calidad de Software",
-		Nivel:         "Doctorado",
-		CarreraOrigen: "Doctorado en Ingeniería Informática",
-		Anio:          &anio,
+		ID:             id,
+		Titulo:         "Optimización de Procesos de Calidad de Software",
+		Nivel:          "Doctorado",
+		CarreraOrigen:  "Doctorado en Ingeniería Informática",
+		Anio:           &anio,
 		AutorHistorico: "Ing. Juan Pérez",
 	}, nil
 }
@@ -30,11 +30,11 @@ func (m *MockStorage) GetAll() ([]Tesis, error) {
 	anio := 2024
 	return []Tesis{
 		{
-			ID:            1,
-			Titulo:        "Optimización de Procesos de Calidad de Software",
-			Nivel:         "Doctorado",
-			CarreraOrigen: "Doctorado en Ingeniería Informática",
-			Anio:          &anio,
+			ID:             1,
+			Titulo:         "Optimización de Procesos de Calidad de Software",
+			Nivel:          "Doctorado",
+			CarreraOrigen:  "Doctorado en Ingeniería Informática",
+			Anio:           &anio,
 			AutorHistorico: "Ing. Juan Pérez",
 		},
 	}, nil
@@ -221,4 +221,76 @@ func TestDelete_Exitoso(t *testing.T) {
 
 	err := srv.Delete(1)
 	assert.NoError(t, err)
+}
+
+func TestCreate_Grado_Hasta4Autores_Exitoso(t *testing.T) {
+	mock := &MockStorage{}
+	srv := NewService(mock, zap.NewNop())
+	anio := 2025
+	autorID := 1
+
+	tesis := &Tesis{
+		Titulo:         "Sistema Inteligente para Monitoreo de Software",
+		Nivel:          "Grado",
+		CarreraOrigen:  "Ingeniería en Informática",
+		Anio:           &anio,
+		AutorID:        &autorID,
+		IntegrantesIDs: []int{2, 3},
+		AutorHistorico: "Alumno Externo",
+	}
+
+	err := srv.Create(tesis)
+	assert.NoError(t, err)
+}
+
+func TestCreate_Grado_MasDe4Autores_DebeDevolverError(t *testing.T) {
+	mock := &MockStorage{}
+	srv := NewService(mock, zap.NewNop())
+	anio := 2025
+	autorID := 1
+
+	tesis := &Tesis{
+		Titulo:         "Sistema Inteligente para Monitoreo de Software",
+		Nivel:          "Grado",
+		CarreraOrigen:  "Ingeniería en Informática",
+		Anio:           &anio,
+		AutorID:        &autorID,
+		IntegrantesIDs: []int{2, 3, 4},
+		AutorHistorico: "Alumno Externo",
+	}
+
+	err := srv.Create(tesis)
+	assert.Error(t, err)
+	assert.Equal(t, ErrMaxAutoresExcedido, err)
+}
+
+func TestCreate_Posgrado_MasDe1Autor_DebeDevolverError(t *testing.T) {
+	mock := &MockStorage{}
+	srv := NewService(mock, zap.NewNop())
+	anio := 2025
+	autorID := 1
+
+	tesis := &Tesis{
+		Titulo:         "Tesis Doctoral Avanzada",
+		Nivel:          "Doctorado",
+		CarreraOrigen:  "Doctorado en Ingeniería Informática",
+		Anio:           &anio,
+		AutorID:        &autorID,
+		IntegrantesIDs: []int{2},
+	}
+
+	err := srv.Create(tesis)
+	assert.Error(t, err)
+	assert.Equal(t, ErrMaxAutoresExcedido, err)
+}
+
+func TestGetAutorDisplay_MultiplesAutores(t *testing.T) {
+	tesis := &Tesis{
+		AutorNombre:        "Juan Pérez",
+		AutoresSecundarios: "Lucas Gómez, Ana Torres",
+		AutorHistorico:     "Martín Rossi",
+	}
+
+	display := tesis.GetAutorDisplay()
+	assert.Equal(t, "Juan Pérez, Lucas Gómez, Ana Torres, Martín Rossi", display)
 }

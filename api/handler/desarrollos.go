@@ -21,16 +21,12 @@ func NewDesarrolloHandler(s *desarrollo.Service, is *integrante.Service, l *zap.
 	return &DesarrolloHandler{service: s, integranteService: is, logger: l}
 }
 
-// DesarrolloConParticipantes es lo que consume ListaDesarrollos.html: el
-// desarrollo con sus integrantes registrados y sus participantes externos
-// ya resueltos, listos para pintar el acordeón.
 type DesarrolloConParticipantes struct {
 	desarrollo.Desarrollo
 	Integrantes           []integrante.Integrante
 	ParticipantesExternos []string
 }
 
-// 1. Ver "Gestión de Desarrollos" (acordeón)
 func (h *DesarrolloHandler) Lista(c *gin.Context) {
 	desarrollos, err := h.service.GetAll()
 	if err != nil {
@@ -56,7 +52,6 @@ func (h *DesarrolloHandler) Lista(c *gin.Context) {
 	})
 }
 
-// 2. Mostrar Formulario de Carga
 func (h *DesarrolloHandler) Crear(c *gin.Context) {
 	integrantes, _ := h.integranteService.GetAll()
 	c.HTML(http.StatusOK, "CrearDesarrollo.html", gin.H{
@@ -65,9 +60,6 @@ func (h *DesarrolloHandler) Crear(c *gin.Context) {
 	})
 }
 
-// leerParticipantesDelForm interpreta los dos campos que genera
-// participantesWidget.js: "integrantes" (IDs de integrantes ya registrados)
-// y "externos" (nombres sueltos de participantes sin ficha).
 func leerParticipantesDelForm(c *gin.Context) (integranteIDs []int, externos []string) {
 	for _, idStr := range c.PostFormArray("integrantes") {
 		if id, err := strconv.Atoi(idStr); err == nil {
@@ -78,7 +70,6 @@ func leerParticipantesDelForm(c *gin.Context) (integranteIDs []int, externos []s
 	return integranteIDs, externos
 }
 
-// Procesar el Formulario de Carga (POST)
 func (h *DesarrolloHandler) Insertar(c *gin.Context) {
 	anio, _ := strconv.Atoi(c.PostForm("anio"))
 
@@ -113,7 +104,6 @@ func (h *DesarrolloHandler) Insertar(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/admin/desarrollos")
 }
 
-// Mostrar Formulario de Editar precargado
 func (h *DesarrolloHandler) Editar(c *gin.Context) {
 	idParam := c.Query("id")
 	id, err := strconv.Atoi(idParam)
@@ -141,7 +131,6 @@ func (h *DesarrolloHandler) Editar(c *gin.Context) {
 	})
 }
 
-// Procesar la Actualización (POST)
 func (h *DesarrolloHandler) Actualizar(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	if id <= 0 {
@@ -192,7 +181,6 @@ func (h *DesarrolloHandler) Actualizar(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/admin/desarrollos")
 }
 
-// Eliminar Registro
 func (h *DesarrolloHandler) Borrar(c *gin.Context) {
 	idParam := c.Query("id")
 	id, err := strconv.Atoi(idParam)
@@ -204,19 +192,17 @@ func (h *DesarrolloHandler) Borrar(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/admin/desarrollos")
 }
 
-// ViewPublica renderiza la vista pública de desarrollos en Desarrollos.html
-func (h *DesarrolloHandler) ViewPublica(c *gin.Context) {
+func (h *DesarrolloHandler) ViewLacis(c *gin.Context) {
 	desarrollos, err := h.service.GetAll()
 	if err != nil {
-		h.logger.Error("Error al obtener desarrollos para vista pública Desarrollos.html", zap.Error(err))
+		h.logger.Error("Error al obtener desarrollos para la sección de productos de software en Lacis.html", zap.Error(err))
 		desarrollos = []desarrollo.Desarrollo{}
 	}
 
 	_, loggedIn := CurrentUserID(c)
 
-	c.HTML(http.StatusOK, "Desarrollos.html", gin.H{
+	c.HTML(http.StatusOK, "Lacis.html", gin.H{
 		"Desarrollos": desarrollos,
 		"LoggedIn":    loggedIn,
 	})
 }
-

@@ -75,7 +75,6 @@ function CargarLista() {
                 lista.appendChild(nuevoNom);
             });
 
-            // Mostrar el primer proyecto por defecto
             if (cacheProyectos.length > 0) {
                 mostrarDetalleProyecto(cacheProyectos[0]);
             }
@@ -120,11 +119,9 @@ function CargarLogros() {
 
                 const decript = document.createElement("p");
 
-                // Añadir contenido de texto
                 titulo.innerHTML = p.titulo;
                 decript.innerHTML = (p.descripcion || "").replace(/\n/g, '<br>');
 
-                // Anidar correctamente
                 cff.appendChild(icono);
                 cff.appendChild(titulo);
                 cfb.appendChild(decript);
@@ -219,7 +216,6 @@ function listaResponsive() {
         const listaContainer = document.getElementById("Lista");
         if (!listaContainer) return;
 
-        // Crear contenedores del carrusel
         const cs = document.createElement("div");
         cs.className = "carousel slide";
         cs.setAttribute('data-bs-ride', 'carousel');
@@ -228,7 +224,6 @@ function listaResponsive() {
         const ci = document.createElement("div");
         ci.className = "carousel-inner";
 
-        // Crear botones
         const btnPrev = document.createElement("button");
         btnPrev.className = "carousel-control-prev";
         btnPrev.setAttribute('data-bs-target', '#carouselExampleControls');
@@ -252,7 +247,6 @@ function listaResponsive() {
         const i2 = document.createElement("i");
         i2.className = "fa-solid fa-arrow-right";
 
-        // Añadir elementos
         listaContainer.appendChild(cs);
         cs.appendChild(ci);
         cs.appendChild(btnPrev);
@@ -263,7 +257,6 @@ function listaResponsive() {
         btnNext.appendChild(sp2);
         sp2.appendChild(i2);
 
-        // Crear elementos dinámicos desde API
         fetch('/api/v1/proyectos')
             .then(response => response.json())
             .then(data => {

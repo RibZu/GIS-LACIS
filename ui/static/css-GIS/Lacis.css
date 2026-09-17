@@ -1,13 +1,9 @@
-
-
-
 body {
     background: linear-gradient(to bottom, #ffffff, var(--color-fondo-claro));
     font-family: var(--bs-font-main);
     color: var(--color-texto-oscuro);
 }
 
-/* ══ HERO / PRINCIPAL ══ */
 .principal {
   position: relative;
   min-height: 100vh;
@@ -18,7 +14,6 @@ body {
   overflow: hidden;
 }
 
-/* Manchas decorativas */
 .principal::before {
   content: '';
   position: absolute;
@@ -38,8 +33,6 @@ body {
   pointer-events: none;
 }
 
-
-/* Título */
 .titulo {
   color: var(--color-texto-oscuro);
   font-size: clamp(2rem, 4.5vw, 3.2rem);
@@ -48,7 +41,6 @@ body {
   letter-spacing: -.5px;
 }
 
-/* Span verde — gradiente, sin border-bottom */
 .texto-verde {
   background:  var(--color-secundario);
   -webkit-background-clip: text;
@@ -64,7 +56,6 @@ body {
   max-width: 520px;
 }
 
-/* Imagen derecha */
 .principal-logo img {
   border-radius: 22px;
   box-shadow:
@@ -82,7 +73,6 @@ body {
     0 6px 24px rgba(0,0,0,.12),
     0 28px 70px rgba(0,0,0,.18);
 }
-
 
 .hero-btn-primary {
   display: inline-flex;
@@ -127,11 +117,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* Link hacia /desarrollos: mismo verde de marca que los botones del hero,
-   en una pastilla suave (no sólida) para que se note más que un link de
-   texto plano sin llegar a competir con los 3 CTA principales. Va debajo
-   de los 3 botones, alineado a la izquierda con ellos (no flotando a la
-   derecha, que se leía como desconectado del grupo). */
 .hero-link-desarrollos-wrap {
   display: flex;
   justify-content: flex-start;
@@ -249,7 +234,6 @@ body {
   margin: 0.6rem auto 0;
 }
 
-
 .lacis-card {
   border: 1px solid rgba(139,195,74,.2) !important;
   border-radius: var(--bs-border-radius-xl);
@@ -366,7 +350,7 @@ body {
     width: 100%;
     min-height: 25rem;
     transition: transform 0.6s;
-   
+
 }
 
 .carta-flipped-interior {
@@ -409,7 +393,7 @@ body {
 }
 @media (max-width: 580px){
     body, html {
-    overflow-x: hidden; 
+    overflow-x: hidden;
 }
 
 }
@@ -431,6 +415,60 @@ body {
   max-width: 600px; font-size: 1.05rem; line-height: 1.8;
 }
 
-/* TERMINA LACIS */
+#productos-software {
 
+  scroll-margin-top: 90px;
+}
 
+.lacis-card-producto {
+  text-align: left;
+  min-height: auto;
+}
+
+.lacis-card-producto .card-body {
+  text-align: left;
+}
+
+.lacis-card-producto .card-icon-container {
+  width: 50px;
+  height: 50px;
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.producto-year-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: rgba(139, 195, 74, .15);
+  color: var(--color-principal);
+}
+
+.producto-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.75rem;
+  color: var(--lacis-primary);
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-bottom: 2px solid var(--color-secundario);
+  padding-bottom: 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.producto-cta:hover {
+  color: var(--color-principal);
+  border-color: var(--color-principal);
+}
+
+.producto-cta i {
+  font-size: 0.78rem;
+  transition: transform 0.2s ease;
+}
+
+.producto-cta:hover i {
+  transform: translateX(3px);
+}

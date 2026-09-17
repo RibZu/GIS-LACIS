@@ -16,7 +16,6 @@ type IntegranteHandler struct {
 	logger  *zap.Logger
 }
 
-// NewIntegranteHandler crea un nuevo controlador de integrantes
 func NewIntegranteHandler(s *integrante.Service, l *zap.Logger) *IntegranteHandler {
 	return &IntegranteHandler{
 		service: s,
@@ -24,7 +23,6 @@ func NewIntegranteHandler(s *integrante.Service, l *zap.Logger) *IntegranteHandl
 	}
 }
 
-// 1. Ver Lista de Integrantes de PostgreSQL en la Plantilla HTML
 func (h *IntegranteHandler) Lista(c *gin.Context) {
 	integrantes, err := h.service.GetAll()
 	if err != nil {
@@ -39,12 +37,10 @@ func (h *IntegranteHandler) Lista(c *gin.Context) {
 	})
 }
 
-// 2. Mostrar Formulario de Crear
 func (h *IntegranteHandler) Crear(c *gin.Context) {
 	c.HTML(http.StatusOK, "Crear.html", gin.H{"LoggedIn": true})
 }
 
-// Procesar el Formulario Crear (POST)
 func (h *IntegranteHandler) Insertar(c *gin.Context) {
 	perteneceLacis := c.PostForm("pertenece_lacis") == "true" || c.PostForm("pertenece_lacis") == "on"
 	perteneceSoftware := c.PostForm("pertenece_grupo_software") == "true" || c.PostForm("pertenece_grupo_software") == "on"
@@ -113,7 +109,6 @@ func (h *IntegranteHandler) Insertar(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/admin/integrantes")
 }
 
-// Mostrar Formulario de Editar precargado
 func (h *IntegranteHandler) Editar(c *gin.Context) {
 	idParam := c.Query("id")
 	id, err := strconv.Atoi(idParam)
@@ -134,7 +129,6 @@ func (h *IntegranteHandler) Editar(c *gin.Context) {
 	})
 }
 
-// Procesar la Actualización (POST) - Solo permite modificar: título, CV, resumen y rol/pertenencia
 func (h *IntegranteHandler) Actualizar(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	if id <= 0 {
@@ -199,7 +193,6 @@ func (h *IntegranteHandler) Actualizar(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/admin/integrantes")
 }
 
-// Eliminar Registro
 func (h *IntegranteHandler) Borrar(c *gin.Context) {
 	idParam := c.Query("id")
 	id, err := strconv.Atoi(idParam)
@@ -211,8 +204,6 @@ func (h *IntegranteHandler) Borrar(c *gin.Context) {
 
 	c.Redirect(http.StatusSeeOther, "/admin/integrantes")
 }
-
-// REST API JSON ENDPOINTS (Opcionales para Postman)
 
 func (ih *IntegranteHandler) API_GetAll(c *gin.Context) {
 	integrantes, err := ih.service.GetAll()

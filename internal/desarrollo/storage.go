@@ -149,8 +149,6 @@ func (s *PostgresStorage) Update(id int, fields UpdateFields) error {
 	return nil
 }
 
-// -------- Vínculo con integrantes registrados (desarrollo_integrantes) --------
-
 func (s *PostgresStorage) SetIntegrantes(desarrolloID int, integranteIDs []int) error {
 	tx, err := s.db.Begin()
 	if err != nil {
@@ -197,8 +195,6 @@ func (s *PostgresStorage) GetIntegrantes(desarrolloID int) ([]integrante.Integra
 	}
 	return lista, rows.Err()
 }
-
-// -------- Participantes externos (participante_externo) --------
 
 func (s *PostgresStorage) SetParticipantesExternos(desarrolloID int, nombres []string) error {
 	tx, err := s.db.Begin()

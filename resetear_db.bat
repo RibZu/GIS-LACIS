@@ -10,7 +10,6 @@ echo desde cero usando el archivo "Modelo Base de datos.sql".
 echo.
 pause
 
-REM Buscar PostgreSQL en C:\Program Files\PostgreSQL
 set "PG_PATH="
 for /d %%D in ("C:\Program Files\PostgreSQL\*") do (
     if exist "%%D\bin\initdb.exe" (
