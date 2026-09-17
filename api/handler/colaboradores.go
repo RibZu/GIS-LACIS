@@ -54,7 +54,6 @@ func (h *ColaboradorHandler) View_ColaboradoresAdmin(c *gin.Context) {
 	c.HTML(http.StatusOK, "EditarColaboradores.html", gin.H{"LoggedIn": true})
 }
 
-// Helper to handle file upload
 func (h *ColaboradorHandler) saveLogoFile(c *gin.Context) (string, error) {
 	file, err := c.FormFile("logo")
 	if err != nil {
@@ -64,16 +63,16 @@ func (h *ColaboradorHandler) saveLogoFile(c *gin.Context) (string, error) {
 		return "", err
 	}
 
-	// Save to ui/static/assets/img-GIS
+	// guardar en ui/static/assets/img-GIS
 	ext := filepath.Ext(file.Filename)
 	filename := fmt.Sprintf("colab_%d%s", time.Now().UnixNano(), ext)
-	uploadPath := filepath.Join("ui", "static", "assets", "img-GIS", filename)
+	uploadPath := filepath.Join("ui", "static", "assets", "img-GIS", "colabLogo", filename)
 
 	if err := c.SaveUploadedFile(file, uploadPath); err != nil {
 		return "", err
 	}
 
-	return "/static/assets/img-GIS/" + filename, nil
+	return "/static/assets/img-GIS/colabLogo/" + filename, nil
 }
 
 // API_Create crea un nuevo colaborador desde form-data

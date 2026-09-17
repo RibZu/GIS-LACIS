@@ -24,13 +24,14 @@
     <link rel="stylesheet" href="/static/css-GIS/abm-proyectos.css">
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column">
 
-
-    <!-- Header / Navbar Compartido -->
     <header>
         {{ template "nav" . }}
     </header>
+
+    {{ template "subheader-modulo" . }}
+    
 
     <main class="container-fluid px-4 my-4 flex-grow-1 pt-5">
 
