@@ -33,3 +33,17 @@ function initGrupoToggle(nombreGrupo, checkId, cardId, contenedorId, selectId) {
 
     actualizarEstado();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', () => {
+            const btn = form.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Guardando...';
+                btn.style.pointerEvents = 'none';
+            }
+        });
+    }
+});
+

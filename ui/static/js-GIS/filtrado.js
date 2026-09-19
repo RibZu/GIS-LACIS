@@ -3,36 +3,65 @@ let claseTituloDirector = document.querySelector(".titulo-director");
 
 function AjustarColumnasDirectoresDeLinea(cantidad) {
   const contenedor = document.getElementById("contenedor-directores-deLinea");
+  if (!contenedor) return;
   contenedor.classList.remove("row-cols-lg-2", "row-cols-lg-3");
   contenedor.classList.add(cantidad >= 3 ? "row-cols-lg-3" : "row-cols-lg-2");
 }
 
+let grupoActual = "todas";
+
 function filtrarCartas(clase) {
+  if (clase === "todas" || clase === "lacis") {
+    grupoActual = clase;
+  }
 
-  contenedorPrincipalDeDirector.innerHTML = "";
-  contenedorPrincipalDeDirectoresDeLinea.innerHTML = "";
-  contenedorPrincipalDeIntegrantes.innerHTML = "";
+  if (typeof contenedorPrincipalDeDirector !== "undefined" && contenedorPrincipalDeDirector) {
+    contenedorPrincipalDeDirector.innerHTML = "";
+  }
+  if (typeof contenedorPrincipalDeDirectoresDeLinea !== "undefined" && contenedorPrincipalDeDirectoresDeLinea) {
+    contenedorPrincipalDeDirectoresDeLinea.innerHTML = "";
+  }
+  if (typeof contenedorPrincipalDeIntegrantes !== "undefined" && contenedorPrincipalDeIntegrantes) {
+    contenedorPrincipalDeIntegrantes.innerHTML = "";
+  }
 
-  let filtradosIntegrantes;
-  let filtradosDirectores;
-  let filtradosDirector;
+  let filtradosIntegrantes = [];
+  let filtradosDirectores = [];
+  let filtradosDirector = [];
 
-  if(clase==="todas"){
-     filtradosIntegrantes=todos_los_integrantes;
-     filtradosDirectores=todos_los_directores;
-    filtradosDirector=director;
-  }else if(clase==="lacis"){
-
+  if (clase === "todas") {
+    filtradosIntegrantes = todos_los_integrantes;
+    filtradosDirectores = todos_los_directores;
+    filtradosDirector = director;
+  } else if (clase === "lacis") {
     filtradosDirector = directorLacis;
     filtradosDirectores = todos_los_directoresLacis;
-    filtradosIntegrantes= todos_los_integrantes_lacis;
+    filtradosIntegrantes = todos_los_integrantes_lacis;
+  } else if (clase === "director") {
+    if (grupoActual === "lacis") {
+      filtradosDirector = directorLacis;
+      filtradosDirectores = todos_los_directoresLacis;
+    } else {
+      filtradosDirector = director;
+      filtradosDirectores = todos_los_directores;
+    }
+  } else {
+    let baseIntegrantes = (grupoActual === "lacis") ? todos_los_integrantes_lacis : todos_los_integrantes;
+    filtradosIntegrantes = baseIntegrantes.filter(p => p.clase_rol === clase);
 
-   } else{
+    if (clase === "estudiante") {
+      let extra = baseIntegrantes.filter(p => p.clase_rol === "becario");
+      extra.forEach(ex => {
+        if (!filtradosIntegrantes.some(f => f.id === ex.id || f.nombre === ex.nombre)) {
+          filtradosIntegrantes.push(ex);
+        }
+      });
+    }
 
-    filtradosIntegrantes= todos_los_integrantes.filter(p=> p.clase_rol===clase);
-    filtradosDirectores=todos_los_directores.filter(p=> p.clase_rol===clase);
-    filtradosDirector=director.filter(p => p.clase_rol===clase);
-
+    let baseDirectores = (grupoActual === "lacis") ? todos_los_directoresLacis : todos_los_directores;
+    filtradosDirectores = baseDirectores.filter(p => p.clase_rol === clase);
+    let baseDirector = (grupoActual === "lacis") ? directorLacis : director;
+    filtradosDirector = baseDirector.filter(p => p.clase_rol === clase);
   }
 
   CrearCartaIntegrantes(filtradosIntegrantes);
@@ -41,57 +70,58 @@ function filtrarCartas(clase) {
 
   AjustarColumnasDirectoresDeLinea(filtradosDirectores.length);
 
-  AOS.refreshHard();
+  if (typeof AOS !== 'undefined') {
+    AOS.refreshHard();
+  }
 }
 
-let filtroBoton=document.querySelectorAll(".filtro-btn");
+let filtroBoton = document.querySelectorAll(".filtro-btn");
 
 filtroBoton.forEach(boton => {
-
   boton.addEventListener("click", () => {
-
     let id = boton.id;
     let clase = "";
+
+    filtroBoton.forEach(b => b.classList.remove("active"));
+    boton.classList.add("active");
 
     switch (id) {
       case "todos":
         clase = "todas";
-        claseTituloIntegrantes.style.display="block";
-        claseTituloDirector.style.display="block";
+        if (claseTituloIntegrantes) claseTituloIntegrantes.style.display = "block";
+        if (claseTituloDirector) claseTituloDirector.style.display = "block";
         break;
       case "lacis":
         clase = "lacis";
-        claseTituloIntegrantes.style.display="block";
-        claseTituloDirector.style.display="block";
+        if (claseTituloIntegrantes) claseTituloIntegrantes.style.display = "block";
+        if (claseTituloDirector) claseTituloDirector.style.display = "block";
         break;
       case "director":
         clase = "director";
-        claseTituloIntegrantes.style.display="none";
-        claseTituloDirector.style.display="block";
-
+        if (claseTituloIntegrantes) claseTituloIntegrantes.style.display = "none";
+        if (claseTituloDirector) claseTituloDirector.style.display = "block";
         break;
       case "investigador":
         clase = "investigador";
-        claseTituloDirector.style.display="none";
-        claseTituloIntegrantes.style.display="block";
-
+        if (claseTituloDirector) claseTituloDirector.style.display = "none";
+        if (claseTituloIntegrantes) claseTituloIntegrantes.style.display = "block";
         break;
       case "estudiante":
         clase = "estudiante";
-        claseTituloDirector.style.display="none";
-        claseTituloIntegrantes.style.display="block";
-
+        if (claseTituloDirector) claseTituloDirector.style.display = "none";
+        if (claseTituloIntegrantes) claseTituloIntegrantes.style.display = "block";
         break;
       case "asesorExterno":
         clase = "asesor-externo";
-        claseTituloDirector.style.display="none";
-        claseTituloIntegrantes.style.display="block";
-
+        if (claseTituloDirector) claseTituloDirector.style.display = "none";
+        if (claseTituloIntegrantes) claseTituloIntegrantes.style.display = "block";
         break;
     }
 
     let offcanvas = document.getElementById('offcanvasWithBothOptions');
-    bootstrap.Offcanvas.getInstance(offcanvas)?.hide();
+    if (offcanvas && typeof bootstrap !== 'undefined') {
+      bootstrap.Offcanvas.getInstance(offcanvas)?.hide();
+    }
 
     filtrarCartas(clase);
   });

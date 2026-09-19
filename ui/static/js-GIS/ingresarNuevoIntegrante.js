@@ -372,48 +372,204 @@ function CrearCartaIntegrantes(datos){
 
 }
 
-fetch('../../static/json-GIS/director.json')
-  .then(response => response.json())
-  .then(data => {
-    director=data;
-    CrearCartaDirector(director);
-    if (typeof AOS !== 'undefined') AOS.refreshHard();
+function mapearIntegranteDesdeAPI(item, grupo, rolForzado, claseRolForzada) {
+  let nombreCompleto = (item.nombre + " " + (item.apellido || "")).trim();
+  let rolId = (grupo === "lacis" && item.rol_lacis_id) ? item.rol_lacis_id : (item.rol_software_id || item.rol_id || 2);
 
-  })
+  let rol = rolForzado;
+  let claseRol = claseRolForzada;
+
+  if (!rol) {
+    if (rolId === 1) {
+      let desc = (item.descripcion || "").toLowerCase();
+      let nom = nombreCompleto.toLowerCase();
+      rol = (desc.includes("co-director") || nom.includes("co-director") || nom.includes("beron") || nom.includes("berón") || nom.includes("peralta")) ? "CO-DIRECTOR" : "DIRECTOR";
+      claseRol = "director";
+    } else if (rolId === 2) {
+      rol = "INVESTIGADOR";
+      claseRol = "investigador";
+    } else if (rolId === 3) {
+      rol = "ASESOR EXTERNO";
+      claseRol = "asesor-externo";
+    } else if (rolId === 4) {
+      let desc = (item.descripcion || "").toLowerCase();
+      rol = desc.includes("becari") ? "BECARIO" : "ESTUDIANTE";
+      claseRol = desc.includes("becari") ? "becario" : "estudiante";
+    } else {
+      rol = "INVESTIGADOR";
+      claseRol = "investigador";
+    }
+  }
+
+  let mail = (item.contacto && item.contacto.includes("@")) ? item.contacto.trim() : "";
+  let linkedin = item.contacto_linkedin ? item.contacto_linkedin.trim() : ((item.contacto && item.contacto.includes("http")) ? item.contacto.trim() : "");
+
+  return {
+    id: item.id,
+    nombre: nombreCompleto,
+    imagen: item.imagen || "",
+    cv: item.cv || "",
+    mail: mail,
+    linkedin: linkedin,
+    especializacion: item.especializacion || "",
+    descripcion: item.descripcion || "",
+    rol: rol,
+    clase_rol: claseRol,
+    grupo: grupo
+  };
+}
+
+function cargarIntegrantesDesdeAPI() {
+  fetch('/api/v1/integrantes')
+    .then(response => {
+      if (!response.ok) throw new Error("Error HTTP " + response.status);
+      return response.json();
+    })
+    .then(data => {
+      if (!Array.isArray(data) || data.length === 0) {
+        cargarDesdeJSONFallback();
+        return;
+      }
+
+      director = [];
+      todos_los_directores = [];
+      todos_los_integrantes = [];
+      directorLacis = [];
+      todos_los_directoresLacis = [];
+      todos_los_integrantes_lacis = [];
+
+      data.forEach(item => {
+        let nomLower = (item.nombre + " " + (item.apellido || "")).toLowerCase();
+        let isLacis = item.pertenece_lacis;
+        let isSoftware = item.pertenece_grupo_software;
+        let rolId = item.rol_id;
+        let rolSoft = item.rol_software_id;
+        let rolLacis = item.rol_lacis_id;
+
+       
+        if (item.id === 1 || nomLower.includes("montejano") || nomLower.includes("montegano")) {
+          director.push(mapearIntegranteDesdeAPI(item, "software", "DIRECTOR", "director"));
+        } else if (item.id === 2 || (nomLower.includes("beron") || nomLower.includes("berón")) && isSoftware) {
+          director.push(mapearIntegranteDesdeAPI(item, "software", "CO-DIRECTOR", "director"));
+        }
+       
+        else if (item.id === 3 || (nomLower.includes("salgado") && isSoftware)) {
+          todos_los_directores.push(mapearIntegranteDesdeAPI(item, "software", "DIRECTOR", "director"));
+        } else if (item.id === 4 || (nomLower.includes("garis") && isSoftware)) {
+          todos_los_directores.push(mapearIntegranteDesdeAPI(item, "software", "DIRECTOR", "director"));
+        }
+
+       
+        if (item.id === 5 || nomLower.includes("baigorria")) {
+          directorLacis.push(mapearIntegranteDesdeAPI(item, "lacis", "DIRECTOR", "director"));
+        } else if (item.id === 6 || nomLower.includes("peralta")) {
+          directorLacis.push(mapearIntegranteDesdeAPI(item, "lacis", "CO-DIRECTOR", "director"));
+        }
+    
+        if (item.id === 3 || (nomLower.includes("salgado") && isLacis)) {
+          todos_los_directoresLacis.push(mapearIntegranteDesdeAPI(item, "lacis", "DIRECTOR", "director"));
+        } else if (item.id === 4 || (nomLower.includes("garis") && isLacis)) {
+          todos_los_directoresLacis.push(mapearIntegranteDesdeAPI(item, "lacis", "DIRECTOR", "director"));
+        } else if (item.id === 7 || (nomLower.includes("sanchez") && nomLower.includes("alberto") && isLacis)) {
+          todos_los_directoresLacis.push(mapearIntegranteDesdeAPI(item, "lacis", "DIRECTOR", "director"));
+        }
+
+       
+        let esConocidoDir = [1, 2, 3, 4, 5, 6, 7].includes(item.id) ||
+          nomLower.includes("montejano") || nomLower.includes("montegano") ||
+          nomLower.includes("beron") || nomLower.includes("berón") ||
+          nomLower.includes("salgado") || nomLower.includes("garis") ||
+          nomLower.includes("baigorria") || nomLower.includes("peralta") ||
+          (nomLower.includes("sanchez") && nomLower.includes("alberto"));
+
+        if (!esConocidoDir) {
+          if (isSoftware && (rolSoft === 1 || rolId === 1)) {
+            todos_los_directores.push(mapearIntegranteDesdeAPI(item, "software"));
+          }
+          if (isLacis && (rolLacis === 1 || rolId === 1)) {
+            todos_los_directoresLacis.push(mapearIntegranteDesdeAPI(item, "lacis"));
+          }
+        }
+
+    
+        let esSoloDirectorGIS = (item.id === 1 || item.id === 2 || item.id === 3 || item.id === 4) ||
+          (!esConocidoDir && isSoftware && (rolSoft === 1 || rolId === 1));
+
+        if (!esSoloDirectorGIS) {
+          todos_los_integrantes.push(mapearIntegranteDesdeAPI(item, "software"));
+        }
+
+        let esDirectorLaCIS = (item.id === 3 || item.id === 4 || item.id === 5 || item.id === 6 || item.id === 7) ||
+          (!esConocidoDir && isLacis && (rolLacis === 1 || rolId === 1));
+
+        if (!esDirectorLaCIS && isLacis) {
+          todos_los_integrantes_lacis.push(mapearIntegranteDesdeAPI(item, "lacis"));
+        }
+      });
+
+      if (contenedorPrincipalDeDirector) contenedorPrincipalDeDirector.innerHTML = "";
+      if (contenedorPrincipalDeDirectoresDeLinea) contenedorPrincipalDeDirectoresDeLinea.innerHTML = "";
+      if (contenedorPrincipalDeIntegrantes) contenedorPrincipalDeIntegrantes.innerHTML = "";
+
+      CrearCartaDirector(director);
+      CrearCartaDirectores(todos_los_directores);
+      CrearCartaIntegrantes(todos_los_integrantes);
+
+      if (typeof AjustarColumnasDirectoresDeLinea === "function") {
+        AjustarColumnasDirectoresDeLinea(todos_los_directores.length);
+      }
+      if (typeof AOS !== "undefined") {
+        AOS.refreshHard();
+      }
+    })
+    .catch(err => {
+      console.warn("Fallo al consultar /api/v1/integrantes, usando fallback JSON:", err);
+      cargarDesdeJSONFallback();
+    });
+}
+
+function cargarDesdeJSONFallback() {
+  fetch('../../static/json-GIS/director.json')
+    .then(response => response.json())
+    .then(data => {
+      director = data;
+      CrearCartaDirector(director);
+      if (typeof AOS !== 'undefined') AOS.refreshHard();
+    });
 
   fetch('../../static/json-GIS/directorLacis.json')
-  .then(response => response.json())
-  .then(data => {
-    directorLacis = data;
-  })
+    .then(response => response.json())
+    .then(data => {
+      directorLacis = data;
+    });
 
-   fetch('../../static/json-GIS/directoresLacis.json')
-  .then(response => response.json())
-  .then(data => {
-    todos_los_directoresLacis = data;
-  })
+  fetch('../../static/json-GIS/directoresLacis.json')
+    .then(response => response.json())
+    .then(data => {
+      todos_los_directoresLacis = data;
+    });
 
- fetch('../../static/json-GIS/directores.json')
-  .then(response => response.json())
-  .then(data => {
-    todos_los_directores=data;
-    CrearCartaDirectores(todos_los_directores);
-    if (typeof AOS !== 'undefined') AOS.refreshHard();
-
-  })
+  fetch('../../static/json-GIS/directores.json')
+    .then(response => response.json())
+    .then(data => {
+      todos_los_directores = data;
+      CrearCartaDirectores(todos_los_directores);
+      if (typeof AOS !== 'undefined') AOS.refreshHard();
+    });
 
   fetch('../../static/json-GIS/integrantes.json')
-  .then(response => response.json())
-  .then(data => {
-    todos_los_integrantes=data;
-    CrearCartaIntegrantes(todos_los_integrantes);
-    if (typeof AOS !== 'undefined') AOS.refreshHard();
+    .then(response => response.json())
+    .then(data => {
+      todos_los_integrantes = data;
+      CrearCartaIntegrantes(todos_los_integrantes);
+      if (typeof AOS !== 'undefined') AOS.refreshHard();
+    });
 
-  })
+  fetch('../../static/json-GIS/integrantesLacis.json')
+    .then(response => response.json())
+    .then(data => {
+      todos_los_integrantes_lacis = data;
+    });
+}
 
-    fetch('../../static/json-GIS/integrantesLacis.json')
-  .then(response => response.json())
-  .then(data => {
-    todos_los_integrantes_lacis=data;
-
-  })
+cargarIntegrantesDesdeAPI();

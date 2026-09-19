@@ -12,6 +12,15 @@ document.addEventListener('DOMContentLoaded', function () {
     let activeRole = 'all';
     let activePertenencia = 'all';
 
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status') || (document.body ? document.body.dataset.status : '');
+    if (status && status.trim() !== '') {
+        mostrarModalNotificacion(status.trim());
+        if (document.body) document.body.removeAttribute('data-status');
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     function renderPagination(totalFiltered, totalPages) {
         if (!paginationControls) return;
         paginationControls.innerHTML = '';
@@ -201,4 +210,131 @@ function verDetalles(nombre, titulo, rol, descripcion, email, linkedin, pertenen
     }
 }
 
+function mostrarModalNotificacion(status) {
+
+    if (typeof Swal !== 'undefined') {
+        let titulo = '¡Guardado Correctamente!';
+        let texto = 'El integrante ha sido registrado exitosamente en el sistema.';
+        let icono = 'success';
+
+        if (status === 'editado') {
+            titulo = '¡Editado Correctamente!';
+            texto = 'Los datos del integrante fueron actualizados con éxito.';
+        } else if (status === 'eliminado') {
+            titulo = '¡Eliminado Correctamente!';
+            texto = 'El integrante ha sido eliminado del sistema con éxito.';
+        } else if (status === 'error') {
+            titulo = 'Ocurrió un error';
+            texto = 'No se pudo completar la operación en el sistema.';
+            icono = 'error';
+        }
+
+        Swal.fire({
+            icon: icono,
+            title: titulo,
+            text: texto,
+            confirmButtonText: '<i class="bi bi-check2-circle me-1"></i> Aceptar',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'custom-swal-popup',
+                title: 'custom-swal-title',
+                htmlContainer: 'custom-swal-text',
+                confirmButton: 'custom-swal-confirm'
+            }
+        });
+        return;
+    }
+
+
+    const modalEl = document.getElementById('modalNotificacion');
+    const iconEl = document.getElementById('notifIcon');
+    const tituloEl = document.getElementById('notifTitulo');
+    const mensajeEl = document.getElementById('notifMensaje');
+
+    if (!modalEl) return;
+
+    if (status === 'guardado' || status === 'creado') {
+        if (iconEl) iconEl.className = 'bi bi-check-circle-fill text-success';
+        if (tituloEl) tituloEl.textContent = '¡Guardado Correctamente!';
+        if (mensajeEl) mensajeEl.textContent = 'El integrante ha sido registrado exitosamente en el sistema.';
+    } else if (status === 'editado') {
+        if (iconEl) iconEl.className = 'bi bi-check-circle-fill text-success';
+        if (tituloEl) tituloEl.textContent = '¡Editado Correctamente!';
+        if (mensajeEl) mensajeEl.textContent = 'Los datos del integrante fueron actualizados con éxito.';
+    } else if (status === 'eliminado') {
+        if (iconEl) iconEl.className = 'bi bi-check-circle-fill text-success';
+        if (tituloEl) tituloEl.textContent = '¡Eliminado Correctamente!';
+        if (mensajeEl) mensajeEl.textContent = 'El integrante ha sido eliminado del sistema con éxito.';
+    } else if (status === 'error') {
+        if (iconEl) iconEl.className = 'bi bi-x-circle-fill text-danger';
+        if (tituloEl) tituloEl.textContent = 'Ocurrió un error';
+        if (mensajeEl) mensajeEl.textContent = 'No se pudo completar la operación en el sistema.';
+    }
+
+    if (typeof bootstrap !== 'undefined') {
+        const bsModal = new bootstrap.Modal(modalEl);
+        bsModal.show();
+    }
+}
+
+function abrirModalConfirmarEliminar(id, nombre) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: '¿Eliminar integrante?',
+            html: `¿Estás seguro de que deseas eliminar a <b>${nombre || 'este integrante'}</b>?<br><small class="text-muted">Esta acción no se puede deshacer.</small>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="bi bi-trash-fill me-1"></i> Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'custom-swal-popup',
+                title: 'custom-swal-title',
+                htmlContainer: 'custom-swal-text',
+                confirmButton: 'custom-swal-confirm btn-danger-confirm',
+                cancelButton: 'custom-swal-cancel'
+            },
+            reverseButtons: true,
+            focusCancel: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/admin/borrar-integrante?id=${id}`;
+            }
+        });
+        return;
+    }
+
+    const modalEl = document.getElementById('modalConfirmarEliminar');
+    const textoEl = document.getElementById('eliminarModalTexto');
+    const btnAccion = document.getElementById('btnConfirmarEliminarAccion');
+
+    if (textoEl) {
+        textoEl.innerHTML = `¿Estás seguro de que deseas eliminar a <b>${nombre || 'este integrante'}</b>?<br><small class="text-muted">Esta acción no se puede deshacer.</small>`;
+    }
+    if (btnAccion) {
+        btnAccion.href = `/admin/borrar-integrante?id=${id}`;
+    }
+
+    if (modalEl && typeof bootstrap !== 'undefined') {
+        const bsModal = new bootstrap.Modal(modalEl);
+        bsModal.show();
+    } else if (confirm(`¿Está seguro de que desea eliminar a ${nombre}?`)) {
+        window.location.href = `/admin/borrar-integrante?id=${id}`;
+    }
+}
+
+
+document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.btn-eliminar-item');
+    if (btn) {
+        e.preventDefault();
+        const id = btn.dataset.id;
+        const nombre = btn.dataset.nombre;
+        abrirModalConfirmarEliminar(id, nombre);
+    }
+});
+
 window.verDetalles = verDetalles;
+window.confirmarEliminarIntegrante = abrirModalConfirmarEliminar;
+window.mostrarModalNotificacion = mostrarModalNotificacion;
+

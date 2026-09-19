@@ -34,6 +34,7 @@ func (h *IntegranteHandler) Lista(c *gin.Context) {
 	c.HTML(http.StatusOK, "Lista.html", gin.H{
 		"Integrantes": integrantes,
 		"LoggedIn":    true,
+		"Status":      c.Query("status"),
 	})
 }
 
@@ -106,7 +107,7 @@ func (h *IntegranteHandler) Insertar(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusSeeOther, "/admin/integrantes")
+	c.Redirect(http.StatusSeeOther, "/admin/integrantes?status=guardado")
 }
 
 func (h *IntegranteHandler) Editar(c *gin.Context) {
@@ -190,7 +191,7 @@ func (h *IntegranteHandler) Actualizar(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusSeeOther, "/admin/integrantes")
+	c.Redirect(http.StatusSeeOther, "/admin/integrantes?status=editado")
 }
 
 func (h *IntegranteHandler) Borrar(c *gin.Context) {
@@ -199,10 +200,12 @@ func (h *IntegranteHandler) Borrar(c *gin.Context) {
 	if err == nil && id > 0 {
 		if errDel := h.service.Delete(id); errDel != nil {
 			h.logger.Error("Error al eliminar integrante desde la plantilla", zap.Int("id", id), zap.Error(errDel))
+			c.Redirect(http.StatusSeeOther, "/admin/integrantes?status=error")
+			return
 		}
 	}
 
-	c.Redirect(http.StatusSeeOther, "/admin/integrantes")
+	c.Redirect(http.StatusSeeOther, "/admin/integrantes?status=eliminado")
 }
 
 func (ih *IntegranteHandler) API_GetAll(c *gin.Context) {

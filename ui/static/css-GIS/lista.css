@@ -311,3 +311,89 @@ h1, h2, h3, h4, h5, .admin-header-title {
     background-color: #F7F8FA;
     border-color: var(--borde-tarjeta);
 }
+
+
+.swal2-popup.custom-swal-popup {
+    border-radius: 1.25rem !important;
+    padding: 2.25rem 2rem !important;
+    font-family: 'Manrope', sans-serif !important;
+    box-shadow: 0 20px 45px rgba(16, 24, 40, 0.16) !important;
+    border: 1px solid rgba(26, 68, 132, 0.12) !important;
+    background: #ffffff !important;
+}
+
+.swal2-title.custom-swal-title {
+    font-family: 'Montserrat', sans-serif !important;
+    color: var(--azul-logo) !important;
+    font-weight: 700 !important;
+    font-size: 1.45rem !important;
+    letter-spacing: -0.3px !important;
+    margin-top: 0.6rem !important;
+    margin-bottom: 0.3rem !important;
+}
+
+.swal2-html-container.custom-swal-text {
+    font-family: 'Manrope', sans-serif !important;
+    color: #475467 !important;
+    font-size: 0.95rem !important;
+    line-height: 1.55 !important;
+    margin: 0.5rem 0 1.2rem 0 !important;
+}
+
+.swal2-confirm.custom-swal-confirm {
+    background-color: var(--azul-logo) !important;
+    color: #ffffff !important;
+    border-radius: 50rem !important;
+    padding: 0.7rem 2.2rem !important;
+    font-weight: 600 !important;
+    font-size: 0.92rem !important;
+    box-shadow: 0 4px 14px rgba(26, 68, 132, 0.28) !important;
+    border: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.swal2-confirm.custom-swal-confirm:hover {
+    background-color: var(--azul-hover) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 18px rgba(26, 68, 132, 0.38) !important;
+}
+
+.swal2-cancel.custom-swal-cancel {
+    background-color: #64748b !important;
+    color: #ffffff !important;
+    border-radius: 50rem !important;
+    padding: 0.7rem 1.8rem !important;
+    font-weight: 600 !important;
+    font-size: 0.92rem !important;
+    border: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.swal2-cancel.custom-swal-cancel:hover {
+    background-color: #475569 !important;
+    transform: translateY(-1px) !important;
+}
+
+.swal2-confirm.btn-danger-confirm {
+    background-color: #dc2626 !important;
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.28) !important;
+}
+
+.swal2-confirm.btn-danger-confirm:hover {
+    background-color: #b91c1c !important;
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.38) !important;
+}
+
+.swal2-icon.swal2-success {
+    border-color: #10b981 !important;
+    color: #10b981 !important;
+}
+
+.swal2-icon.swal2-success [class^='swal2-success-line'] {
+    background-color: #10b981 !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-ring {
+    border-color: rgba(16, 185, 129, 0.25) !important;
+}
+
