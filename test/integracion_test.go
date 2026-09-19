@@ -47,7 +47,7 @@ func TestIntegration_InsertarIntegrante(t *testing.T) {
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusSeeOther, w.Code)
-	assert.Equal(t, "/admin/integrantes", w.Header().Get("Location"))
+	assert.Contains(t, w.Header().Get("Location"), "/admin/integrantes")
 }
 
 func TestIntegration_ObtenerIntegrantesJSON(t *testing.T) {
@@ -95,7 +95,7 @@ func TestIntegration_InsertarTesis(t *testing.T) {
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusSeeOther, w.Code)
-	assert.Equal(t, "/admin/tesis", w.Header().Get("Location"))
+	assert.Contains(t, w.Header().Get("Location"), "/admin/tesis")
 }
 
 func TestIntegration_LoginRedirectsIfAuthenticated(t *testing.T) {

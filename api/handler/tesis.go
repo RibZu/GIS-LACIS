@@ -41,6 +41,7 @@ func (h *TesisHandler) Lista(c *gin.Context) {
 	c.HTML(http.StatusOK, "ListaTesis.html", gin.H{
 		"Tesis":    lista,
 		"LoggedIn": true,
+		"Status":   c.Query("status"),
 	})
 }
 
@@ -175,7 +176,7 @@ func (h *TesisHandler) Insertar(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusSeeOther, "/admin/tesis")
+	c.Redirect(http.StatusSeeOther, "/admin/tesis?status=guardado")
 }
 
 func (h *TesisHandler) Editar(c *gin.Context) {
@@ -337,7 +338,7 @@ func (h *TesisHandler) Actualizar(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusSeeOther, "/admin/tesis")
+	c.Redirect(http.StatusSeeOther, "/admin/tesis?status=editado")
 }
 
 func (h *TesisHandler) Borrar(c *gin.Context) {
@@ -346,10 +347,12 @@ func (h *TesisHandler) Borrar(c *gin.Context) {
 	if err == nil && id > 0 {
 		if errDel := h.service.Delete(id); errDel != nil {
 			h.logger.Error("Error al eliminar tesis desde la plantilla", zap.Int("id", id), zap.Error(errDel))
+			c.Redirect(http.StatusSeeOther, "/admin/tesis?status=error")
+			return
 		}
 	}
 
-	c.Redirect(http.StatusSeeOther, "/admin/tesis")
+	c.Redirect(http.StatusSeeOther, "/admin/tesis?status=eliminado")
 }
 
 func (h *TesisHandler) API_GetAll(c *gin.Context) {

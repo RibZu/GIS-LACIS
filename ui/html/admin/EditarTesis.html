@@ -137,7 +137,7 @@
                                         <select class="form-select form-select-sm select-autor-id" id="autor_id" name="autor_id">
                                             <option value="" disabled>Seleccionar integrante...</option>
                                             {{ $currAutor := 0 }}
-                                            {{ if .Tesis }}{{ if .Tesis.AutorID }}{{ $currAutor = .Tesis.AutorID }}{{ end }}{{ end }}
+                                            {{ if .Tesis }}{{ $currAutor = .Tesis.GetAutorID }}{{ end }}
                                             {{ range .Integrantes }}
                                             <option value="{{ .ID }}" {{ if eq .ID $currAutor }}selected{{ end }}>{{ .Nombre }} {{ .Apellido }} ({{ .Especializacion }})</option>
                                             {{ end }}
@@ -269,7 +269,7 @@
                                     <select class="form-select form-select-sm" id="director_id" name="director_id">
                                         <option value="">Seleccionar director...</option>
                                         {{ $currDir := 0 }}
-                                        {{ if .Tesis }}{{ if .Tesis.DirectorID }}{{ $currDir = .Tesis.DirectorID }}{{ end }}{{ end }}
+                                        {{ if .Tesis }}{{ $currDir = .Tesis.GetDirectorID }}{{ end }}
                                         {{ range .Integrantes }}
                                         <option value="{{ .ID }}" {{ if eq .ID $currDir }}selected{{ end }}>{{ .Nombre }} {{ .Apellido }}</option>
                                         {{ end }}
@@ -311,7 +311,7 @@
                                     <select class="form-select form-select-sm" id="coodirector_id" name="coodirector_id">
                                         <option value="">Seleccionar co-director...</option>
                                         {{ $currCoodir := 0 }}
-                                        {{ if .Tesis }}{{ if .Tesis.CoodirectorID }}{{ $currCoodir = .Tesis.CoodirectorID }}{{ end }}{{ end }}
+                                        {{ if .Tesis }}{{ $currCoodir = .Tesis.GetCoodirectorID }}{{ end }}
                                         {{ range .Integrantes }}
                                         <option value="{{ .ID }}" {{ if eq .ID $currCoodir }}selected{{ end }}>{{ .Nombre }} {{ .Apellido }}</option>
                                         {{ end }}

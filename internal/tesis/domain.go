@@ -85,6 +85,27 @@ func (t Tesis) GetAnioDisplay() int {
 	return 0
 }
 
+func (t Tesis) GetAutorID() int {
+	if t.AutorID != nil {
+		return *t.AutorID
+	}
+	return 0
+}
+
+func (t Tesis) GetDirectorID() int {
+	if t.DirectorID != nil {
+		return *t.DirectorID
+	}
+	return 0
+}
+
+func (t Tesis) GetCoodirectorID() int {
+	if t.CoodirectorID != nil {
+		return *t.CoodirectorID
+	}
+	return 0
+}
+
 type UpdateFields struct {
 	Titulo               *string `json:"titulo"`
 	Anio                 *int    `json:"anio"`

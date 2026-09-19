@@ -62,6 +62,9 @@ func InitRoutes(e *gin.Engine) {
 	e.LoadHTMLGlob("ui/html/**/*.html")
 
 	integranteStorage := integrante.NewPostgresStorage(db)
+	if err := integrante.MigrarIntegrantesDesdeJSON(db, "ui/static/json-GIS", logger); err != nil {
+		logger.Error("Error al verificar/migrar integrantes iniciales desde JSON", zap.Error(err))
+	}
 	integranteService := integrante.NewService(integranteStorage, logger)
 	integranteHandler := handler.NewIntegranteHandler(integranteService, logger)
 
