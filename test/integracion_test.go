@@ -27,7 +27,16 @@ func TestIntegration_InsertarIntegrante(t *testing.T) {
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
 	assert.NoError(t, err)
-	defer db.Close()
+	// t.Cleanup (no defer): el DELETE registrado abajo corre antes que este Close (orden LIFO),
+	// igual que en TestIntegration_LacisMuestraProductosDeSoftware.
+	t.Cleanup(func() { db.Close() })
+	t.Cleanup(func() {
+		_, err := db.Exec(
+			`DELETE FROM integrante WHERE nombre = $1 AND apellido = $2 AND contacto_mail = $3`,
+			"Test", "Integracion", "test@unsl.edu.ar",
+		)
+		assert.NoError(t, err, "limpieza del integrante sembrado por el test")
+	})
 
 	r := gin.Default()
 	api.InitRoutes(r)
@@ -72,7 +81,13 @@ func TestIntegration_InsertarTesis(t *testing.T) {
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
 	assert.NoError(t, err)
-	defer db.Close()
+	// Mismo orden LIFO que en TestIntegration_InsertarIntegrante: el DELETE corre antes del Close.
+	// Los integrantes_tesis de la tesis se borran solos por ON DELETE CASCADE.
+	t.Cleanup(func() { db.Close() })
+	t.Cleanup(func() {
+		_, err := db.Exec(`DELETE FROM tesis WHERE titulo = $1`, "Tesis Test Integración")
+		assert.NoError(t, err, "limpieza de la tesis sembrada por el test")
+	})
 
 	r := gin.Default()
 	api.InitRoutes(r)
@@ -186,7 +201,17 @@ func TestIntegration_AdminSinSesionRedirigeALogin(t *testing.T) {
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
 	assert.NoError(t, err)
-	defer db.Close()
+	// Mismo orden LIFO que en TestIntegration_InsertarIntegrante. Esta prueba no debería insertar
+	// nada (es justo lo que verifica); el DELETE es una red de seguridad por si una regresión
+	// dejara pasar el alta sin sesión.
+	t.Cleanup(func() { db.Close() })
+	t.Cleanup(func() {
+		_, err := db.Exec(
+			`DELETE FROM integrante WHERE nombre = $1 AND apellido = $2`,
+			"NoDeberia", "Insertarse",
+		)
+		assert.NoError(t, err, "limpieza del integrante que no debería haberse insertado")
+	})
 
 	r := gin.Default()
 	api.InitRoutes(r)

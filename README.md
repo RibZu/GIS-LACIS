@@ -39,6 +39,16 @@ Para sincronizar la base de datos local con los últimos cambios estructurales d
 
 Si tu base local es de antes de este cambio, corré `resetear_db.bat` para traerla al día.
 
+#### Últimos cambios en los datos del modelo
+
+- `Modelo Base de datos.sql` ahora **trae los datos reales del módulo "Proyectos"** (productos de software): 23 productos, con sus integrantes vinculados (52 vínculos) y sus 30 participantes externos. Así, la sección "Productos de Software" de `/lacis` se ve completa apenas se crea la base.
+- Se quitó el integrante de prueba ("Test Integracion") que se había colado en el archivo, y se corrigieron el nombre "Dr. Montejano" y la ruta del CV de Guiñazu (`.pdf`).
+- El archivo declara UTF-8 en su primera línea (`SET client_encoding = 'UTF8';`): importarlo a mano con `psql` ya no rompe los acentos ni las eñes.
+- Las pruebas de integración (`test/integracion_test.go`) borran al terminar los registros que crean, así que correr `go test ./...` ya no deja datos de prueba en la base.
+- Todavía no hay proyectos, reconocimientos, colaboradores ni tesis cargados, por lo que las páginas `/proyectos` y `/tesis` se ven vacías hasta que se carguen desde el panel.
+
+Para recibir estos datos, corré `resetear_db.bat`. **Ojo:** eso borra todo lo que hayas cargado en tu base local; si tenés datos propios que querés conservar, hacé antes un respaldo con `pg_dump`.
+
 ---
 
 ## Guía de Arquitectura y Estructura de Carpetas
