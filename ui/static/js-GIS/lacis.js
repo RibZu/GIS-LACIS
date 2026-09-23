@@ -16,4 +16,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    const boton_ver_mas_productos = document.getElementById('btn-ver-mas-productos');
+    if (boton_ver_mas_productos) {
+        boton_ver_mas_productos.addEventListener('click', () => {
+            const ocultos = document.querySelectorAll('.producto-oculto');
+            [...ocultos].slice(0, 6).forEach(carta => {
+                carta.classList.remove('producto-oculto', 'd-none');
+            });
+            if (document.querySelectorAll('.producto-oculto').length === 0) {
+                boton_ver_mas_productos.closest('.text-center').remove();
+            }
+            if (typeof AOS !== 'undefined') {
+                AOS.refreshHard();
+            }
+        });
+    }
 });

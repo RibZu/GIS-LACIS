@@ -6,8 +6,10 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"PaginaSEG/api"
 
@@ -301,10 +303,56 @@ func TestIntegration_LacisMuestraProductosDeSoftware(t *testing.T) {
 	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 	db, err := sql.Open("postgres", dsn)
 	assert.NoError(t, err)
-	defer db.Close()
+	// t.Cleanup (no defer) para que el orden de LIFO sea el correcto frente al cleanup de
+	// borrado registrado abajo: los t.Cleanup se ejecutan en orden inverso al de registro, así
+	// que este Close (registrado primero) corre DESPUÉS del DELETE (registrado después) — con
+	// `defer db.Close()` el cierre ocurriría antes de que t.Cleanup llegue a borrar nada.
+	t.Cleanup(func() { db.Close() })
 
 	r := gin.Default()
 	api.InitRoutes(r)
+
+	// Sembrado con limpieza garantizada al final (pase o falle el test): estos títulos son
+	// exclusivos de este test, así que un DELETE por título no toca ningún desarrollo real. Sin
+	// esto, cada corrida del test deja basura permanente en la base — y como "año actual + 1"
+	// siempre gana el orden "más reciente primero", esa basura sepulta los productos reales en
+	// la vista pública tras la primera corrida.
+	tituloReciente := "ZZZ Test Recorte Reciente"
+	tituloAntiguo := "AAA Test Recorte Antiguo"
+	tituloConParticipantes := "Test Producto Con Participantes"
+	t.Cleanup(func() {
+		_, err := db.Exec(
+			`DELETE FROM desarrollo WHERE titulo IN ($1, $2, $3)`,
+			tituloReciente, tituloAntiguo, tituloConParticipantes,
+		)
+		assert.NoError(t, err, "limpieza de desarrollos sembrados por el test")
+	})
+
+	seedDesarrollo := func(titulo string, anio int, integranteIDs []string, externos []string) {
+		formData := url.Values{}
+		formData.Set("titulo", titulo)
+		formData.Set("anio", strconv.Itoa(anio))
+		for _, id := range integranteIDs {
+			formData.Add("integrantes", id)
+		}
+		for _, ext := range externos {
+			formData.Add("externos", ext)
+		}
+		req, _ := http.NewRequest("POST", "/admin/insertar-desarrollo", strings.NewReader(formData.Encode()))
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req.AddCookie(&http.Cookie{Name: "session", Value: "1"})
+		w := httptest.NewRecorder()
+		r.ServeHTTP(w, req)
+		assert.Equal(t, http.StatusSeeOther, w.Code)
+	}
+
+	nombreExterno := "Participante Externo Test QA"
+	seedDesarrollo(tituloReciente, time.Now().Year()+1, nil, nil)
+	seedDesarrollo(tituloAntiguo, 1990, nil, nil)
+	seedDesarrollo(tituloConParticipantes, 2024, []string{"5"}, []string{nombreExterno})
+
+	var total int
+	assert.NoError(t, db.QueryRow("SELECT COUNT(*) FROM desarrollo").Scan(&total))
 
 	req, _ := http.NewRequest("GET", "/lacis", nil)
 	w := httptest.NewRecorder()
@@ -316,4 +364,25 @@ func TestIntegration_LacisMuestraProductosDeSoftware(t *testing.T) {
 
 	assert.Contains(t, body, "Productos de")
 	assert.Contains(t, body, ">Software</span>")
+
+	// US1: recorte a 6 — el HTML trae una tarjeta ("producto-item") por cada desarrollo, pero
+	// las que exceden las 6 más recientes llevan además la clase "producto-oculto".
+	assert.Equal(t, total, strings.Count(body, "producto-item"),
+		"cada desarrollo debe tener su tarjeta en el HTML, aunque esté oculta")
+	esperadasOcultas := total - 6
+	if esperadasOcultas < 0 {
+		esperadasOcultas = 0
+	}
+	assert.Equal(t, esperadasOcultas, strings.Count(body, "producto-oculto"))
+	assert.Less(t, strings.Index(body, tituloReciente), strings.Index(body, tituloAntiguo),
+		"el producto más reciente debe aparecer antes que el más antiguo")
+
+	// US2: con más de 6 desarrollos (garantizado por el sembrado de arriba), debe aparecer el
+	// control "ver más".
+	assert.Contains(t, body, `id="btn-ver-mas-productos"`)
+
+	// US3: el integrante vinculado y el participante externo sembrados arriba deben verse en la
+	// tarjeta pública, igual que los vería un administrador en /admin/desarrollos.
+	assert.Contains(t, body, "Mg. Baigorria")
+	assert.Contains(t, body, nombreExterno)
 }

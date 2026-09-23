@@ -199,10 +199,21 @@ func (h *DesarrolloHandler) ViewLacis(c *gin.Context) {
 		desarrollos = []desarrollo.Desarrollo{}
 	}
 
+	var lista []DesarrolloConParticipantes
+	for _, d := range desarrollos {
+		vinculados, _ := h.service.ObtenerIntegrantes(d.ID)
+		externos, _ := h.service.ObtenerParticipantesExternos(d.ID)
+		lista = append(lista, DesarrolloConParticipantes{
+			Desarrollo:            d,
+			Integrantes:           vinculados,
+			ParticipantesExternos: externos,
+		})
+	}
+
 	_, loggedIn := CurrentUserID(c)
 
 	c.HTML(http.StatusOK, "Lacis.html", gin.H{
-		"Desarrollos": desarrollos,
+		"Desarrollos": lista,
 		"LoggedIn":    loggedIn,
 	})
 }
