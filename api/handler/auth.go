@@ -90,5 +90,6 @@ func (h *AuthHandler) ShowDashboard(c *gin.Context) {
 		"TieneProyectos":       tieneModulo(u, "proyectos"),
 		"TieneReconocimientos": tieneModulo(u, "reconocimientos"),
 		"TieneEmpresas":        tieneModulo(u, "empresas"),
+		"TieneEstadisticas":    tieneModulo(u, "estadisticas"),
 	})
 }

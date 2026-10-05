@@ -104,3 +104,15 @@
     color: var(--azul-logo); font-weight: 600; cursor: pointer; font-size: .85rem;
 }
 .participant-search-add-externo:hover { text-decoration: underline; }
+
+/* Estado del producto en la lista: con repositorio (tiene "Enlace / URL") o con licencia (no lo tiene).
+   Mismo tamaño que .badge-pertenencia; se distinguen por el texto y el ícono, no solo por el color. */
+.badge-repositorio,
+.badge-licencia {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 0.72rem; font-weight: 600;
+    padding: 4px 8px; border-radius: .4rem;
+    white-space: nowrap;
+}
+.badge-repositorio { background-color: #E6EDF8; color: var(--azul-logo); }
+.badge-licencia { background-color: #E8F1EC; color: #4B6B5A; }

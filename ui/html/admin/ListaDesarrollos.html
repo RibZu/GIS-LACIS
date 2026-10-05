@@ -52,6 +52,8 @@
                 <div class="des-accordion-item" data-titulo="{{ .Titulo }}">
                     <button class="des-accordion-trigger" type="button">
                         <span class="badge-pertenencia">{{ .Anio }}</span>
+                        {{ if .TieneRepositorio }}<span class="badge-repositorio"><i class="bi bi-link-45deg"></i> Con repositorio</span>
+                        {{ else }}<span class="badge-licencia"><i class="bi bi-shield-check"></i> Con licencia</span>{{ end }}
                         <span class="fw-bold">{{ .Titulo }}</span>
                         <span class="d-none d-md-flex flex-wrap gap-1">
                             {{ range .Integrantes }}<span class="chip-integrante">{{ .Nombre }} {{ .Apellido }}</span>{{ end }}

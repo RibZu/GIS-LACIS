@@ -8,6 +8,10 @@
 # Database data
 pg_data/
 
+# Go: binarios de test y perfiles de cobertura
+*.test
+*.out
+
 # Logs
 *.log
 
@@ -24,3 +28,6 @@ Thumbs.db
 /.specify/
 /specs/
 /CLAUDE.md
+
+# Configuración local del editor JetBrains (GoLand / IntelliJ)
+/.idea/

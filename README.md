@@ -45,6 +45,10 @@ Si tu base local es de antes de este cambio, corré `resetear_db.bat` para traer
 - Se quitó el integrante de prueba ("Test Integracion") que se había colado en el archivo, y se corrigieron el nombre "Dr. Montejano" y la ruta del CV de Guiñazu (`.pdf`).
 - El archivo declara UTF-8 en su primera línea (`SET client_encoding = 'UTF8';`): importarlo a mano con `psql` ya no rompe los acentos ni las eñes.
 - Las pruebas de integración (`test/integracion_test.go`) borran al terminar los registros que crean, así que correr `go test ./...` ya no deja datos de prueba en la base.
+- Los **participantes externos** de los productos de software ya no llevan el prefijo **"Est."**: el `.sql` viene sin el prefijo (27 de 30 nombres) y el panel guarda cada nombre tal cual se escribe. Los títulos (`"Dr. Cristian Tissera"`) y las organizaciones no cambian.
+- Los productos de software sin **"Enlace / URL"** se muestran como **"Producto con licencia"** en el dorso de la tarjeta de `/lacis` y en la lista del panel; no hay que cargar nada extra.
+- Módulo nuevo **Estadísticas** (`/admin/estadisticas`): contadores, productos por año, repositorio vs. licencia y productos incompletos. Se asigna desde Administradores con la clave `estadisticas`; el admin siempre lo ve.
+- La página **Estadísticas** (`/admin/estadisticas`) ahora se organiza en desplegables por módulo: "Estadísticas de módulo: Productos de software" (con todas las estadísticas de antes) y "Estadísticas generales" (vacía por ahora, para las que cruzan datos de varios módulos). No cambia el esquema, así que no hace falta `resetear_db.bat` por este cambio.
 - Todavía no hay proyectos, reconocimientos, colaboradores ni tesis cargados, por lo que las páginas `/proyectos` y `/tesis` se ven vacías hasta que se carguen desde el panel.
 
 Para recibir estos datos, corré `resetear_db.bat`. **Ojo:** eso borra todo lo que hayas cargado en tu base local; si tenés datos propios que querés conservar, hacé antes un respaldo con `pg_dump`.

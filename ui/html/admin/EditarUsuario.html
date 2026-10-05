@@ -102,6 +102,10 @@
                             <input class="form-check-input" type="checkbox" name="modulos" value="empresas" id="mod-empresas" {{ if index .Seleccionados "empresas" }}checked{{ end }}>
                             <label class="form-check-label" for="mod-empresas">Empresas Colaboradoras</label>
                         </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="modulos" value="estadisticas" id="mod-estadisticas" {{ if index .Seleccionados "estadisticas" }}checked{{ end }}>
+                            <label class="form-check-label" for="mod-estadisticas">Estadísticas</label>
+                        </div>
                     </div>
                     {{ end }}
 

@@ -1,0 +1,149 @@
+/* El <body> es un grid: sin min-width: 0 el <main> crece con su contenido (la tabla de incompletos)
+   y en pantallas chicas lo que sobra queda recortado en vez de quedarse dentro de la pantalla. */
+.stats-main {
+    min-width: 0;
+}
+
+/* Módulo Estadísticas (solo lectura). Las barras son .progress de Bootstrap renderizadas en el servidor. */
+
+.stats-seccion {
+    margin-bottom: 2.5rem;
+}
+
+.stat-kpi {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    height: 100%;
+    padding: 1.25rem;
+    background: #ffffff;
+    border: 1px solid var(--adm-border);
+    border-radius: var(--adm-radius-lg);
+    box-shadow: var(--adm-shadow);
+}
+
+.stat-kpi-valor {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--adm-navy);
+}
+
+.stat-kpi-etiqueta {
+    font-size: .9rem;
+    color: #667085;
+}
+
+.stats-titulo {
+    margin-bottom: 1rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--adm-navy);
+}
+
+/* Productos por año: año | barra | cantidad. */
+.stat-anio {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr 2.5rem;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: .5rem;
+}
+
+.stat-anio-etiqueta {
+    font-weight: 600;
+    color: #344054;
+}
+
+.stat-anio-cantidad {
+    text-align: right;
+    font-weight: 600;
+    color: var(--adm-navy);
+}
+
+.stat-anio .progress-bar {
+    background-color: var(--adm-navy);
+}
+
+/* Barra apilada con repositorio / con licencia: los mismos tonos que .badge-repositorio y .badge-licencia. */
+.stat-segmento-repositorio .progress-bar {
+    background-color: var(--azul-logo);
+}
+
+.stat-segmento-licencia .progress-bar {
+    background-color: #7FA08E;
+}
+
+.stat-leyenda {
+    margin-top: .75rem;
+    color: #344054;
+}
+
+/* Desplegables por módulo (<details>/<summary> nativos, sin JS): el navegador gestiona el
+   abrir/cerrar, el teclado (Tab, Enter, Espacio) y el estado que anuncian las lectoras de pantalla. */
+.stats-desplegable {
+    margin-bottom: 1rem;
+    /* min-width: 0 evita que el contenido (tabla, barras) ensanche la página en pantallas chicas. */
+    min-width: 0;
+}
+
+.stats-desplegable-encabezado {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .85rem 1rem;
+    background: #EDEEF2;
+    border-radius: var(--adm-radius-sm);
+    cursor: pointer;
+    list-style: none;
+}
+
+/* Se oculta el triángulo nativo del <summary>: la flecha es el ícono del encabezado. */
+.stats-desplegable-encabezado::-webkit-details-marker {
+    display: none;
+}
+
+.stats-desplegable-encabezado:hover {
+    background: #E3E5EB;
+}
+
+/* Foco visible al navegar con Tab. */
+.stats-desplegable-encabezado:focus-visible {
+    outline: 3px solid var(--adm-navy);
+    outline-offset: 2px;
+}
+
+.stats-desplegable-titulo {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--adm-ink);
+}
+
+/* Cerrada apunta hacia la derecha; abierta, hacia abajo. */
+.stats-desplegable-flecha {
+    transition: transform .15s;
+    transform: rotate(-90deg);
+}
+
+.stats-desplegable[open] .stats-desplegable-flecha {
+    transform: rotate(0);
+}
+
+/* La línea vertical fina a la izquierda marca que el contenido pertenece a la sección. */
+.stats-desplegable-contenido {
+    margin-left: 1rem;
+    padding: 1.25rem 0 .25rem 1.25rem;
+    border-left: 2px solid #C5CAD6;
+    min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stats-desplegable-flecha {
+        transition: none;
+    }
+}
+
+/* Mensaje de una sección que todavía no tiene estadísticas (por ahora, "Estadísticas generales"). */
+.stats-vacio {
+    color: var(--adm-ink-soft);
+}
