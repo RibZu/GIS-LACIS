@@ -99,45 +99,110 @@
                         {{ end }}
                     </section>
 
-                    <section id="stats-incompletos" class="stats-seccion">
-                        <h3 class="stats-titulo">Productos incompletos</h3>
-                        {{ if .E.Incompletos }}
-                        <div class="table-responsive">
-                            <table class="table table-sm align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>Año</th>
-                                        <th>Título</th>
-                                        <th>Falta</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{ range .E.Incompletos }}
-                                    <tr data-incompleto-id="{{ .ID }}">
-                                        <td>{{ .Anio }}</td>
-                                        <td>{{ .Titulo }}</td>
-                                        <td>{{ range $i, $f := .Faltantes }}{{ if $i }}, {{ end }}{{ $f }}{{ end }}</td>
-                                        <td class="text-end"><a href="/admin/editar-desarrollo?id={{ .ID }}" class="btn btn-sm btn-outline-primary">Completar</a></td>
-                                    </tr>
-                                    {{ end }}
-                                </tbody>
-                            </table>
-                        </div>
-                        {{ else }}
-                        <p class="text-muted mb-0">Todos los productos tienen su información completa.</p>
-                        {{ end }}
-                    </section>
                 </div>
             </details>
 
-            <details class="stats-desplegable" id="stats-generales">
+            <details class="stats-desplegable" id="stats-modulo-integrantes">
                 <summary class="stats-desplegable-encabezado">
                     <i class="bi bi-chevron-down stats-desplegable-flecha" aria-hidden="true"></i>
-                    <span class="stats-desplegable-titulo">Estadísticas generales</span>
+                    <span class="stats-desplegable-titulo">Estadísticas de módulo: Integrantes</span>
                 </summary>
                 <div class="stats-desplegable-contenido">
-                    <p class="stats-vacio mb-0">Todavía no hay estadísticas generales.</p>
+                    <div class="row g-3 stats-cards-row">
+                        <div class="col-6 col-md-4 col-lg">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiTotalIntegrantes">{{ .E.Integrantes.Registrados }}</div>
+                                <div class="stats-kpi-label">Integrantes registrados</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiActivos">{{ .E.Integrantes.Activos }}</div>
+                                <div class="stats-kpi-label">Integrantes activos</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiInactivos">{{ .E.Integrantes.Inactivos }}</div>
+                                <div class="stats-kpi-label">Integrantes inactivos</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiLacis">{{ .E.Integrantes.Lacis }}</div>
+                                <div class="stats-kpi-label">Pertenecientes a LaCIS</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiSoftware">{{ .E.Integrantes.Software }}</div>
+                                <div class="stats-kpi-label">Pertenecientes a Grupo Software</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <details class="stats-desplegable" id="stats-modulo-tesis">
+                <summary class="stats-desplegable-encabezado">
+                    <i class="bi bi-chevron-down stats-desplegable-flecha" aria-hidden="true"></i>
+                    <span class="stats-desplegable-titulo">Estadísticas de módulo: Tesis</span>
+                </summary>
+                <div class="stats-desplegable-contenido">
+                    <div class="row g-3 stats-cards-row">
+                        <div class="col-12 col-md-4">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiTotalTesis">{{ .E.Tesis.Registradas }}</div>
+                                <div class="stats-kpi-label">Tesis registradas</div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiPosgrado">{{ .E.Tesis.Posgrado }}</div>
+                                <div class="stats-kpi-label">Tesis de posgrado</div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiGrado">{{ .E.Tesis.GradoOtros }}</div>
+                                <div class="stats-kpi-label">Tesis de grado / otros</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <section id="stats-tesis-por-anio" class="stats-seccion">
+                        <h3 class="stats-titulo">Tesis por año</h3>
+                        {{ if .E.Tesis.PorAnio }}
+                        {{ range .E.Tesis.PorAnio }}
+                        <div class="stat-anio" data-anio="{{ .Anio }}">
+                            <span class="stat-anio-etiqueta">{{ .Anio }}</span>
+                            <div class="progress" role="progressbar" aria-label="Tesis en {{ .Anio }}" aria-valuenow="{{ .Cantidad }}" aria-valuemin="0">
+                                <div class="progress-bar" style="width: {{ .PorcentajeDelMaximo }}%"></div>
+                            </div>
+                            <span class="stat-anio-cantidad">{{ .Cantidad }}</span>
+                        </div>
+                        {{ end }}
+                        {{ else }}
+                        <p class="text-muted mb-0">Todavía no hay tesis cargadas.</p>
+                        {{ end }}
+                    </section>
+
+                    <section id="stats-tesis-pdf" class="stats-seccion">
+                        <h3 class="stats-titulo">Con PDF vs. sin PDF</h3>
+                        {{ if .E.Tesis.HayTesis }}
+                        <div class="progress-stacked" role="group" aria-label="Tesis con PDF y sin PDF">
+                            <div class="progress stat-segmento-con-pdf" role="progressbar" aria-label="Con PDF" aria-valuenow="{{ .E.Tesis.PorcentajeConPDF }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ .E.Tesis.PorcentajeConPDF }}%">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div class="progress stat-segmento-sin-pdf" role="progressbar" aria-label="Sin PDF" aria-valuenow="{{ .E.Tesis.PorcentajeSinPDF }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ .E.Tesis.PorcentajeSinPDF }}%">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                        <p class="stat-leyenda mb-0">{{ .E.Tesis.ConPDF }} ({{ .E.Tesis.PorcentajeConPDF }}%) con PDF · {{ .E.Tesis.SinPDF }} ({{ .E.Tesis.PorcentajeSinPDF }}%) sin PDF</p>
+                        {{ else }}
+                        <p class="text-muted mb-0">Todavía no hay tesis cargadas.</p>
+                        {{ end }}
+                    </section>
                 </div>
             </details>
             {{ end }}

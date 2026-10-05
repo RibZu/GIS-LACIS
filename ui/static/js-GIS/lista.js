@@ -12,45 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let activeRole = 'all';
     let activePertenencia = 'all';
 
-    function actualizarEstadisticasIntegrantes() {
-        const kpiTotal = document.getElementById('kpiTotalIntegrantes');
-        const kpiActivos = document.getElementById('kpiActivos');
-        const kpiInactivos = document.getElementById('kpiInactivos');
-        const kpiLacis = document.getElementById('kpiLacis');
-        const kpiSoftware = document.getElementById('kpiSoftware');
-
-        if (!kpiTotal) return;
-
-        let total = rows.length;
-        let activos = 0;
-        let inactivos = 0;
-        let lacis = 0;
-        let software = 0;
-
-        rows.forEach(row => {
-            const isActivo = row.getAttribute('data-activo') === 'true';
-            const isLacis = row.getAttribute('data-lacis') === 'true';
-            const isSoftware = row.getAttribute('data-software') === 'true';
-
-            if (isActivo) {
-                activos++;
-            } else {
-                inactivos++;
-            }
-
-            if (isLacis) lacis++;
-            if (isSoftware) software++;
-        });
-
-        kpiTotal.textContent = total;
-        if (kpiActivos) kpiActivos.textContent = activos;
-        if (kpiInactivos) kpiInactivos.textContent = inactivos;
-        if (kpiLacis) kpiLacis.textContent = lacis;
-        if (kpiSoftware) kpiSoftware.textContent = software;
-    }
-
-    actualizarEstadisticasIntegrantes();
-
     const urlParams = new URLSearchParams(window.location.search);
     const status = urlParams.get('status') || (document.body ? document.body.dataset.status : '');
     if (status && status.trim() !== '') {

@@ -21,7 +21,7 @@ func NewService(s Storage, l *zap.Logger) *Service {
 // Obtener calcula las estadísticas en el momento. Si cualquier lectura falla devuelve un error y
 // ningún número, para no mostrar resultados parciales.
 func (s *Service) Obtener() (*Estadisticas, error) {
-	integrantes, err := s.storage.ContarIntegrantesActivosLacis()
+	integrantesLacis, err := s.storage.ContarIntegrantesActivosLacis()
 	if err != nil {
 		return nil, s.fallo("integrantes activos", err)
 	}
@@ -33,32 +33,49 @@ func (s *Service) Obtener() (*Estadisticas, error) {
 	if err != nil {
 		return nil, s.fallo("productos", err)
 	}
+	integrantes, err := s.storage.ResumenIntegrantes()
+	if err != nil {
+		return nil, s.fallo("integrantes", err)
+	}
+	tesis, err := s.storage.ResumenTesis()
+	if err != nil {
+		return nil, s.fallo("tesis", err)
+	}
 
 	est := &Estadisticas{
-		IntegrantesActivosLacis: integrantes,
+		IntegrantesActivosLacis: integrantesLacis,
 		ParticipantesExternos:   contarPersonasDistintas(nombres),
 		Productos:               len(productos),
 	}
+	anios := make([]int, 0, len(productos))
 	for _, p := range productos {
 		if desarrollo.TieneRepositorio(p.URL) {
 			est.ProductosConRepositorio++
 		}
+		anios = append(anios, p.Anio)
 	}
 	est.ProductosConLicencia = est.Productos - est.ProductosConRepositorio
 	est.HayProductos = est.Productos > 0
-	if est.HayProductos {
-		// Redondeo al entero más cercano; el segundo porcentaje es el resto, así suman 100.
-		est.PorcentajeConRepositorio = (200*est.ProductosConRepositorio + est.Productos) / (2 * est.Productos)
-		est.PorcentajeConLicencia = 100 - est.PorcentajeConRepositorio
-	}
-	est.PorAnio = productosPorAnio(productos)
-	est.Incompletos = productosIncompletos(productos)
+	est.PorcentajeConRepositorio, est.PorcentajeConLicencia = porcentajes(est.ProductosConRepositorio, est.Productos)
+	est.PorAnio = seriePorAnio(anios)
+	est.Integrantes = estadisticasIntegrantes(integrantes)
+	est.Tesis = estadisticasTesis(tesis)
 	return est, nil
 }
 
 func (s *Service) fallo(que string, err error) error {
 	s.logger.Error("No se pudieron obtener las estadísticas", zap.String("lectura", que), zap.Error(err))
 	return fmt.Errorf("estadisticas: %w", err)
+}
+
+// porcentajes reparte 100 entre parte y el resto de total. Redondea parte al entero más cercano y
+// el segundo porcentaje es lo que falta, así suman 100. Sin total devuelve 0 y 0.
+func porcentajes(parte, total int) (int, int) {
+	if total == 0 {
+		return 0, 0
+	}
+	p := (200*parte + total) / (2 * total)
+	return p, 100 - p
 }
 
 // contarPersonasDistintas cuenta los nombres distintos ignorando mayúsculas y espacios de más, así
@@ -74,18 +91,18 @@ func contarPersonasDistintas(nombres []string) int {
 	return len(vistos)
 }
 
-// productosPorAnio arma una fila por cada año entre el primero y el último con productos, incluso
-// los años sin ninguno, para que la serie no salte años.
-func productosPorAnio(productos []ProductoResumen) []CantidadPorAnio {
-	if len(productos) == 0 {
+// seriePorAnio arma una fila por cada año entre el primero y el último de la lista, incluso los
+// años sin ninguno, para que la serie no salte años. La usan productos y tesis.
+func seriePorAnio(anios []int) []CantidadPorAnio {
+	if len(anios) == 0 {
 		return nil
 	}
 	cantidades := make(map[int]int)
-	minAnio, maxAnio := productos[0].Anio, productos[0].Anio
-	for _, p := range productos {
-		cantidades[p.Anio]++
-		minAnio = min(minAnio, p.Anio)
-		maxAnio = max(maxAnio, p.Anio)
+	minAnio, maxAnio := anios[0], anios[0]
+	for _, a := range anios {
+		cantidades[a]++
+		minAnio = min(minAnio, a)
+		maxAnio = max(maxAnio, a)
 	}
 	maxCantidad := 0
 	for _, c := range cantidades {
@@ -103,24 +120,53 @@ func productosPorAnio(productos []ProductoResumen) []CantidadPorAnio {
 	return serie
 }
 
-// productosIncompletos devuelve, en el orden recibido, los productos a los que les falta la
-// descripción, el contacto o los participantes. El repositorio no cuenta.
-func productosIncompletos(productos []ProductoResumen) []ProductoIncompleto {
-	var incompletos []ProductoIncompleto
-	for _, p := range productos {
-		var faltantes []string
-		if strings.TrimSpace(p.Descripcion) == "" {
-			faltantes = append(faltantes, "descripción")
+// estadisticasIntegrantes cuenta igual que lo hacía antes lista.js en la lista de integrantes: todo
+// el que no está activo es inactivo, y LaCIS y Grupo Software se cuentan por separado.
+func estadisticasIntegrantes(filas []IntegranteResumen) EstadisticasIntegrantes {
+	e := EstadisticasIntegrantes{Registrados: len(filas)}
+	for _, f := range filas {
+		if f.Activo {
+			e.Activos++
+		} else {
+			e.Inactivos++
 		}
-		if strings.TrimSpace(p.Contacto) == "" {
-			faltantes = append(faltantes, "contacto")
+		if f.PerteneceLacis {
+			e.Lacis++
 		}
-		if !p.TieneParticipantes {
-			faltantes = append(faltantes, "participantes")
-		}
-		if len(faltantes) > 0 {
-			incompletos = append(incompletos, ProductoIncompleto{ID: p.ID, Titulo: p.Titulo, Anio: p.Anio, Faltantes: faltantes})
+		if f.PerteneceGrupoSoftware {
+			e.Software++
 		}
 	}
-	return incompletos
+	return e
+}
+
+// esPosgrado es la misma regla que usaba antes listaTesis.js en la lista de tesis. Se dejó tal cual
+// a pedido del usuario: no cambiarla aunque dependa del texto del nivel.
+func esPosgrado(nivel string) bool {
+	n := strings.ToLower(nivel)
+	return strings.Contains(n, "doctor") || strings.Contains(n, "maestr") ||
+		strings.Contains(n, "especializ") || strings.Contains(n, "posgrado")
+}
+
+// estadisticasTesis arma las tarjetas de tesis y los gráficos por año y de PDF. Las tesis sin año
+// cuentan en todo menos en la serie por año.
+func estadisticasTesis(filas []TesisResumen) EstadisticasTesis {
+	e := EstadisticasTesis{Registradas: len(filas), HayTesis: len(filas) > 0}
+	var anios []int
+	for _, f := range filas {
+		if esPosgrado(f.Nivel) {
+			e.Posgrado++
+		}
+		if f.TienePDF {
+			e.ConPDF++
+		}
+		if f.Anio != nil {
+			anios = append(anios, *f.Anio)
+		}
+	}
+	e.GradoOtros = e.Registradas - e.Posgrado
+	e.SinPDF = e.Registradas - e.ConPDF
+	e.PorcentajeConPDF, e.PorcentajeSinPDF = porcentajes(e.ConPDF, e.Registradas)
+	e.PorAnio = seriePorAnio(anios)
+	return e
 }

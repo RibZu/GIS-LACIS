@@ -1,34 +1,58 @@
 // Package estadistica calcula indicadores de solo lectura sobre los productos de software, los
-// integrantes y los participantes externos. Es un reporte que cruza varias tablas y no tiene
-// altas, bajas ni ediciones, por eso no define UpdateFields.
+// integrantes, los participantes externos y las tesis. Es un reporte que cruza varias tablas y no
+// tiene altas, bajas ni ediciones, por eso no define UpdateFields.
 package estadistica
 
+// ProductoResumen tiene solo lo que usan las estadísticas de productos: el año y el enlace.
 type ProductoResumen struct {
-	ID                 int
-	Titulo             string
-	Anio               int
-	URL                string
-	Contacto           string
-	Descripcion        string
-	TieneParticipantes bool
+	Anio int
+	URL  string
 }
 
-// CantidadPorAnio es una fila de "Productos por año". PorcentajeDelMaximo es el ancho de la barra:
-// 100 para el año con más productos y proporcional para los demás.
+// IntegranteResumen es una fila de integrante con los tres datos sí/no que cuentan las tarjetas.
+type IntegranteResumen struct {
+	Activo                 bool
+	PerteneceLacis         bool
+	PerteneceGrupoSoftware bool
+}
+
+// TesisResumen es una fila de tesis. Anio es nil cuando la tesis no tiene año cargado.
+type TesisResumen struct {
+	Anio     *int
+	Nivel    string
+	TienePDF bool
+}
+
+// CantidadPorAnio es una fila de "Productos por año" o "Tesis por año". PorcentajeDelMaximo es el
+// ancho de la barra: 100 para el año con más registros y proporcional para los demás.
 type CantidadPorAnio struct {
 	Anio                int
 	Cantidad            int
 	PorcentajeDelMaximo int
 }
 
-// ProductoIncompleto es un producto al que le falta información. Faltantes usa los nombres
-// "descripción", "contacto" y "participantes", en ese orden. El repositorio no cuenta: un
-// producto sin enlace es un producto con licencia, no un producto incompleto.
-type ProductoIncompleto struct {
-	ID        int
-	Titulo    string
-	Anio      int
-	Faltantes []string
+// EstadisticasIntegrantes son las tarjetas que antes calculaba lista.js en la lista de integrantes,
+// con la misma cuenta.
+type EstadisticasIntegrantes struct {
+	Registrados int
+	Activos     int
+	Inactivos   int
+	Lacis       int
+	Software    int
+}
+
+// EstadisticasTesis junta las tarjetas que antes calculaba listaTesis.js en la lista de tesis
+// (Registradas, Posgrado, GradoOtros) con los gráficos de tesis por año y con PDF vs. sin PDF.
+type EstadisticasTesis struct {
+	Registradas      int
+	Posgrado         int
+	GradoOtros       int
+	PorAnio          []CantidadPorAnio
+	HayTesis         bool
+	ConPDF           int
+	SinPDF           int
+	PorcentajeConPDF int
+	PorcentajeSinPDF int
 }
 
 type Estadisticas struct {
@@ -41,5 +65,6 @@ type Estadisticas struct {
 	PorcentajeConLicencia    int
 	HayProductos             bool
 	PorAnio                  []CantidadPorAnio
-	Incompletos              []ProductoIncompleto
+	Integrantes              EstadisticasIntegrantes
+	Tesis                    EstadisticasTesis
 }

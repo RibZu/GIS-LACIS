@@ -40,39 +40,6 @@
                 </div>
             </div>
 
-            <div class="row g-3 stats-cards-row">
-                <div class="col-6 col-md-4 col-lg">
-                    <div class="stats-kpi-card">
-                        <div class="stats-kpi-num" id="kpiTotalIntegrantes">0</div>
-                        <div class="stats-kpi-label">Integrantes registrados</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg">
-                    <div class="stats-kpi-card">
-                        <div class="stats-kpi-num" id="kpiActivos">0</div>
-                        <div class="stats-kpi-label">Integrantes activos</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg">
-                    <div class="stats-kpi-card">
-                        <div class="stats-kpi-num" id="kpiInactivos">0</div>
-                        <div class="stats-kpi-label">Integrantes inactivos</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-6 col-lg">
-                    <div class="stats-kpi-card">
-                        <div class="stats-kpi-num" id="kpiLacis">0</div>
-                        <div class="stats-kpi-label">Pertenecientes a LaCIS</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-6 col-lg">
-                    <div class="stats-kpi-card">
-                        <div class="stats-kpi-num" id="kpiSoftware">0</div>
-                        <div class="stats-kpi-label">Pertenecientes a Grupo Software</div>
-                    </div>
-                </div>
-            </div>
-
             <div class="admin-card">
 
                 <div class="filter-container">
@@ -120,7 +87,6 @@
                                 data-rol="{{ if or (eq .GetRolLacisID 1) (eq .GetRolSoftwareID 1) (eq .RolID 1) }}DIRECTOR{{ else if or (eq .GetRolLacisID 2) (eq .GetRolSoftwareID 2) (eq .RolID 2) }}INVESTIGADOR{{ else if or (eq .GetRolLacisID 3) (eq .GetRolSoftwareID 3) (eq .RolID 3) }}ASESOR{{ else if or (eq .GetRolLacisID 4) (eq .GetRolSoftwareID 4) (eq .RolID 4) }}ESTUDIANTE{{ else }}{{ .Rol.Nombre }}{{ end }}"
                                 data-lacis="{{ .PerteneceLacis }}"
                                 data-software="{{ .PerteneceGrupoSoftware }}"
-                                data-activo="{{ .Activo }}"
                                 data-nombre="{{ .Nombre }} {{ .Apellido }} {{ .Especializacion }}">
                                 <td>
                                     <div class="d-flex align-items-center gap-3">

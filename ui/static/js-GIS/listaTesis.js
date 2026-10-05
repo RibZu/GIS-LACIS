@@ -12,34 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let activeNivel = 'all';
     let activeCarrera = 'all';
 
-    function actualizarEstadisticasTesis() {
-        const kpiTotal = document.getElementById('kpiTotalTesis');
-        const kpiPosgrado = document.getElementById('kpiPosgrado');
-        const kpiGrado = document.getElementById('kpiGrado');
-
-        if (!kpiTotal) return;
-
-        let total = rows.length;
-        let posgrado = 0;
-        let grado = 0;
-
-        rows.forEach(row => {
-            const nivel = (row.getAttribute('data-nivel') || '').toLowerCase();
-
-            if (nivel.includes('doctor') || nivel.includes('maestr') || nivel.includes('especializ') || nivel.includes('posgrado')) {
-                posgrado++;
-            } else {
-                grado++;
-            }
-        });
-
-        kpiTotal.textContent = total;
-        if (kpiPosgrado) kpiPosgrado.textContent = posgrado;
-        if (kpiGrado) kpiGrado.textContent = grado;
-    }
-
-    actualizarEstadisticasTesis();
-
     const urlParams = new URLSearchParams(window.location.search);
     const status = urlParams.get('status') || (document.body ? document.body.dataset.status : '');
     if (status && status.trim() !== '') {

@@ -39,27 +39,6 @@
                 </div>
             </div>
 
-            <div class="row g-3 stats-cards-row">
-                <div class="col-12 col-md-4">
-                    <div class="stats-kpi-card">
-                        <div class="stats-kpi-num" id="kpiTotalTesis">0</div>
-                        <div class="stats-kpi-label">Tesis registradas</div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="stats-kpi-card">
-                        <div class="stats-kpi-num" id="kpiPosgrado">0</div>
-                        <div class="stats-kpi-label">Tesis de posgrado</div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="stats-kpi-card">
-                        <div class="stats-kpi-num" id="kpiGrado">0</div>
-                        <div class="stats-kpi-label">Tesis de grado / otros</div>
-                    </div>
-                </div>
-            </div>
-
             <div class="admin-card">
 
                 <div class="filter-container">
@@ -108,8 +87,7 @@
                             <tr class="tesis-row"
                                 data-search="{{ .Titulo }} {{ .GetAutorDisplay }} {{ .GetDirectorDisplay }} {{ .GetCoodirectorDisplay }} {{ .CarreraOrigen }} {{ .PalabrasClave }} {{ .GetAnioDisplay }}"
                                 data-nivel="{{ .Nivel }}"
-                                data-carrera="{{ .CarreraOrigen }}"
-                                data-pdf="{{ if .ArchivoPDF }}true{{ else }}false{{ end }}">
+                                data-carrera="{{ .CarreraOrigen }}">
                                 <td>
                                     <div class="d-flex align-items-start gap-2">
                                         <i class="bi bi-file-earmark-text-fill fs-4 mt-1" style="color: var(--azul-logo);"></i>

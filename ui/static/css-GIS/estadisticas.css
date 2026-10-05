@@ -1,5 +1,5 @@
-/* El <body> es un grid: sin min-width: 0 el <main> crece con su contenido (la tabla de incompletos)
-   y en pantallas chicas lo que sobra queda recortado en vez de quedarse dentro de la pantalla. */
+/* El <body> es un grid: sin min-width: 0 el <main> crece con su contenido y en pantallas chicas lo
+   que sobra queda recortado en vez de quedarse dentro de la pantalla. */
 .stats-main {
     min-width: 0;
 }
@@ -74,6 +74,15 @@
     background-color: #7FA08E;
 }
 
+/* Barra apilada de tesis con PDF / sin PDF: los mismos tonos que la de productos. */
+.stat-segmento-con-pdf .progress-bar {
+    background-color: var(--azul-logo);
+}
+
+.stat-segmento-sin-pdf .progress-bar {
+    background-color: #7FA08E;
+}
+
 .stat-leyenda {
     margin-top: .75rem;
     color: #344054;
@@ -143,7 +152,43 @@
     }
 }
 
-/* Mensaje de una sección que todavía no tiene estadísticas (por ahora, "Estadísticas generales"). */
-.stats-vacio {
-    color: var(--adm-ink-soft);
+/* Tarjetas de integrantes y de tesis: mudadas sin cambios desde lista.css, donde estaban arriba de
+   las listas. --borde-tarjeta la define lista.css, que esta página no carga, así que lleva su mismo
+   valor como respaldo. */
+.stats-cards-row {
+    margin-bottom: 24px;
+}
+
+.stats-kpi-card {
+    background: #ffffff;
+    border: 1px solid var(--borde-tarjeta, #E7E9EE);
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.stats-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.08);
+}
+
+.stats-kpi-num {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--azul-logo);
+    line-height: 1.1;
+    margin-bottom: 6px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.stats-kpi-label {
+    font-size: 0.86rem;
+    color: #475467;
+    font-weight: 500;
+    line-height: 1.35;
 }
