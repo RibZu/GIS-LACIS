@@ -83,7 +83,7 @@
                     </section>
 
                     <section id="stats-repositorio" class="stats-seccion">
-                        <h3 class="stats-titulo">Con repositorio vs. con licencia</h3>
+                        <h3 class="stats-titulo">Con repositorio - Con licencia</h3>
                         {{ if .E.HayProductos }}
                         <div class="progress-stacked" role="group" aria-label="Productos con repositorio y con licencia">
                             <div class="progress stat-segmento-repositorio" role="progressbar" aria-label="Con repositorio" aria-valuenow="{{ .E.PorcentajeConRepositorio }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ .E.PorcentajeConRepositorio }}%">
@@ -188,7 +188,7 @@
                     </section>
 
                     <section id="stats-tesis-pdf" class="stats-seccion">
-                        <h3 class="stats-titulo">Con PDF vs. sin PDF</h3>
+                        <h3 class="stats-titulo">Con PDF - Sin PDF</h3>
                         {{ if .E.Tesis.HayTesis }}
                         <div class="progress-stacked" role="group" aria-label="Tesis con PDF y sin PDF">
                             <div class="progress stat-segmento-con-pdf" role="progressbar" aria-label="Con PDF" aria-valuenow="{{ .E.Tesis.PorcentajeConPDF }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ .E.Tesis.PorcentajeConPDF }}%">
