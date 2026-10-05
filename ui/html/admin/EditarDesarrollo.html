@@ -64,6 +64,7 @@
                         <div class="col-md-6">
                             <label for="url" class="form-label">Enlace / URL (Opcional)</label>
                             <input type="text" class="form-control" id="url" name="url" placeholder="ejemplo.com.ar (con o sin https://)" value="{{ if .Desarrollo }}{{ .Desarrollo.URL }}{{ end }}">
+                            <div class="form-text">Si lo dejás vacío, el producto se publica como "Producto con licencia".</div>
                         </div>
 
                         <div class="col-md-6">

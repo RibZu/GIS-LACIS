@@ -126,6 +126,21 @@
                 </div>
                 {{ end }}
 
+                {{ if .TieneEstadisticas }}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 dash-card">
+                        <div class="card-body d-flex gap-3">
+                            <div class="dash-modtile" style="background:#14B8A6"><i class="bi bi-bar-chart-line"></i></div>
+                            <div>
+                                <h5 class="card-title mb-1">Estadísticas</h5>
+                                <p class="card-text small text-muted mb-2">Indicadores de productos de software, integrantes y participantes externos de LaCIS.</p>
+                                <a href="/admin/estadisticas" class="btn btn-sm btn-outline-primary mt-2">Ir a Módulo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ end }}
+
                 {{ if .EsAdmin }}
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100 dash-card">

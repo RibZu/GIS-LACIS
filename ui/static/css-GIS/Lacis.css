@@ -377,7 +377,8 @@ body {
     transition: transform 0.6s;
 }
 
-.flip-btn:hover {
+.flip-btn:hover,
+.producto-ver-link:hover {
     background-color: var(--color-secundario) !important;
     border: 1px solid white!important;
     color: white;
@@ -423,10 +424,86 @@ body {
 .lacis-card-producto {
   text-align: left;
   min-height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* El card-body ocupa todo el alto de la tarjeta, así el mt-auto de las acciones lleva "Ver más"
+   (y "Volver"/"Ver producto" en el dorso) al pie y queda a la misma altura en toda la fila. */
+.lacis-card-producto > .card-body {
+  flex: 1 1 auto;
 }
 
 .lacis-card-producto .card-body {
   text-align: left;
+}
+
+/* Flip de productos: las dos caras se apilan en la misma celda del grid en vez de ir en
+   position:absolute con alto fijo (como en Servicios), así la tarjeta toma el alto de la cara
+   más larga y la descripción del dorso nunca queda cortada. */
+.carta-flipped.carta-producto {
+  min-height: 0;
+  height: 100%;
+}
+
+.carta-producto .carta-flipped-interior {
+  display: grid;
+  height: 100%;
+}
+
+.carta-producto .carta-frontal,
+.carta-producto .carta-trasera {
+  position: relative;
+  grid-area: 1 / 1;
+  height: auto;
+}
+
+/* "Producto con licencia": aviso lateral, en su propio renglón sobre los botones del dorso de los
+   productos sin repositorio. A propósito es cuadrado (sin redondeo), no lleva ícono y no se parece a
+   los botones ("Volver" y "Ver producto" tienen borde gris oscuro, esquinas redondeadas y reaccionan
+   al mouse): tiene borde verde, una barra gruesa a la izquierda, fondo verde claro, texto a la
+   izquierda, y no tiene :hover ni :focus porque es solo informativo. Contrastes (WCAG): texto sobre
+   su fondo 6,08:1, borde sobre la tarjeta blanca 4,10:1 y barra sobre la tarjeta blanca 6,60:1. */
+.producto-licencia {
+  display: block;
+  margin-bottom: .75rem;
+  padding: .5rem .75rem;
+  border: 1px solid #558B2F;
+  border-left: 4px solid #33691E;
+  border-radius: 0;
+  background-color: #F1F8E9;
+  color: #33691E;
+  font-size: .875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: left;
+  cursor: default;
+  user-select: none;
+}
+
+.carta-producto .carta-trasera .card-body {
+  text-align: left;
+}
+
+/* En las tarjetas con flip el hover levanta la tarjeta entera (las dos caras juntas) y no cada
+   cara por separado: si subía solo la cara visible, por debajo asomaba el borde de la otra. Las
+   tarjetas internas también ocultan su reverso, porque al tener transform propio el navegador
+   puede dibujarlas aunque la cara que las contiene esté de espaldas. */
+.carta-flipped.carta-producto {
+  transition: transform 0.3s;
+}
+
+.carta-flipped.carta-producto:hover {
+  transform: translateY(-6px);
+}
+
+.carta-producto .lacis-card:hover {
+  transform: none;
+}
+
+.carta-producto .lacis-card {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .lacis-card-producto .card-icon-container {
@@ -443,34 +520,6 @@ body {
   border-radius: 999px;
   background-color: rgba(139, 195, 74, .15);
   color: var(--color-principal);
-}
-
-.producto-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 0.75rem;
-  color: var(--lacis-primary);
-  font-weight: 700;
-  font-size: 0.88rem;
-  text-decoration: none;
-  border-bottom: 2px solid var(--color-secundario);
-  padding-bottom: 2px;
-  transition: color 0.2s ease, border-color 0.2s ease;
-}
-
-.producto-cta:hover {
-  color: var(--color-principal);
-  border-color: var(--color-principal);
-}
-
-.producto-cta i {
-  font-size: 0.78rem;
-  transition: transform 0.2s ease;
-}
-
-.producto-cta:hover i {
-  transform: translateX(3px);
 }
 
 .producto-ver-mas {
@@ -499,8 +548,8 @@ body {
 .producto-ver-mas:hover,
 .producto-ver-mas:focus-visible {
   color: #fff;
-  border-color: var(--color-principal);
-  background-color: var(--color-principal);
+  border-color: #fff;
+  background-color: var(--color-secundario);
 }
 
 .producto-ver-mas i {

@@ -13,6 +13,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     cambiar_perspectiva.classList.add("flipped");
                 }
+
+                // En las tarjetas de productos, la cara que queda de espaldas se vuelve inert para
+                // que el teclado no pueda enfocar sus botones, y el foco pasa a la cara visible.
+                if (cambiar_perspectiva.classList.contains('carta-producto')) {
+                    const girada = cambiar_perspectiva.classList.contains('flipped');
+                    const frente = cambiar_perspectiva.querySelector('.carta-frontal');
+                    const dorso = cambiar_perspectiva.querySelector('.carta-trasera');
+                    frente.inert = girada;
+                    dorso.inert = !girada;
+                    frente.querySelector('.producto-flip-btn').setAttribute('aria-expanded', String(girada));
+                    (girada ? dorso : frente).querySelector('.flip-btn').focus();
+                }
             }
         });
     });

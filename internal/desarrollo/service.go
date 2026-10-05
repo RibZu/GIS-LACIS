@@ -136,7 +136,16 @@ func (s *Service) VincularParticipantesExternos(desarrolloID int, nombres []stri
 	if desarrolloID <= 0 {
 		return ErrIDInvalido
 	}
-	return s.storage.SetParticipantesExternos(desarrolloID, nombres)
+
+	// Cada nombre se guarda tal cual lo escribió el gestor: solo se recortan los espacios de los
+	// bordes y se descartan los vacíos.
+	limpios := make([]string, 0, len(nombres))
+	for _, nombre := range nombres {
+		if n := strings.TrimSpace(nombre); n != "" {
+			limpios = append(limpios, n)
+		}
+	}
+	return s.storage.SetParticipantesExternos(desarrolloID, limpios)
 }
 
 func (s *Service) ObtenerParticipantesExternos(desarrolloID int) ([]string, error) {

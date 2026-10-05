@@ -4,6 +4,7 @@ import (
 	"PaginaSEG/api/handler"
 	"PaginaSEG/internal/colaborador"
 	"PaginaSEG/internal/desarrollo"
+	"PaginaSEG/internal/estadistica"
 	"PaginaSEG/internal/integrante"
 	"PaginaSEG/internal/proyecto"
 	"PaginaSEG/internal/reconocimiento"
@@ -88,6 +89,10 @@ func InitRoutes(e *gin.Engine) {
 	reconocimientoStorage := reconocimiento.NewPostgresStorage(db)
 	reconocimientoService := reconocimiento.NewService(reconocimientoStorage, logger)
 	reconocimientoHandler := handler.NewReconocimientoHandler(reconocimientoService, logger)
+
+	estadisticaStorage := estadistica.NewPostgresStorage(db)
+	estadisticaService := estadistica.NewService(estadisticaStorage, logger)
+	estadisticaHandler := handler.NewEstadisticaHandler(estadisticaService, logger)
 
 	e.GET("/", func(c *gin.Context) {
 		_, loggedIn := handler.CurrentUserID(c)
@@ -178,6 +183,11 @@ func InitRoutes(e *gin.Engine) {
 	usuariosAdmin.GET("/editar-usuario", usuarioHandler.Editar)
 	usuariosAdmin.POST("/actualizar-usuario", usuarioHandler.Actualizar)
 	usuariosAdmin.GET("/borrar-usuario", usuarioHandler.Borrar)
+
+	// Módulo "estadisticas": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
+	estadisticasAdmin := v1Admin.Group("")
+	estadisticasAdmin.Use(handler.RequireModule(usuarioService, "estadisticas"))
+	estadisticasAdmin.GET("/estadisticas", estadisticaHandler.Ver)
 
 	v1API := e.Group("/api/v1")
 	v1API.GET("/integrantes", integranteHandler.API_GetAll)
