@@ -1,6 +1,6 @@
 // Package estadistica calcula indicadores de solo lectura sobre los productos de software, los
-// integrantes, los participantes externos y las tesis. Es un reporte que cruza varias tablas y no
-// tiene altas, bajas ni ediciones, por eso no define UpdateFields.
+// integrantes, los participantes externos, las tesis y los proyectos. Es un reporte que cruza varias tablas
+// y no tiene altas, bajas ni ediciones, por eso no define UpdateFields.
 package estadistica
 
 // ProductoResumen tiene solo lo que usan las estadísticas de productos: el año y el enlace.
@@ -55,6 +55,36 @@ type EstadisticasTesis struct {
 	PorcentajeSinPDF int
 }
 
+// RolCantidad representa la cantidad de integrantes que cumplen un rol específico en un proyecto o a nivel global.
+type RolCantidad struct {
+	Rol      string
+	Cantidad int
+}
+
+// ProyectoEstadistica representa un proyecto con su resumen de integrantes por rol.
+type ProyectoEstadistica struct {
+	ID               int
+	Titulo           string
+	AnioInicio       int
+	AnioFin          int
+	Activo           bool
+	EquipoHistorico  string
+	TotalIntegrantes int
+	TieneIntegrantes bool
+	Roles            []RolCantidad
+}
+
+// EstadisticasProyectos consolida los indicadores de proyectos y el detalle individual.
+type EstadisticasProyectos struct {
+	TotalProyectos          int
+	ProyectosConIntegrantes int
+	ProyectosSinDatos       int
+	TotalParticipaciones    int
+	HayProyectos            bool
+	RolesGlobal             []RolCantidad
+	Lista                   []ProyectoEstadistica
+}
+
 type Estadisticas struct {
 	IntegrantesActivosLacis  int
 	ParticipantesExternos    int
@@ -67,4 +97,5 @@ type Estadisticas struct {
 	PorAnio                  []CantidadPorAnio
 	Integrantes              EstadisticasIntegrantes
 	Tesis                    EstadisticasTesis
+	Proyectos                EstadisticasProyectos
 }

@@ -3,6 +3,7 @@ package proyecto
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"go.uber.org/zap"
 )
@@ -144,11 +145,17 @@ func (s *Service) GetEquipo(proyectoID int) ([]MiembroEquipo, error) {
 	return equipo, nil
 }
 
+var ErrRolRequerido = errors.New("debe seleccionar un rol para el integrante en el proyecto")
+
 func (s *Service) AgregarMiembro(proyectoID, integranteID int, rolEnProyecto string) error {
 	if proyectoID <= 0 || integranteID <= 0 {
 		return ErrIDInvalido
 	}
-	if err := s.storage.AgregarMiembro(proyectoID, integranteID, rolEnProyecto); err != nil {
+	rolLimpio := strings.TrimSpace(rolEnProyecto)
+	if rolLimpio == "" || strings.EqualFold(rolLimpio, "sin rol asignado") {
+		return ErrRolRequerido
+	}
+	if err := s.storage.AgregarMiembro(proyectoID, integranteID, rolLimpio); err != nil {
 		s.logger.Error("Error al agregar miembro al equipo", zap.Error(err))
 		return err
 	}
