@@ -95,6 +95,14 @@ Si algo falla, mirá la pestaña *Logs* del servicio web:
 
 Subí los cambios con `git push` a `main`. Railway construye y publica solo. **No vuelvas a cargar `db/lacis.sql`.** Si un cambio agrega una tabla o columna nueva, hay que aplicar ese cambio a mano en la base de Railway con `psql` (como en el paso 3, pero con el archivo del cambio).
 
+### Si el sitio ya estaba publicado: descripción de Simon Riberi
+
+La descripción de Simon Riberi cambió en `db/lacis.sql`, pero ese archivo no se vuelve a cargar. Si ya cargaste los datos antes, corregí esa fila a mano: guardá este comando en un archivo `actualizar-descripcion.sql` (codificación UTF-8) y ejecutalo con `psql "<DATABASE_PUBLIC_URL>" -f actualizar-descripcion.sql`. Tiene que responder `UPDATE 1`; después abrí `/integrantes` y revisá la tarjeta.
+
+```sql
+UPDATE integrante SET descripcion = 'Técnico Universitario en Web (UNSL). Desarrollador web con experiencia en proyectos reales y académicos utilizando diversas tecnologías entre las que se incluyen Go, PostgreSQL, JavaScript, PHP, React y Node.js. Participó en el diseño, desarrollo y mantenimiento del sitio web oficial de LaCIS como Práctica.' WHERE nombre = 'Tec. Riberi Zunino' AND apellido = 'Simon Martin';
+```
+
 ## 9. Aviso importante
 
 `admin` / `admin123` es la contraseña de la **versión de prueba**. Cualquier persona que la adivine puede entrar al panel y modificar o borrar contenido. Antes de usar el sitio como definitivo, entrá como `admin`, abrí *Administradores*, editá el usuario `admin` y poné una contraseña nueva.

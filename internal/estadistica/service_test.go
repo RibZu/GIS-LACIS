@@ -13,11 +13,13 @@ type MockStorage struct {
 	productos   []ProductoResumen
 	integrantes []IntegranteResumen
 	tesis       []TesisResumen
+	proyectos   []ProyectoFilaEstadistica
 
 	errNombres     error
 	errProductos   error
 	errIntegrantes error
 	errTesis       error
+	errProyectos   error
 }
 
 func (m *MockStorage) NombresParticipantesExternos() ([]string, error) {
@@ -31,6 +33,9 @@ func (m *MockStorage) ResumenIntegrantes() ([]IntegranteResumen, error) {
 }
 func (m *MockStorage) ResumenTesis() ([]TesisResumen, error) {
 	return m.tesis, m.errTesis
+}
+func (m *MockStorage) ResumenProyectos() ([]ProyectoFilaEstadistica, error) {
+	return m.proyectos, m.errProyectos
 }
 
 func nuevoServicio(m *MockStorage) *Service {
@@ -209,6 +214,7 @@ func TestObtener_SiFallaCualquierLecturaNoDevuelveNumeros(t *testing.T) {
 		"productos":              {errProductos: falla},
 		"integrantes":            {errIntegrantes: falla},
 		"tesis":                  {errTesis: falla},
+		"proyectos":              {errProyectos: falla},
 	}
 	for nombre, m := range casos {
 		est, err := nuevoServicio(m).Obtener()
