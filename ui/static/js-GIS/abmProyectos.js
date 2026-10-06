@@ -196,6 +196,11 @@ document.getElementById('formProyecto').addEventListener('submit', async (e) => 
 
             // Asignar el equipo armado en memoria mientras se completaba el form
             const equipoAAsignar = widgetEquipo ? widgetEquipo.obtenerSeleccionados() : [];
+            const sinRol = equipoAAsignar.find(m => !m.rol || m.rol.trim() === '' || m.rol.toLowerCase() === 'sin rol asignado');
+            if (sinRol) {
+                throw new Error(`Debes asignarle un rol a "${sinRol.nombre}" antes de guardar.`);
+            }
+
             for (const m of equipoAAsignar) {
                 await fetch(`/api/v1/admin/proyectos/${nuevoProyecto.id}/equipo`, {
                     method: 'POST',
@@ -296,13 +301,20 @@ function inicializarWidgetEquipo() {
 }
 
 async function agregarMiembroAlServidor(integranteId, rol) {
+    if (!rol || rol.trim() === '' || rol.toLowerCase() === 'sin rol asignado') {
+        mostrarToast('Debes seleccionar un rol válido para el integrante.', 'warning');
+        return;
+    }
     try {
         const res = await fetch(`/api/v1/admin/proyectos/${proyectoIdActual}/equipo`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ integrante_id: parseInt(integranteId), rol_en_proyecto: rol })
         });
-        if (!res.ok) throw new Error('No se pudo agregar el integrante');
+        if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(data.error || 'No se pudo agregar el integrante');
+        }
     } catch (err) {
         mostrarToast(err.message, 'danger');
     }

@@ -24,7 +24,7 @@ function crearWidgetEquipoProyecto(config) {
     }
 
     function opcionesRolHTML(rolActual) {
-        var html = '<option value="">Sin rol asignado</option>';
+        var html = '<option value="" disabled' + (!rolActual ? ' selected' : '') + '>Seleccionar rol...</option>';
         roles.forEach(function (r) {
             var selected = (r === rolActual) ? ' selected' : '';
             html += '<option value="' + r + '"' + selected + '>' + r + '</option>';
@@ -75,7 +75,8 @@ function crearWidgetEquipoProyecto(config) {
 
     function agregar(id, nombre, rol) {
         if (yaSeleccionado(id)) return;
-        var persona = { id: id, nombre: nombre, rol: rol || '' };
+        var rolInicial = rol || (roles.length > 0 ? roles[0] : '');
+        var persona = { id: id, nombre: nombre, rol: rolInicial };
         seleccionados.push(persona);
         renderLista();
         if (typeof config.onAgregar === 'function') config.onAgregar(persona);
