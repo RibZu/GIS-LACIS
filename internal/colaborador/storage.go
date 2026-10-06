@@ -5,7 +5,6 @@ import (
 	"fmt"
 )
 
-// Storage define la interfaz de acceso a datos para colaboradores.
 type Storage interface {
 	GetAll() ([]Colaborador, error)
 	Create(c *Colaborador) error

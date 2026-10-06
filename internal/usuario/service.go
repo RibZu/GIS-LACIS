@@ -17,7 +17,18 @@ var (
 	ErrIDInvalido        = errors.New("ID inválido")
 	ErrModulosRequerido  = errors.New("Debes seleccionar al menos un modulo")
 	ErrUsernameInvalido  = errors.New("El username no puede contener espacios")
+	ErrUsernameDuplicado = errors.New("ya existe un usuario con ese nombre de usuario")
+	ErrEmailDuplicado    = errors.New("ya existe un usuario con ese email")
+	ErrAutoEliminacion   = errors.New("un usuario no puede eliminar su propia cuenta")
+	ErrAutoDegradacion   = errors.New("un administrador no puede quitarse su propio rol")
+	ErrUltimoAdmin       = errors.New("tiene que quedar al menos un administrador")
 )
+
+const rolAdmin = "ADMIN"
+
+func esAdministrador(u *UsuarioGestor) bool {
+	return u != nil && u.Rol != nil && *u.Rol == rolAdmin
+}
 
 type Service struct {
 	storage Storage
@@ -59,8 +70,11 @@ func (s *Service) Create(u *UsuarioGestor) error {
 
 	err = s.storage.Create(u)
 	if err != nil {
-		s.logger.Error("Errore durante crear", zap.Error(err))
-		return fmt.Errorf("Errore durante crear: %w", err)
+		if errors.Is(err, ErrUsernameDuplicado) || errors.Is(err, ErrEmailDuplicado) {
+			return err
+		}
+		s.logger.Error("Error al crear usuario", zap.Error(err))
+		return fmt.Errorf("error al crear usuario: %w", err)
 	}
 	s.logger.Info("Usuario creado", zap.Int("id", u.ID))
 	return nil
@@ -72,7 +86,9 @@ func (s *Service) ReadByUsername(username string) (*UsuarioGestor, error) {
 	}
 	usuario, err := s.storage.ReadByUsername(username)
 	if err != nil {
-		s.logger.Error("Errore durante read", zap.String("username", username), zap.Error(err))
+		if !errors.Is(err, ErrNotFound) {
+			s.logger.Error("Error al leer usuario por username", zap.String("username", username), zap.Error(err))
+		}
 		return nil, err
 	}
 	return usuario, nil
@@ -84,25 +100,52 @@ func (s *Service) Read(id int) (*UsuarioGestor, error) {
 	}
 	usuario, err := s.storage.Read(id)
 	if err != nil {
-		s.logger.Error("Errore durante read", zap.Int("id", id), zap.Error(err))
+		if !errors.Is(err, ErrNotFound) {
+			s.logger.Error("Error al leer usuario", zap.Int("id", id), zap.Error(err))
+		}
 		return nil, err
 	}
 	return usuario, nil
 }
 
-func (s *Service) Delete(id int) error {
+func (s *Service) verificarQueQuedeOtroAdmin(destino *UsuarioGestor) error {
+	if !esAdministrador(destino) {
+		return nil
+	}
+	total, err := s.storage.ContarAdmins()
+	if err != nil {
+		s.logger.Error("Error al contar administradores", zap.Error(err))
+		return err
+	}
+	if total <= 1 {
+		return ErrUltimoAdmin
+	}
+	return nil
+}
+
+func (s *Service) Delete(actorID, id int) error {
 	if id <= 0 {
 		return ErrIDInvalido
 	}
-	err := s.storage.Delete(id)
+	if actorID == id {
+		return ErrAutoEliminacion
+	}
+	destino, err := s.Read(id)
 	if err != nil {
-		s.logger.Error("Errore durante delete", zap.Int("id", id), zap.Error(err))
+		return err
+	}
+	if err := s.verificarQueQuedeOtroAdmin(destino); err != nil {
+		return err
+	}
+	if err := s.storage.Delete(id); err != nil {
+		if !errors.Is(err, ErrNotFound) {
+			s.logger.Error("Error al eliminar usuario", zap.Int("id", id), zap.Error(err))
+		}
 		return err
 	}
 
-	s.logger.Info("Usuario eliminado", zap.Int("id", id))
+	s.logger.Info("Usuario eliminado", zap.Int("id", id), zap.Int("por", actorID))
 	return nil
-
 }
 
 func (s *Service) GetAll() ([]UsuarioGestor, error) {
@@ -114,7 +157,10 @@ func (s *Service) GetAll() ([]UsuarioGestor, error) {
 	return usuarios, nil
 }
 
-func (s *Service) Update(id int, fields *UpdateFieldGestor) error {
+func (s *Service) Update(actorID, id int, fields *UpdateFieldGestor) error {
+	if id <= 0 {
+		return ErrIDInvalido
+	}
 	if fields.Username != nil {
 		if *fields.Username == "" {
 			return ErrUsernameRequerido
@@ -133,6 +179,18 @@ func (s *Service) Update(id int, fields *UpdateFieldGestor) error {
 		if *fields.Modulos == "" {
 			return ErrModulosRequerido
 		}
+		destino, err := s.Read(id)
+		if err != nil {
+			return err
+		}
+		if esAdministrador(destino) {
+			if actorID == id {
+				return ErrAutoDegradacion
+			}
+			if err := s.verificarQueQuedeOtroAdmin(destino); err != nil {
+				return err
+			}
+		}
 		rol := calcularRol(*fields.Modulos)
 		fields.Rol = &rol
 	}
@@ -150,7 +208,9 @@ func (s *Service) Update(id int, fields *UpdateFieldGestor) error {
 	}
 	err := s.storage.Update(id, fields)
 	if err != nil {
-		s.logger.Error("Error al actualizar usuario", zap.Int("id", id), zap.Error(err))
+		if !errors.Is(err, ErrUsernameDuplicado) && !errors.Is(err, ErrEmailDuplicado) && !errors.Is(err, ErrNotFound) {
+			s.logger.Error("Error al actualizar usuario", zap.Int("id", id), zap.Error(err))
+		}
 		return err
 	}
 	s.logger.Info("Usuario actualizado", zap.Int("id", id))

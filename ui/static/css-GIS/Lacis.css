@@ -428,8 +428,6 @@ body {
   flex-direction: column;
 }
 
-/* El card-body ocupa todo el alto de la tarjeta, así el mt-auto de las acciones lleva "Ver más"
-   (y "Volver"/"Ver producto" en el dorso) al pie y queda a la misma altura en toda la fila. */
 .lacis-card-producto > .card-body {
   flex: 1 1 auto;
 }
@@ -438,9 +436,6 @@ body {
   text-align: left;
 }
 
-/* Flip de productos: las dos caras se apilan en la misma celda del grid en vez de ir en
-   position:absolute con alto fijo (como en Servicios), así la tarjeta toma el alto de la cara
-   más larga y la descripción del dorso nunca queda cortada. */
 .carta-flipped.carta-producto {
   min-height: 0;
   height: 100%;
@@ -458,12 +453,6 @@ body {
   height: auto;
 }
 
-/* "Producto con licencia": aviso lateral, en su propio renglón sobre los botones del dorso de los
-   productos sin repositorio. A propósito es cuadrado (sin redondeo), no lleva ícono y no se parece a
-   los botones ("Volver" y "Ver producto" tienen borde gris oscuro, esquinas redondeadas y reaccionan
-   al mouse): tiene borde verde, una barra gruesa a la izquierda, fondo verde claro, texto a la
-   izquierda, y no tiene :hover ni :focus porque es solo informativo. Contrastes (WCAG): texto sobre
-   su fondo 6,08:1, borde sobre la tarjeta blanca 4,10:1 y barra sobre la tarjeta blanca 6,60:1. */
 .producto-licencia {
   display: block;
   margin-bottom: .75rem;
@@ -485,10 +474,6 @@ body {
   text-align: left;
 }
 
-/* En las tarjetas con flip el hover levanta la tarjeta entera (las dos caras juntas) y no cada
-   cara por separado: si subía solo la cara visible, por debajo asomaba el borde de la otra. Las
-   tarjetas internas también ocultan su reverso, porque al tener transform propio el navegador
-   puede dibujarlas aunque la cara que las contiene esté de espaldas. */
 .carta-flipped.carta-producto {
   transition: transform 0.3s;
 }

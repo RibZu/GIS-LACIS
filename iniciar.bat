@@ -6,10 +6,6 @@ echo        GIS-LACIS - Script de Inicio Automtico
 echo ========================================================
 echo.
 
-rem Sin esto, psql toma el codepage activo de la consola (en Windows en espanol suele
-rem ser 850/1252, no UTF-8) como client_encoding y corrompe los acentos/nn al cargar
-rem "Modelo Base de datos.sql" (queda escrito como doble-UTF-8, ej. "BascuÃ±an" en vez
-rem de "Bascuñan") sin que psql avise del error.
 set "PGCLIENTENCODING=UTF8"
 
 echo [INFO] Cerrando sesiones de PostgreSQL que hayan quedado abiertas...
@@ -87,6 +83,7 @@ echo [INFO] Iniciando el Servidor Web (Go)...
 echo La pagina estara disponible en: http://localhost:8080
 echo ========================================================
 echo.
+set "DATABASE_URL=postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
 start "" "cmd.exe" /k "go run cmd/api/main.go"
 
 echo.

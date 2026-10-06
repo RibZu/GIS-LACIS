@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarEventos();
 });
 
-// ==================== PROYECTOS ====================
 
 async function cargarDesdeAPI() {
     try {
@@ -138,7 +137,6 @@ function renderizarCards() {
     });
 }
 
-// ==================== DRAWER CREAR / EDITAR ====================
 
 function abrirDrawerCrear() {
     document.getElementById('formProyecto').reset();
@@ -182,7 +180,6 @@ document.getElementById('formProyecto').addEventListener('submit', async (e) => 
 
     try {
         if (!id) {
-            // Crear proyecto nuevo
             const res = await fetch('/api/v1/admin/proyectos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -194,7 +191,6 @@ document.getElementById('formProyecto').addEventListener('submit', async (e) => 
             }
             const nuevoProyecto = await res.json();
 
-            // Asignar el equipo armado en memoria mientras se completaba el form
             const equipoAAsignar = widgetEquipo ? widgetEquipo.obtenerSeleccionados() : [];
             const sinRol = equipoAAsignar.find(m => !m.rol || m.rol.trim() === '' || m.rol.toLowerCase() === 'sin rol asignado');
             if (sinRol) {
@@ -213,7 +209,6 @@ document.getElementById('formProyecto').addEventListener('submit', async (e) => 
             mostrarToast('Proyecto creado con su equipo con éxito.');
             cargarDesdeAPI();
         } else {
-            // Actualizar proyecto existente (el equipo se maneja aparte, en vivo)
             const res = await fetch(`/api/v1/admin/proyectos/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -232,7 +227,6 @@ document.getElementById('formProyecto').addEventListener('submit', async (e) => 
     }
 });
 
-// ==================== ELIMINAR PROYECTO ====================
 
 function confirmarEliminar(id) {
     idProyectoAEliminar = id;
@@ -255,7 +249,6 @@ document.getElementById('btnConfirmarEliminar').addEventListener('click', async 
     }
 });
 
-// ==================== EQUIPO DEL PROYECTO (buscador estilo Desarrollos) ====================
 
 async function cargarIntegrantes() {
     try {
@@ -264,7 +257,6 @@ async function cargarIntegrantes() {
         const activos = data
             .filter(i => i.activo !== false)
             .map(i => ({ id: i.id, nombre: `${i.nombre} ${i.apellido}` }));
-        // Mutamos el mismo array (no reasignamos) para que el widget vea los cambios.
         todosLosIntegrantes.length = 0;
         activos.forEach(i => todosLosIntegrantes.push(i));
     } catch (err) {
@@ -345,7 +337,6 @@ async function cargarEquipoDeProyecto(id) {
     if (widgetEquipo) widgetEquipo.resetear(seleccionInicial);
 }
 
-// ==================== CARGA RÁPIDA DE INTEGRANTE ====================
 
 document.getElementById('linkCrearIntegranteRapido').addEventListener('click', (e) => {
     e.preventDefault();
@@ -391,7 +382,6 @@ document.getElementById('btnGuardarMiniIntegrante').addEventListener('click', as
     }
 });
 
-// ==================== FILTROS ====================
 
 function configurarEventos() {
     inputBuscar.addEventListener('input', () => renderizarCards());

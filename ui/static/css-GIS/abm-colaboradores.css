@@ -25,7 +25,6 @@ body {
     border: 1px solid var(--gris-borde);
 }
 
-/* Contenedor Admin de Colaborador */
 .colaborador-card-wrapper {
     background: #ffffff;
     border: 1px solid var(--gris-borde);
@@ -55,7 +54,6 @@ body {
     filter: grayscale(100%);
 }
 
-/* Barra de controles superiores */
 .card-header-actions {
     width: 100%;
     display: flex;
@@ -66,7 +64,6 @@ body {
     border-bottom: 1px solid #f1f5f9;
 }
 
-/* FLIP CARD IDÉNTICA A PROYECTO.HTML / EPROYECTO.CSS */
 .card-flip {
     background: transparent;
     border-radius: 18px;
@@ -181,7 +178,6 @@ body {
     color: #38bdf8;
 }
 
-/* Badge personalizado */
 .badge-vigente {
     background-color: #e0f2fe;
     color: #0369a1;

@@ -131,10 +131,8 @@ function abrirDrawerEditar(id) {
     document.getElementById('formId').value = c.id;
     document.getElementById('formDescripcion').value = c.descripcion || '';
 
-    // Clear file input
     document.getElementById('formLogo').value = '';
 
-    // Show current logo in preview if available
     if (c.logo_url) {
         logoPreview.src = c.logo_url;
         logoPreview.classList.remove('d-none');

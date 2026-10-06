@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     cambiar_perspectiva.classList.add("flipped");
                 }
 
-                // En las tarjetas de productos, la cara que queda de espaldas se vuelve inert para
-                // que el teclado no pueda enfocar sus botones, y el foco pasa a la cara visible.
                 if (cambiar_perspectiva.classList.contains('carta-producto')) {
                     const girada = cambiar_perspectiva.classList.contains('flipped');
                     const frente = cambiar_perspectiva.querySelector('.carta-frontal');
