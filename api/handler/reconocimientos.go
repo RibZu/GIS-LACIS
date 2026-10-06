@@ -11,7 +11,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// ReconocimientoHandler maneja las peticiones HTTP relacionadas a reconocimientos
 type ReconocimientoHandler struct {
 	service *reconocimiento.Service
 	logger  *zap.Logger
@@ -24,7 +23,6 @@ func NewReconocimientoHandler(s *reconocimiento.Service, l *zap.Logger) *Reconoc
 	}
 }
 
-// API_GetAll retorna la lista de reconocimientos activos en JSON (endpoint público)
 func (h *ReconocimientoHandler) API_GetAll(c *gin.Context) {
 	recs, err := h.service.GetAll()
 	if err != nil {
@@ -35,7 +33,6 @@ func (h *ReconocimientoHandler) API_GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, recs)
 }
 
-// API_GetAllAdmin retorna todos los reconocimientos (incluye inactivos) para el panel admin
 func (h *ReconocimientoHandler) API_GetAllAdmin(c *gin.Context) {
 	recs, err := h.service.GetAllAdmin()
 	if err != nil {
@@ -46,12 +43,10 @@ func (h *ReconocimientoHandler) API_GetAllAdmin(c *gin.Context) {
 	c.JSON(http.StatusOK, recs)
 }
 
-// View_ReconocimientosAdmin renderiza la vista HTML del panel admin de reconocimientos
 func (h *ReconocimientoHandler) View_ReconocimientosAdmin(c *gin.Context) {
 	c.HTML(http.StatusOK, "EditarReconocimientos.html", gin.H{"LoggedIn": true})
 }
 
-// API_Create crea un nuevo reconocimiento desde payload JSON
 func (h *ReconocimientoHandler) API_Create(c *gin.Context) {
 	var r reconocimiento.Reconocimiento
 	if err := c.ShouldBindJSON(&r); err != nil {
@@ -69,7 +64,6 @@ func (h *ReconocimientoHandler) API_Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, r)
 }
 
-// API_Read obtiene un reconocimiento por ID
 func (h *ReconocimientoHandler) API_Read(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id <= 0 {
@@ -91,7 +85,6 @@ func (h *ReconocimientoHandler) API_Read(c *gin.Context) {
 	c.JSON(http.StatusOK, r)
 }
 
-// API_Update actualiza campos de un reconocimiento por ID
 func (h *ReconocimientoHandler) API_Update(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id <= 0 {
@@ -119,7 +112,6 @@ func (h *ReconocimientoHandler) API_Update(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"mensaje": "reconocimiento actualizado exitosamente"})
 }
 
-// API_Delete realiza la baja lógica de un reconocimiento (activo = false)
 func (h *ReconocimientoHandler) API_Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id <= 0 {
@@ -140,7 +132,6 @@ func (h *ReconocimientoHandler) API_Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"mensaje": "reconocimiento dado de baja exitosamente"})
 }
 
-// API_Restaurar reactiva un reconocimiento dado de baja lógica
 func (h *ReconocimientoHandler) API_Restaurar(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id <= 0 {

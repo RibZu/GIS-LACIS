@@ -43,7 +43,7 @@
                 </div>
                 {{ end }}
 
-                <form action="/admin/insertar-desarrollo" method="POST">
+                <form action="/admin/insertar-desarrollo" method="POST" data-envio-unico>
 
                     <div class="form-section-subtitle">
                         <i class="bi bi-card-heading me-2" style="color: var(--azul-logo);"></i>1. Datos del Producto
@@ -52,19 +52,19 @@
                     <div class="row g-3">
                         <div class="col-md-8">
                             <label for="titulo" class="form-label">Título <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Ej: Sistema de Gestión Académica" required>
+                            <input type="text" class="form-control" id="titulo" name="titulo" value="{{ if .Desarrollo }}{{ .Desarrollo.Titulo }}{{ end }}" placeholder="Ej: Sistema de Gestión Académica" required>
                         </div>
 
                         <div class="col-md-4">
                             <label for="anio" class="form-label">Año <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="anio" name="anio" min="1990" max="2100" placeholder="Ej: 2026" required>
+                            <input type="number" class="form-control" id="anio" name="anio" min="1990" max="2100" value="{{ if .AnioTexto }}{{ .AnioTexto }}{{ end }}" placeholder="Ej: 2026" required>
                         </div>
 
                         <div class="col-md-6">
                             <label for="url" class="form-label">Enlace / URL (Opcional)</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-link-45deg"></i></span>
-                                <input type="text" class="form-control" id="url" name="url" placeholder="ejemplo.com.ar (con o sin https://)">
+                                <input type="text" class="form-control" id="url" name="url" value="{{ if .Desarrollo }}{{ .Desarrollo.URL }}{{ end }}" placeholder="ejemplo.com.ar (con o sin https://)">
                             </div>
                             <div class="form-text">Si lo dejás vacío, el producto se publica como "Producto con licencia".</div>
                         </div>
@@ -73,13 +73,13 @@
                             <label for="contacto" class="form-label">Contacto (Opcional)</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                <input type="text" class="form-control" id="contacto" name="contacto" placeholder="usuario@unsl.edu.ar">
+                                <input type="text" class="form-control" id="contacto" name="contacto" value="{{ if .Desarrollo }}{{ .Desarrollo.Contacto }}{{ end }}" placeholder="usuario@unsl.edu.ar">
                             </div>
                         </div>
 
                         <div class="col-12">
                             <label for="descripcion" class="form-label">Descripción (Opcional)</label>
-                            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" placeholder="Describe brevemente el desarrollo..."></textarea>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" placeholder="Describe brevemente el desarrollo...">{{ if .Desarrollo }}{{ .Desarrollo.Descripcion }}{{ end }}</textarea>
                         </div>
                     </div>
 
@@ -131,10 +131,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/ui/static/js-GIS/participantesWidget.js"></script>
+    <script src="/ui/static/js-GIS/envio-unico.js"></script>
     <script>
         var INTEGRANTES_ACTIVOS = [
             {{ range .Integrantes }}{{ if .Activo }}{ id: {{ .ID }}, nombre: "{{ .Nombre }} {{ .Apellido }}" },
             {{ end }}{{ end }}
+        ];
+
+        var SELECCION_INICIAL = [
+            {{ range .Vinculados }}{ id: {{ .ID }}, nombre: "{{ .Nombre }} {{ .Apellido }}", tipo: "integrante" },
+            {{ end }}
+            {{ range .ParticipantesExternos }}{ nombre: "{{ . }}", tipo: "externo" },
+            {{ end }}
         ];
 
         crearWidgetParticipantes({
@@ -148,7 +156,7 @@
             manualInputId: 'externoManualInput',
             manualConfirmId: 'btnConfirmarExternoManual',
             integrantesActivos: INTEGRANTES_ACTIVOS,
-            seleccionInicial: []
+            seleccionInicial: SELECCION_INICIAL
         });
     </script>
 </body>

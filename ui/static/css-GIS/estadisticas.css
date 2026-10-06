@@ -1,10 +1,6 @@
-/* El <body> es un grid: sin min-width: 0 el <main> crece con su contenido y en pantallas chicas lo
-   que sobra queda recortado en vez de quedarse dentro de la pantalla. */
 .stats-main {
     min-width: 0;
 }
-
-/* Módulo Estadísticas (solo lectura). Las barras son .progress de Bootstrap renderizadas en el servidor. */
 
 .stats-seccion {
     margin-bottom: 2.5rem;
@@ -41,7 +37,6 @@
     color: var(--adm-navy);
 }
 
-/* Productos por año: año | barra | cantidad. */
 .stat-anio {
     display: grid;
     grid-template-columns: 3.5rem 1fr 2.5rem;
@@ -65,7 +60,6 @@
     background-color: var(--adm-navy);
 }
 
-/* Barra apilada con repositorio / con licencia: los mismos tonos que .badge-repositorio y .badge-licencia. */
 .stat-segmento-repositorio .progress-bar {
     background-color: var(--azul-logo);
 }
@@ -74,7 +68,6 @@
     background-color: #7FA08E;
 }
 
-/* Barra apilada de tesis con PDF / sin PDF: los mismos tonos que la de productos. */
 .stat-segmento-con-pdf .progress-bar {
     background-color: var(--azul-logo);
 }
@@ -88,11 +81,8 @@
     color: #344054;
 }
 
-/* Desplegables por módulo (<details>/<summary> nativos, sin JS): el navegador gestiona el
-   abrir/cerrar, el teclado (Tab, Enter, Espacio) y el estado que anuncian las lectoras de pantalla. */
 .stats-desplegable {
     margin-bottom: 1rem;
-    /* min-width: 0 evita que el contenido (tabla, barras) ensanche la página en pantallas chicas. */
     min-width: 0;
 }
 
@@ -107,7 +97,6 @@
     list-style: none;
 }
 
-/* Se oculta el triángulo nativo del <summary>: la flecha es el ícono del encabezado. */
 .stats-desplegable-encabezado::-webkit-details-marker {
     display: none;
 }
@@ -116,7 +105,6 @@
     background: #E3E5EB;
 }
 
-/* Foco visible al navegar con Tab. */
 .stats-desplegable-encabezado:focus-visible {
     outline: 3px solid var(--adm-navy);
     outline-offset: 2px;
@@ -128,7 +116,6 @@
     color: var(--adm-ink);
 }
 
-/* Cerrada apunta hacia la derecha; abierta, hacia abajo. */
 .stats-desplegable-flecha {
     transition: transform .15s;
     transform: rotate(-90deg);
@@ -138,7 +125,6 @@
     transform: rotate(0);
 }
 
-/* La línea vertical fina a la izquierda marca que el contenido pertenece a la sección. */
 .stats-desplegable-contenido {
     margin-left: 1rem;
     padding: 1.25rem 0 .25rem 1.25rem;
@@ -152,9 +138,6 @@
     }
 }
 
-/* Tarjetas de integrantes y de tesis: mudadas sin cambios desde lista.css, donde estaban arriba de
-   las listas. --borde-tarjeta la define lista.css, que esta página no carga, así que lleva su mismo
-   valor como respaldo. */
 .stats-cards-row {
     margin-bottom: 24px;
 }

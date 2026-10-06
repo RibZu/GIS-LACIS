@@ -12,7 +12,9 @@ import (
 	"PaginaSEG/internal/usuario"
 	"database/sql"
 	"html/template"
+	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +22,17 @@ import (
 	"go.uber.org/zap"
 )
 
+const dsnLocal = "postgres://postgres@localhost:5433/lacis?sslmode=disable"
+
 func InitRoutes(e *gin.Engine) {
+
+	logger, err := zap.NewProduction()
+	if err != nil {
+		log.Fatalf("No se pudo crear el logger: %v", err)
+	}
+	defer logger.Sync()
+
+	e.Use(gin.Logger(), gin.CustomRecovery(handler.NuevoRecuperador(logger)))
 
 	e.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -33,10 +45,10 @@ func InitRoutes(e *gin.Engine) {
 		c.Next()
 	})
 
-	logger, err := zap.NewProduction()
-	defer logger.Sync()
-
-	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
+	dsn := os.Getenv("DATABASE_URL")
+	if dsn == "" {
+		dsn = dsnLocal
+	}
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		logger.Fatal("No se pudo abrir conexión a PostgreSQL", zap.Error(err))
@@ -51,8 +63,10 @@ func InitRoutes(e *gin.Engine) {
 		time.Sleep(2 * time.Second)
 	}
 	if err != nil {
-		logger.Fatal("No se pudo hacer Ping a PostgreSQL después de varios intentos", zap.Error(err))
+		logger.Fatal("No se pudo conectar a PostgreSQL: revisá la variable DATABASE_URL", zap.Error(err))
 	}
+
+	handler.ConfigurarSesion(os.Getenv("SESSION_SECRET"), logger)
 
 	e.Static("/static", "ui/static")
 	e.Static("/ui/static", "ui/static")
@@ -61,6 +75,7 @@ func InitRoutes(e *gin.Engine) {
 		"add": func(a, b int) int { return a + b },
 	})
 	e.LoadHTMLGlob("ui/html/**/*.html")
+	e.NoRoute(handler.PaginaNoEncontrada)
 
 	integranteStorage := integrante.NewPostgresStorage(db)
 	if err := integrante.MigrarIntegrantesDesdeJSON(db, "ui/static/json-GIS", logger); err != nil {
@@ -173,7 +188,8 @@ func InitRoutes(e *gin.Engine) {
 	desarrollosAdmin.POST("/insertar-desarrollo", desarrolloHandler.Insertar)
 	desarrollosAdmin.GET("/editar-desarrollo", desarrolloHandler.Editar)
 	desarrollosAdmin.POST("/actualizar-desarrollo", desarrolloHandler.Actualizar)
-	desarrollosAdmin.GET("/borrar-desarrollo", desarrolloHandler.Borrar)
+	desarrollosAdmin.POST("/borrar-desarrollo", desarrolloHandler.Borrar)
+	desarrollosAdmin.GET("/borrar-desarrollo", desarrolloHandler.BorrarGet)
 
 	usuariosAdmin := v1Admin.Group("")
 	usuariosAdmin.Use(handler.RequireAdmin(usuarioService))
@@ -182,9 +198,9 @@ func InitRoutes(e *gin.Engine) {
 	usuariosAdmin.POST("/insertar-usuario", usuarioHandler.Insertar)
 	usuariosAdmin.GET("/editar-usuario", usuarioHandler.Editar)
 	usuariosAdmin.POST("/actualizar-usuario", usuarioHandler.Actualizar)
-	usuariosAdmin.GET("/borrar-usuario", usuarioHandler.Borrar)
+	usuariosAdmin.POST("/borrar-usuario", usuarioHandler.Borrar)
+	usuariosAdmin.GET("/borrar-usuario", usuarioHandler.BorrarGet)
 
-	// Módulo "estadisticas": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
 	estadisticasAdmin := v1Admin.Group("")
 	estadisticasAdmin.Use(handler.RequireModule(usuarioService, "estadisticas"))
 	estadisticasAdmin.GET("/estadisticas", estadisticaHandler.Ver)
@@ -215,12 +231,10 @@ func InitRoutes(e *gin.Engine) {
 	proyectosAPIAdmin.POST("/admin/proyectos/:id/equipo", proyectoHandler.API_AgregarMiembro)
 	proyectosAPIAdmin.DELETE("/admin/proyectos/:id/equipo/:integrante_id", proyectoHandler.API_QuitarMiembro)
 
-	// Módulo "reconocimientos": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
 	reconocimientosAdmin := v1Admin.Group("")
 	reconocimientosAdmin.Use(handler.RequireModule(usuarioService, "reconocimientos"))
 	reconocimientosAdmin.GET("/reconocimientos", reconocimientoHandler.View_ReconocimientosAdmin)
 
-	// Rutas API de administración de Reconocimientos (CRUD placeholders)
 	reconocimientosAPIAdmin := v1API.Group("")
 	reconocimientosAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "reconocimientos"))
 	reconocimientosAPIAdmin.GET("/admin/reconocimientos-todos", reconocimientoHandler.API_GetAllAdmin)
@@ -230,12 +244,10 @@ func InitRoutes(e *gin.Engine) {
 	reconocimientosAPIAdmin.DELETE("/admin/reconocimientos/:id", reconocimientoHandler.API_Delete)
 	reconocimientosAPIAdmin.PATCH("/admin/reconocimientos/:id/restaurar", reconocimientoHandler.API_Restaurar)
 
-	// Módulo "empresas" (Colaboradores): requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
 	colaboradoresAdmin := v1Admin.Group("")
 	colaboradoresAdmin.Use(handler.RequireModule(usuarioService, "empresas"))
 	colaboradoresAdmin.GET("/colaboradores", colaboradorHandler.View_ColaboradoresAdmin)
 
-	// Rutas API de administración de Colaboradores
 	colaboradoresAPIAdmin := v1API.Group("")
 	colaboradoresAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "empresas"))
 	colaboradoresAPIAdmin.GET("/admin/colaboradores-todos", colaboradorHandler.API_GetAllAdmin)
@@ -245,10 +257,8 @@ func InitRoutes(e *gin.Engine) {
 	colaboradoresAPIAdmin.DELETE("/admin/colaboradores/:id", colaboradorHandler.API_Delete)
 	colaboradoresAPIAdmin.PATCH("/admin/colaboradores/:id/restaurar", colaboradorHandler.API_Restaurar)
 
-	// Público: consultar equipo de un proyecto
 	v1API.GET("/proyectos/:id/equipo", proyectoHandler.API_GetEquipo)
 
-	// Nuevo grupo admin para integrantes
 	integrantesAPIAdmin := v1API.Group("")
 	integrantesAPIAdmin.Use(handler.RequireModuleAPI(usuarioService, "integrantes"))
 	integrantesAPIAdmin.POST("/admin/integrantes/mini", integranteHandler.API_CreateMinimo)

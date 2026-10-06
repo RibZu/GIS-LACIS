@@ -291,7 +291,6 @@ function mostrarModalNotificacionTesis(status) {
         return;
     }
 
-    // Fallback nativo: Modal Bootstrap integrado
     const modalEl = document.getElementById('modalNotificacion');
     const iconEl = document.getElementById('notifIcon');
     const tituloEl = document.getElementById('notifTitulo');
@@ -369,7 +368,6 @@ function confirmarEliminarTesis(id, titulo) {
     }
 }
 
-// Delegación de eventos para clicks de eliminación
 document.addEventListener('click', function (e) {
     const btn = e.target.closest('.btn-eliminar-item');
     if (btn && btn.dataset.tipo === 'tesis') {

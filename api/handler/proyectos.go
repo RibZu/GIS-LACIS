@@ -165,7 +165,6 @@ type miembroEquipoInput struct {
 	RolEnProyecto string `json:"rol_en_proyecto"`
 }
 
-// API_GetEquipo devuelve el equipo actual de un proyecto (endpoint público)
 func (h *ProyectoHandler) API_GetEquipo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id <= 0 {
@@ -181,7 +180,6 @@ func (h *ProyectoHandler) API_GetEquipo(c *gin.Context) {
 	c.JSON(http.StatusOK, equipo)
 }
 
-// API_AgregarMiembro agrega (o actualiza el rol de) un integrante al equipo del proyecto
 func (h *ProyectoHandler) API_AgregarMiembro(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id <= 0 {
@@ -201,7 +199,6 @@ func (h *ProyectoHandler) API_AgregarMiembro(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"mensaje": "integrante agregado al equipo"})
 }
 
-// API_QuitarMiembro quita un integrante del equipo del proyecto
 func (h *ProyectoHandler) API_QuitarMiembro(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id <= 0 {

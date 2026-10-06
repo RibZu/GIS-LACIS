@@ -43,7 +43,7 @@
                 </div>
                 {{ end }}
 
-                <form action="/admin/actualizar-desarrollo" method="POST">
+                <form action="/admin/actualizar-desarrollo" method="POST" data-envio-unico>
                     <input type="hidden" name="id" value="{{ if .Desarrollo }}{{ .Desarrollo.ID }}{{ end }}">
 
                     <div class="form-section-subtitle">
@@ -58,7 +58,7 @@
 
                         <div class="col-md-4">
                             <label for="anio" class="form-label">Año <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="anio" name="anio" min="1990" max="2100" value="{{ if .Desarrollo }}{{ .Desarrollo.Anio }}{{ end }}" required>
+                            <input type="number" class="form-control" id="anio" name="anio" min="1990" max="2100" value="{{ if .AnioTexto }}{{ .AnioTexto }}{{ else if .Desarrollo }}{{ .Desarrollo.Anio }}{{ end }}" required>
                         </div>
 
                         <div class="col-md-6">
@@ -125,6 +125,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/ui/static/js-GIS/participantesWidget.js"></script>
+    <script src="/ui/static/js-GIS/envio-unico.js"></script>
     <script>
         var INTEGRANTES_ACTIVOS = [
             {{ range .Integrantes }}{{ if .Activo }}{ id: {{ .ID }}, nombre: "{{ .Nombre }} {{ .Apellido }}" },
