@@ -35,6 +35,10 @@ func (s *Service) Obtener() (*Estadisticas, error) {
 	if err != nil {
 		return nil, s.fallo("tesis", err)
 	}
+	proyectos, err := s.storage.ResumenProyectos()
+	if err != nil {
+		return nil, s.fallo("proyectos", err)
+	}
 
 	est := &Estadisticas{
 		IntegrantesActivosLacis: contarActivosLacis(integrantes),
@@ -54,6 +58,7 @@ func (s *Service) Obtener() (*Estadisticas, error) {
 	est.PorAnio = seriePorAnio(anios)
 	est.Integrantes = estadisticasIntegrantes(integrantes)
 	est.Tesis = estadisticasTesis(tesis)
+	est.Proyectos = estadisticasProyectos(proyectos)
 	return est, nil
 }
 
@@ -162,3 +167,87 @@ func estadisticasTesis(filas []TesisResumen) EstadisticasTesis {
 	e.PorAnio = seriePorAnio(anios)
 	return e
 }
+
+// estadisticasProyectos agrupa las filas por proyecto y calcula la cantidad de integrantes por rol.
+// Los proyectos antiguos que no tienen integrantes cargados (Cantidad = 0) se conservan con TieneIntegrantes = false.
+func estadisticasProyectos(filas []ProyectoFilaEstadistica) EstadisticasProyectos {
+	res := EstadisticasProyectos{
+		HayProyectos: len(filas) > 0,
+	}
+	if len(filas) == 0 {
+		return res
+	}
+
+	proyectosMap := make(map[int]*ProyectoEstadistica)
+	var proyectosOrdenados []*ProyectoEstadistica
+	globalRolesMap := make(map[string]int)
+
+	for _, f := range filas {
+		p, existe := proyectosMap[f.ID]
+		if !existe {
+			p = &ProyectoEstadistica{
+				ID:              f.ID,
+				Titulo:          f.Titulo,
+				AnioInicio:      f.AnioInicio,
+				AnioFin:         f.AnioFin,
+				Activo:          f.Activo,
+				EquipoHistorico: f.EquipoHistorico,
+			}
+			proyectosMap[f.ID] = p
+			proyectosOrdenados = append(proyectosOrdenados, p)
+		}
+
+		if f.Cantidad > 0 {
+			rolNombre := strings.TrimSpace(f.Rol)
+			if rolNombre == "" {
+				rolNombre = "Sin rol asignado"
+			}
+			p.Roles = append(p.Roles, RolCantidad{
+				Rol:      rolNombre,
+				Cantidad: f.Cantidad,
+			})
+			p.TotalIntegrantes += f.Cantidad
+			p.TieneIntegrantes = true
+
+			globalRolesMap[rolNombre] += f.Cantidad
+			res.TotalParticipaciones += f.Cantidad
+		}
+	}
+
+	res.TotalProyectos = len(proyectosOrdenados)
+	res.Lista = make([]ProyectoEstadistica, 0, len(proyectosOrdenados))
+
+	for _, p := range proyectosOrdenados {
+		if p.TieneIntegrantes {
+			res.ProyectosConIntegrantes++
+		} else {
+			res.ProyectosSinDatos++
+		}
+		res.Lista = append(res.Lista, *p)
+	}
+
+	// Orden canónico para los roles globales más comunes del sistema
+	rolesOrdenCanonico := []string{
+		"Director / Co-Director",
+		"Investigador",
+		"Asesor Externo",
+		"Estudiante / Becario",
+		"Sin rol asignado",
+	}
+
+	rolesVistos := make(map[string]bool)
+	for _, rNombre := range rolesOrdenCanonico {
+		if cant, ok := globalRolesMap[rNombre]; ok && cant > 0 {
+			res.RolesGlobal = append(res.RolesGlobal, RolCantidad{Rol: rNombre, Cantidad: cant})
+			rolesVistos[rNombre] = true
+		}
+	}
+	for rNombre, cant := range globalRolesMap {
+		if !rolesVistos[rNombre] && cant > 0 {
+			res.RolesGlobal = append(res.RolesGlobal, RolCantidad{Rol: rNombre, Cantidad: cant})
+		}
+	}
+
+	return res
+}
+

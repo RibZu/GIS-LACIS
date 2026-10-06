@@ -192,6 +192,10 @@ func (h *ProyectoHandler) API_AgregarMiembro(c *gin.Context) {
 		return
 	}
 	if err := h.service.AgregarMiembro(id, input.IntegranteID, input.RolEnProyecto); err != nil {
+		if errors.Is(err, proyecto.ErrRolRequerido) {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 		h.logger.Error("Error al agregar miembro al proyecto", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "error al agregar el integrante al equipo"})
 		return

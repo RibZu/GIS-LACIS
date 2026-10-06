@@ -1,6 +1,10 @@
+/* El <body> es un grid: sin min-width: 0 el <main> crece con su contenido y en pantallas chicas lo
+   que sobra queda recortado en vez de quedarse dentro de la pantalla. */
 .stats-main {
     min-width: 0;
 }
+
+/* Módulo Estadísticas (solo lectura). Las barras son .progress de Bootstrap renderizadas en el servidor. */
 
 .stats-seccion {
     margin-bottom: 2.5rem;
@@ -37,6 +41,7 @@
     color: var(--adm-navy);
 }
 
+/* Productos por año: año | barra | cantidad. */
 .stat-anio {
     display: grid;
     grid-template-columns: 3.5rem 1fr 2.5rem;
@@ -60,6 +65,7 @@
     background-color: var(--adm-navy);
 }
 
+/* Barra apilada con repositorio / con licencia: los mismos tonos que .badge-repositorio y .badge-licencia. */
 .stat-segmento-repositorio .progress-bar {
     background-color: var(--azul-logo);
 }
@@ -68,6 +74,7 @@
     background-color: #7FA08E;
 }
 
+/* Barra apilada de tesis con PDF / sin PDF: los mismos tonos que la de productos. */
 .stat-segmento-con-pdf .progress-bar {
     background-color: var(--azul-logo);
 }
@@ -81,28 +88,36 @@
     color: #344054;
 }
 
+/* Desplegables por módulo (<details>/<summary> nativos, sin JS): el navegador gestiona el
+   abrir/cerrar, el teclado (Tab, Enter, Espacio) y el estado que anuncian las lectoras de pantalla. */
+/* Animación suave de apertura y cierre para <details> */
 .stats-desplegable {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
     min-width: 0;
+    overflow: hidden;
 }
 
 .stats-desplegable-encabezado {
     display: flex;
     align-items: center;
     gap: .75rem;
-    padding: .85rem 1rem;
+    padding: .9rem 1.15rem;
     background: #EDEEF2;
-    border-radius: var(--adm-radius-sm);
+    border-radius: var(--adm-radius-sm, 8px);
     cursor: pointer;
     list-style: none;
+    user-select: none;
+    transition: background-color .2s ease, border-radius .2s ease;
 }
 
-.stats-desplegable-encabezado::-webkit-details-marker {
+/* Se oculta el triángulo nativo del <summary> */
+.stats-desplegable-encabezado::-webkit-details-marker,
+.stats-desplegable-encabezado::marker {
     display: none;
 }
 
 .stats-desplegable-encabezado:hover {
-    background: #E3E5EB;
+    background: #E2E5EB;
 }
 
 .stats-desplegable-encabezado:focus-visible {
@@ -116,28 +131,59 @@
     color: var(--adm-ink);
 }
 
+/* Flecha rotativa */
 .stats-desplegable-flecha {
-    transition: transform .15s;
+    transition: transform .3s cubic-bezier(0.34, 1.56, 0.64, 1);
     transform: rotate(-90deg);
 }
 
-.stats-desplegable[open] .stats-desplegable-flecha {
-    transform: rotate(0);
+.stats-desplegable[open] > .stats-desplegable-encabezado .stats-desplegable-flecha {
+    transform: rotate(0deg);
+}
+
+/* Envoltorio con animación suave de apertura y cierre usando CSS Grid */
+.stats-desplegable-anim-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stats-desplegable[open] > .stats-desplegable-anim-wrap {
+    grid-template-rows: 1fr;
+}
+
+.stats-desplegable-anim-inner {
+    overflow: hidden;
+    min-height: 0;
 }
 
 .stats-desplegable-contenido {
-    margin-left: 1rem;
-    padding: 1.25rem 0 .25rem 1.25rem;
+    margin-left: 1.25rem;
+    padding: 1.25rem 0 .75rem 1.25rem;
     border-left: 2px solid #C5CAD6;
     min-width: 0;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity .3s ease .1s, transform .3s cubic-bezier(0.16, 1, 0.3, 1) .1s;
+}
+
+.stats-desplegable[open] .stats-desplegable-contenido {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .stats-desplegable-flecha {
-        transition: none;
+    .stats-desplegable-flecha,
+    .stats-desplegable-anim-wrap,
+    .stats-desplegable-contenido {
+        transition: none !important;
+        animation: none !important;
     }
 }
 
+/* Tarjetas de integrantes y de tesis: mudadas sin cambios desde lista.css, donde estaban arriba de
+   las listas. --borde-tarjeta la define lista.css, que esta página no carga, así que lleva su mismo
+   valor como respaldo. */
 .stats-cards-row {
     margin-bottom: 24px;
 }
@@ -175,3 +221,105 @@
     font-weight: 500;
     line-height: 1.35;
 }
+
+/* ==================== MÓDULO PROYECTOS ==================== */
+
+.stat-rol-pill {
+    display: inline-flex;
+    align-items: center;
+    background: #F2F4F7;
+    border: 1px solid #D0D5DD;
+    border-radius: 20px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+.stat-rol-nombre {
+    font-weight: 600;
+    color: var(--adm-navy);
+}
+
+.stat-rol-badge {
+    background-color: var(--azul-logo);
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: 0.5rem;
+}
+
+.stat-proyecto-card {
+    background: #ffffff;
+    border: 1px solid var(--borde-tarjeta, #E7E9EE);
+    border-radius: 12px;
+    padding: 1.15rem 1.25rem;
+    box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.stat-proyecto-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.08);
+}
+
+.stat-proyecto-titulo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--adm-navy);
+}
+
+.stat-proyecto-periodo {
+    font-size: 0.82rem;
+    color: #667085;
+}
+
+.stat-badge-con-integrantes {
+    background-color: #EDF7ED;
+    color: #1E4620;
+    border: 1px solid #C8E6C9;
+    font-weight: 600;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+}
+
+.stat-badge-historico {
+    background-color: #F2F4F7;
+    color: #475467;
+    border: 1px solid #D0D5DD;
+    font-weight: 600;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+}
+
+.stat-proyecto-rol-item {
+    display: inline-flex;
+    align-items: center;
+    background-color: #F8F9FC;
+    border: 1px solid #E2E4EB;
+    border-radius: 8px;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.85rem;
+}
+
+.stat-rol-tag {
+    color: #344054;
+    font-weight: 500;
+}
+
+.stat-rol-cant {
+    background-color: var(--adm-navy);
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 0.1rem 0.45rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-left: 0.45rem;
+}
+
+.stat-proyecto-roles-vacio {
+    line-height: 1.45;
+}
+

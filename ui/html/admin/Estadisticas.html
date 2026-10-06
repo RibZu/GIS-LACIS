@@ -29,13 +29,15 @@
 
             {{ if .Error }}
             <div class="alert alert-danger" role="alert">{{ .Error }}</div>
-            {{ else }}
+            {{ else if .E }}
             <details class="stats-desplegable" id="stats-modulo-productos">
                 <summary class="stats-desplegable-encabezado">
                     <i class="bi bi-chevron-down stats-desplegable-flecha" aria-hidden="true"></i>
                     <span class="stats-desplegable-titulo">Estadísticas de módulo: Productos de software</span>
                 </summary>
-                <div class="stats-desplegable-contenido">
+                <div class="stats-desplegable-anim-wrap">
+                    <div class="stats-desplegable-anim-inner">
+                        <div class="stats-desplegable-contenido">
                     <section id="stats-contadores" class="stats-seccion">
                         <div class="row g-4">
                             <div class="col-6 col-lg-3">
@@ -99,6 +101,8 @@
                         {{ end }}
                     </section>
 
+                        </div>
+                    </div>
                 </div>
             </details>
 
@@ -107,7 +111,9 @@
                     <i class="bi bi-chevron-down stats-desplegable-flecha" aria-hidden="true"></i>
                     <span class="stats-desplegable-titulo">Estadísticas de módulo: Integrantes</span>
                 </summary>
-                <div class="stats-desplegable-contenido">
+                <div class="stats-desplegable-anim-wrap">
+                    <div class="stats-desplegable-anim-inner">
+                        <div class="stats-desplegable-contenido">
                     <div class="row g-3 stats-cards-row">
                         <div class="col-6 col-md-4 col-lg">
                             <div class="stats-kpi-card">
@@ -141,13 +147,17 @@
                         </div>
                     </div>
                 </div>
-            </details>
+            </div>
+        </div>
+    </details>
 
-            <details class="stats-desplegable" id="stats-modulo-tesis">
-                <summary class="stats-desplegable-encabezado">
-                    <i class="bi bi-chevron-down stats-desplegable-flecha" aria-hidden="true"></i>
-                    <span class="stats-desplegable-titulo">Estadísticas de módulo: Tesis</span>
-                </summary>
+    <details class="stats-desplegable" id="stats-modulo-tesis">
+        <summary class="stats-desplegable-encabezado">
+            <i class="bi bi-chevron-down stats-desplegable-flecha" aria-hidden="true"></i>
+            <span class="stats-desplegable-titulo">Estadísticas de módulo: Tesis</span>
+        </summary>
+        <div class="stats-desplegable-anim-wrap">
+            <div class="stats-desplegable-anim-inner">
                 <div class="stats-desplegable-contenido">
                     <div class="row g-3 stats-cards-row">
                         <div class="col-12 col-md-4">
@@ -203,15 +213,215 @@
                         <p class="text-muted mb-0">Todavía no hay tesis cargadas.</p>
                         {{ end }}
                     </section>
+                        </div>
+                    </div>
                 </div>
             </details>
+
+            <details class="stats-desplegable" id="stats-modulo-proyectos">
+                <summary class="stats-desplegable-encabezado">
+                    <i class="bi bi-chevron-down stats-desplegable-flecha" aria-hidden="true"></i>
+                    <span class="stats-desplegable-titulo">Estadísticas de módulo: Proyectos</span>
+                </summary>
+                <div class="stats-desplegable-anim-wrap">
+                    <div class="stats-desplegable-anim-inner">
+                        <div class="stats-desplegable-contenido">
+                    <div class="row g-3 stats-cards-row">
+                        <div class="col-6 col-md-3">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiTotalProyectos">{{ .E.Proyectos.TotalProyectos }}</div>
+                                <div class="stats-kpi-label">Proyectos registrados</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiProyectosConIntegrantes">{{ .E.Proyectos.ProyectosConIntegrantes }}</div>
+                                <div class="stats-kpi-label">Con integrantes detallados</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiProyectosSinDatos">{{ .E.Proyectos.ProyectosSinDatos }}</div>
+                                <div class="stats-kpi-label">Históricos (sin integrantes)</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stats-kpi-card">
+                                <div class="stats-kpi-num" id="kpiTotalParticipaciones">{{ .E.Proyectos.TotalParticipaciones }}</div>
+                                <div class="stats-kpi-label">Total participaciones registradas</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{ if .E.Proyectos.RolesGlobal }}
+                    <section id="stats-proyectos-roles-global" class="stats-seccion">
+                        <h3 class="stats-titulo">Distribución global por rol en proyectos</h3>
+                        <div class="d-flex flex-wrap gap-2">
+                            {{ range .E.Proyectos.RolesGlobal }}
+                            <div class="stat-rol-pill">
+                                <span class="stat-rol-nombre">{{ .Rol }}</span>
+                                <span class="stat-rol-badge">{{ .Cantidad }}</span>
+                            </div>
+                            {{ end }}
+                        </div>
+                    </section>
+                    {{ end }}
+
+                    <section id="stats-proyectos-detalle" class="stats-seccion">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                            <h3 class="stats-titulo mb-0">Detalle de integrantes por proyecto</h3>
+                            <div class="btn-group btn-group-sm" role="group" id="filtrosProyectosStats" aria-label="Filtrar proyectos">
+                                <button type="button" class="btn btn-outline-primary active" data-filtro="todos">Todos ({{ .E.Proyectos.TotalProyectos }})</button>
+                                <button type="button" class="btn btn-outline-primary" data-filtro="con-datos">Con integrantes ({{ .E.Proyectos.ProyectosConIntegrantes }})</button>
+                                <button type="button" class="btn btn-outline-primary" data-filtro="historicos">Históricos ({{ .E.Proyectos.ProyectosSinDatos }})</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm" style="max-width: 420px;">
+                                <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" class="form-control" id="buscadorProyectosStats" placeholder="Buscar proyecto por título..." autocomplete="off">
+                            </div>
+                        </div>
+
+                        {{ if .E.Proyectos.HayProyectos }}
+                        <div class="d-flex flex-column gap-3" id="listaProyectosStats">
+                            {{ range .E.Proyectos.Lista }}
+                            <div class="stat-proyecto-card" data-tiene-integrantes="{{ if .TieneIntegrantes }}true{{ else }}false{{ end }}" data-titulo="{{ .Titulo }}">
+                                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                                    <div class="flex-grow-1">
+                                        <h4 class="stat-proyecto-titulo mb-1">{{ .Titulo }}</h4>
+                                        <span class="stat-proyecto-periodo text-muted small">
+                                            <i class="bi bi-calendar3 me-1"></i>
+                                            {{ if and .AnioInicio .AnioFin }}
+                                                {{ if eq .AnioInicio .AnioFin }}{{ .AnioInicio }}{{ else }}{{ .AnioInicio }} - {{ .AnioFin }}{{ end }}
+                                            {{ else if .AnioInicio }}
+                                                Desde {{ .AnioInicio }}
+                                            {{ else if .AnioFin }}
+                                                Hasta {{ .AnioFin }}
+                                            {{ else }}
+                                                Sin período definido
+                                            {{ end }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        {{ if .TieneIntegrantes }}
+                                        <span class="badge stat-badge-con-integrantes">
+                                            <i class="bi bi-people-fill me-1"></i>{{ .TotalIntegrantes }} integrante{{ if ne .TotalIntegrantes 1 }}s{{ end }}
+                                        </span>
+                                        {{ else }}
+                                        <span class="badge stat-badge-historico">
+                                            <i class="bi bi-clock-history me-1"></i>Proyecto histórico
+                                        </span>
+                                        {{ end }}
+                                    </div>
+                                </div>
+
+                                {{ if .TieneIntegrantes }}
+                                <div class="stat-proyecto-roles pt-2 border-top">
+                                    <div class="small fw-semibold text-muted mb-2">Integrantes por rol:</div>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {{ range .Roles }}
+                                        <div class="stat-proyecto-rol-item">
+                                            <span class="stat-rol-tag">{{ .Rol }}</span>
+                                            <span class="stat-rol-cant">{{ .Cantidad }}</span>
+                                        </div>
+                                        {{ end }}
+                                    </div>
+                                </div>
+                                {{ else }}
+                                <div class="stat-proyecto-roles-vacio pt-2 border-top small text-muted">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Este proyecto no cuenta con integrantes digitalizados por rol en la base de datos.
+                                    {{ if .EquipoHistorico }}
+                                    <div class="mt-1 text-secondary fst-italic">
+                                        <strong>Registro histórico:</strong> {{ .EquipoHistorico }}
+                                    </div>
+                                    {{ end }}
+                                </div>
+                                {{ end }}
+                            </div>
+                            {{ end }}
+                        </div>
+
+                        <div id="vacioFiltroProyectos" class="alert alert-light text-center py-4 border rounded-3 mt-3 d-none">
+                            <i class="bi bi-filter-circle fs-3 text-muted d-block mb-2"></i>
+                            <span class="text-muted">No se encontraron proyectos con el filtro o búsqueda seleccionada.</span>
+                        </div>
+                        {{ else }}
+                        <p class="text-muted mb-0">Todavía no hay proyectos cargados.</p>
+                        {{ end }}
+                    </section>
+                        </div>
+                    </div>
+                </div>
+            </details>
+            {{ else }}
+            <p class="text-muted">No se pudieron cargar los datos de estadísticas.</p>
             {{ end }}
         </div>
     </main>
-    <footer class="text-white pb-4 bg-dark mt-auto">
-        {{ template "footer" . }}
-    </footer>
+    {{ template "footer" . }}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const buscador = document.getElementById('buscadorProyectosStats');
+            const botonesFiltro = document.querySelectorAll('#filtrosProyectosStats [data-filtro]');
+            const tarjetas = document.querySelectorAll('#listaProyectosStats .stat-proyecto-card');
+            const vacioAviso = document.getElementById('vacioFiltroProyectos');
+
+            if (!tarjetas.length) return;
+
+            let filtroActual = 'todos';
+
+            function filtrar() {
+                const query = (buscador ? buscador.value : '').toLowerCase().trim();
+                let visibles = 0;
+
+                tarjetas.forEach(function (card) {
+                    const titulo = (card.getAttribute('data-titulo') || '').toLowerCase();
+                    const tieneIntegrantes = card.getAttribute('data-tiene-integrantes') === 'true';
+
+                    const coincideQuery = !query || titulo.indexOf(query) !== -1;
+                    let coincideFiltro = true;
+
+                    if (filtroActual === 'con-datos') {
+                        coincideFiltro = tieneIntegrantes;
+                    } else if (filtroActual === 'historicos') {
+                        coincideFiltro = !tieneIntegrantes;
+                    }
+
+                    if (coincideQuery && coincideFiltro) {
+                        card.classList.remove('d-none');
+                        visibles++;
+                    } else {
+                        card.classList.add('d-none');
+                    }
+                });
+
+                if (vacioAviso) {
+                    if (visibles === 0) {
+                        vacioAviso.classList.remove('d-none');
+                    } else {
+                        vacioAviso.classList.add('d-none');
+                    }
+                }
+            }
+
+            if (buscador) {
+                buscador.addEventListener('input', filtrar);
+            }
+
+            botonesFiltro.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    botonesFiltro.forEach(function (b) { b.classList.remove('active'); });
+                    btn.classList.add('active');
+                    filtroActual = btn.getAttribute('data-filtro') || 'todos';
+                    filtrar();
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
