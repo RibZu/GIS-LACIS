@@ -55,7 +55,7 @@ if not exist "pg_data\" (
     )
 
     echo [INFO] Creando base de datos 'lacis' y tablas...
-    "!PG_PATH!\psql.exe" -v ON_ERROR_STOP=1 -p 5433 -U postgres -d postgres -c "ALTER USER postgres WITH PASSWORD 'isma_mesa22';" > nul
+    "!PG_PATH!\psql.exe" -v ON_ERROR_STOP=1 -p 5433 -U postgres -d postgres -c "ALTER USER postgres WITH PASSWORD 'postgres';" > nul
     if errorlevel 1 (
         echo [ERROR] No se pudo configurar el usuario administrador de PostgreSQL.
         pause

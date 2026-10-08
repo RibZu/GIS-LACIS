@@ -11,8 +11,10 @@ import (
 	"PaginaSEG/internal/tesis"
 	"PaginaSEG/internal/usuario"
 	"database/sql"
+	"fmt"
 	"html/template"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -36,7 +38,36 @@ func InitRoutes(e *gin.Engine) {
 	logger, err := zap.NewProduction()
 	defer logger.Sync()
 
-	dsn := "postgres://postgres:isma_mesa22@localhost:5433/lacis?sslmode=disable"
+	dsn := os.Getenv("DATABASE_URL")
+	if dsn == "" {
+		dbHost := os.Getenv("DB_HOST")
+		dbPort := os.Getenv("DB_PORT")
+		dbUser := os.Getenv("DB_USER")
+		dbPass := os.Getenv("DB_PASSWORD")
+		dbName := os.Getenv("DB_NAME")
+		dbSSL := os.Getenv("DB_SSLMODE")
+
+		if dbHost != "" || dbUser != "" {
+			if dbHost == "" {
+				dbHost = "localhost"
+			}
+			if dbPort == "" {
+				dbPort = "5432"
+			}
+			if dbUser == "" {
+				dbUser = "postgres"
+			}
+			if dbName == "" {
+				dbName = "lacis"
+			}
+			if dbSSL == "" {
+				dbSSL = "disable"
+			}
+			dsn = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s", dbUser, dbPass, dbHost, dbPort, dbName, dbSSL)
+		} else {
+			dsn = "postgres://postgres:postgres@localhost:5433/lacis?sslmode=disable"
+		}
+	}
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		logger.Fatal("No se pudo abrir conexión a PostgreSQL", zap.Error(err))
