@@ -3,6 +3,7 @@ package api
 import (
 	"PaginaSEG/api/handler"
 	"PaginaSEG/internal/colaborador"
+	"PaginaSEG/internal/configuracion"
 	"PaginaSEG/internal/desarrollo"
 	"PaginaSEG/internal/estadistica"
 	"PaginaSEG/internal/integrante"
@@ -125,9 +126,24 @@ func InitRoutes(e *gin.Engine) {
 	estadisticaService := estadistica.NewService(estadisticaStorage, logger)
 	estadisticaHandler := handler.NewEstadisticaHandler(estadisticaService, logger)
 
+	configuracionStorage, err := configuracion.NewPostgresStorage(db)
+	if err != nil {
+		logger.Error("Error al inicializar configuracionStorage", zap.Error(err))
+	}
+	configuracionService := configuracion.NewService(configuracionStorage, logger)
+	configuracionHandler := handler.NewConfiguracionHandler(configuracionService, logger)
+
 	e.GET("/", func(c *gin.Context) {
 		_, loggedIn := handler.CurrentUserID(c)
-		c.HTML(http.StatusOK, "index.html", gin.H{"LoggedIn": loggedIn})
+		cfg, err := configuracionService.ObtenerConfiguracion()
+		if err != nil {
+			logger.Warn("No se pudo obtener configuracion para index, usando defaults", zap.Error(err))
+			cfg = &configuracion.ConfiguracionSitio{}
+		}
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"LoggedIn":      loggedIn,
+			"Configuracion": cfg,
+		})
 	})
 
 	e.GET("/integrantes", func(c *gin.Context) {
@@ -214,6 +230,10 @@ func InitRoutes(e *gin.Engine) {
 	usuariosAdmin.GET("/editar-usuario", usuarioHandler.Editar)
 	usuariosAdmin.POST("/actualizar-usuario", usuarioHandler.Actualizar)
 	usuariosAdmin.GET("/borrar-usuario", usuarioHandler.Borrar)
+
+	// Configuración General del Sitio (Mails de carreras y Contacto): solo accesible por ADMIN
+	usuariosAdmin.GET("/configuracion", configuracionHandler.VerConfiguracion)
+	usuariosAdmin.POST("/configuracion", configuracionHandler.GuardarConfiguracion)
 
 	// Módulo "estadisticas": requiere que el usuario logueado tenga ese módulo asignado (o sea ADMIN)
 	estadisticasAdmin := v1Admin.Group("")
