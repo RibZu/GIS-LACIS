@@ -40,7 +40,16 @@ CREATE TABLE configuracion_sitio (
     usuario_gestor_id INT REFERENCES usuario_gestor(id) ON DELETE SET NULL,
     telefono_footer VARCHAR(50),
     email_footer VARCHAR(255),
-    direccion VARCHAR(255)
+    direccion VARCHAR(255),
+    ubicacion_footer VARCHAR(255),
+    oficinas_footer VARCHAR(255),
+    mapa_url TEXT,
+    email_doctorado VARCHAR(255),
+    email_maestria_calidad VARCHAR(255),
+    email_maestria_software VARCHAR(255),
+    email_especializacion VARCHAR(255),
+    email_ing_informatica VARCHAR(255),
+    email_tecnicatura_web VARCHAR(255)
 );
 
 CREATE TABLE colaboradores (

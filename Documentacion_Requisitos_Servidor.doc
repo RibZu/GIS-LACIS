@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>Especificación de Requisitos de Servidor y Guía de Despliegue - GIS-LaCIS</title>
+<!--[if gte mso 9]>
+<xml>
+ <w:WordDocument>
+  <w:View>Print</w:View>
+  <w:Zoom>100</w:Zoom>
+  <w:DoNotOptimizeForBrowser/>
+ </w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+    @page {
+        size: A4 portrait;
+        margin: 2.5cm 2cm 2.5cm 2cm;
+        mso-header-margin: 1.2cm;
+        mso-footer-margin: 1.2cm;
+    }
+    body {
+        font-family: 'Segoe UI', Calibri, Arial, Helvetica, sans-serif;
+        color: #1e293b;
+        line-height: 1.55;
+        font-size: 11pt;
+        background-color: #ffffff;
+        margin: 0;
+        padding: 0;
+    }
+    .header-container {
+        border-bottom: 3px solid #1a4484;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+    h1 {
+        color: #1a4484;
+        font-size: 24pt;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        line-height: 1.2;
+    }
+    .subtitle {
+        color: #475569;
+        font-size: 13pt;
+        font-weight: 500;
+        margin: 0;
+    }
+    h2 {
+        color: #0f2942;
+        font-size: 15pt;
+        font-weight: 700;
+        border-bottom: 1.5px solid #cbd5e1;
+        padding-bottom: 6px;
+        margin-top: 26pt;
+        margin-bottom: 12pt;
+        page-break-after: avoid;
+    }
+    h3 {
+        color: #1a4484;
+        font-size: 12pt;
+        font-weight: 600;
+        margin-top: 16pt;
+        margin-bottom: 6pt;
+        page-break-after: avoid;
+    }
+    h4 {
+        color: #334155;
+        font-size: 11pt;
+        font-weight: 600;
+        margin-top: 10pt;
+        margin-bottom: 4pt;
+    }
+    p, li {
+        font-size: 11pt;
+        color: #334155;
+        margin-top: 4pt;
+        margin-bottom: 6pt;
+    }
+    ul, ol {
+        margin-top: 4pt;
+        margin-bottom: 10pt;
+        padding-left: 22px;
+    }
+    li {
+        margin-bottom: 4pt;
+    }
+    .badge {
+        background-color: #e0f2fe;
+        color: #0369a1;
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 9.5pt;
+        border: 1px solid #bae6fd;
+    }
+    .badge-success {
+        background-color: #dcfce7;
+        color: #15803d;
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 9.5pt;
+        border: 1px solid #bbf7d0;
+    }
+    .badge-warning {
+        background-color: #fef3c7;
+        color: #b45309;
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 9.5pt;
+        border: 1px solid #fde68a;
+    }
+    .badge-danger {
+        background-color: #fee2e2;
+        color: #b91c1c;
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 9.5pt;
+        border: 1px solid #fecaca;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12pt 0 16pt 0;
+        font-size: 10pt;
+        page-break-inside: avoid;
+    }
+    th {
+        background-color: #1a4484;
+        color: #ffffff;
+        font-weight: 600;
+        text-align: left;
+        padding: 8px 10px;
+        border: 1px solid #1a4484;
+    }
+    td {
+        padding: 8px 10px;
+        border: 1px solid #cbd5e1;
+        vertical-align: top;
+    }
+    tr:nth-child(even) td {
+        background-color: #f8fafc;
+    }
+    .info-box {
+        background-color: #f0f7ff;
+        border-left: 4.5px solid #1a4484;
+        padding: 10px 14px;
+        margin: 12pt 0;
+        border-radius: 0 5px 5px 0;
+        page-break-inside: avoid;
+    }
+    .warning-box {
+        background-color: #fffbeb;
+        border-left: 4.5px solid #d97706;
+        padding: 10px 14px;
+        margin: 12pt 0;
+        border-radius: 0 5px 5px 0;
+        page-break-inside: avoid;
+    }
+    .success-box {
+        background-color: #f0fdf4;
+        border-left: 4.5px solid #16a34a;
+        padding: 10px 14px;
+        margin: 12pt 0;
+        border-radius: 0 5px 5px 0;
+        page-break-inside: avoid;
+    }
+    .code-block {
+        background-color: #f8fafc;
+        border: 1px solid #cbd5e1;
+        border-left: 4px solid #0284c7;
+        border-radius: 4px;
+        padding: 10px 12px;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 9.5pt;
+        color: #0f172a;
+        white-space: pre-wrap;
+        margin: 10pt 0;
+        line-height: 1.45;
+        page-break-inside: avoid;
+    }
+    .meta-table {
+        margin: 15px 0 25px 0;
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .meta-table td {
+        border: none;
+        padding: 4px 6px;
+        font-size: 10.5pt;
+        background-color: transparent !important;
+    }
+    .meta-label {
+        width: 180px;
+        font-weight: 700;
+        color: #1a4484;
+    }
+    .checklist {
+        list-style-type: none;
+        padding-left: 5px;
+    }
+    .checklist li {
+        margin-bottom: 7px;
+        position: relative;
+        padding-left: 24px;
+    }
+    .checklist li::before {
+        content: "☐";
+        position: absolute;
+        left: 0;
+        font-size: 13pt;
+        color: #1a4484;
+        line-height: 1;
+    }
+    .footer-note {
+        text-align: center;
+        color: #64748b;
+        font-size: 9pt;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 15px;
+        margin-top: 40px;
+    }
+</style>
+</head>
+<body>
+
+    <div class="header-container">
+        <h1>REQUISITOS DEL SERVIDOR Y GUÍA DE DESPLIEGUE</h1>
+        <div class="subtitle">Documento Técnico de Infraestructura para Servidor de la Facultad — Sistema Web GIS-LaCIS</div>
+    </div>
+
+    <table class="meta-table">
+        <tr>
+            <td class="meta-label">Sistema:</td>
+            <td><strong>GIS-LACIS</strong> (Grupo de Ingeniería de Software & Laboratorio de Computación Inteligente y Sistemas)</td>
+        </tr>
+        <tr>
+            <td class="meta-label">Institución Destino:</td>
+            <td>Facultad de Ciencias Físico Matemáticas y Naturales / Servidor Central de la Facultad</td>
+        </tr>
+        <tr>
+            <td class="meta-label">Arquitectura:</td>
+            <td>Backend Web Go (Gin Framework) + Base de Datos PostgreSQL + Frontend SSR (HTML5/CSS3/JS)</td>
+        </tr>
+        <tr>
+            <td class="meta-label">Tipo de Aplicación:</td>
+            <td>Portal Institucional y Panel de Administración Académico/Científico con Subida de Archivos</td>
+        </tr>
+        <tr>
+            <td class="meta-label">Destinatarios:</td>
+            <td>Administradores de Red, Administradores de Sistemas (Sysadmins), Área de Cómputos e Infraestructura</td>
+        </tr>
+        <tr>
+            <td class="meta-label">Fecha de Emisión:</td>
+            <td>Octubre 2026 — Versión 1.0 Oficial de Producción</td>
+        </tr>
+    </table>
+
+    <div class="info-box">
+        <strong>Propósito del documento:</strong> Este informe especifica en detalle todas las características de hardware, sistema operativo, dependencias de software, configuración de base de datos, puertos de red, permisos de almacenamiento y directivas de seguridad requeridas para montar y correr el sistema <strong>GIS-LACIS</strong> en los servidores de la facultad, garantizando su alta disponibilidad y operatividad pública en la web.
+    </div>
+
+    <!-- ========================================== -->
+    <h2>1. Resumen de Arquitectura y Tecnologías del Proyecto</h2>
+    <!-- ========================================== -->
+    <p>
+        El sistema <strong>GIS-LACIS</strong> es una aplicación web integral diseñada para la divulgación científica, gestión de proyectos, catálogo de tesis de grado/posgrado, investigadores y producciones de software.
+    </p>
+    <ul>
+        <li><strong>Backend:</strong> Desarrollado en <strong>Go (Golang)</strong> utilizando el framework web <strong>Gin</strong>. Go compila en un binario ejecutable nativo, lo que se traduce en un consumo de memoria mínimo (habitualmente menos de 50 MB de RAM en reposo) y un rendimiento superior ante solicitudes concurrentes.</li>
+        <li><strong>Base de Datos:</strong> <strong>PostgreSQL</strong> (versión 14 o superior). Almacena de forma relacional usuarios con contraseñas cifradas en <code>bcrypt</code>, integrantes, proyectos, productos de software, publicaciones, colaboraciones, estadísticas y tesis académicas.</li>
+        <li><strong>Frontend:</strong> Server-Side Rendering (SSR) dinámico con plantillas HTML nativas de Go (<code>html/template</code>), hojas de estilo CSS3 optimizadas, interactividad en JavaScript nativo y componentes modulares.</li>
+        <li><strong>Sistema de Archivos (Uploads):</strong> Gestión interna de almacenamiento para archivos multimedia: fotografías de investigadores, logotipos de colaboradores institucionales, currículums en PDF y documentos completos de tesis académicas en PDF.</li>
+    </ul>
+
+    <!-- ========================================== -->
+    <h2>2. Especificaciones de Hardware (Servidor Físico, VM o VPS)</h2>
+    <!-- ========================================== -->
+    <p>
+        Gracias a la eficiencia del lenguaje Go, el sistema presenta requerimientos computacionales muy bajos. Puede alojarse en un servidor dedicado o en una Máquina Virtual (VM) en entornos Proxmox, VMware, KVM u OpenStack de la universidad.
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">Recurso</th>
+                <th style="width: 35%;">Requisito Mínimo</th>
+                <th style="width: 40%;">Requisito Recomendado (Producción Facultad)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Procesador (CPU)</strong></td>
+                <td>1 vCPU / 1 Núcleo (x86_64 o ARM64) a 2.0 GHz</td>
+                <td><strong>2 vCPUs / 2 Núcleos</strong> o superior (permite atender picos de consulta y tareas concurrentes sin degradación).</td>
+            </tr>
+            <tr>
+                <td><strong>Memoria RAM</strong></td>
+                <td>2 GB RAM</td>
+                <td><strong>4 GB RAM</strong> (50 MB reservados para la aplicación Go; el resto asignado a buffers de PostgreSQL, caché de disco y Nginx).</td>
+            </tr>
+            <tr>
+                <td><strong>Almacenamiento (Disco)</strong></td>
+                <td>20 GB de espacio libre (SSD o NVMe)</td>
+                <td><strong>40 GB a 60 GB SSD</strong> (Permite alojar base de datos histórica, backups diarios automáticos y el repositorio creciente de tesis en formato PDF).</td>
+            </tr>
+            <tr>
+                <td><strong>Interfaz de Red</strong></td>
+                <td>100 Mbps simétricos</td>
+                <td><strong>1 Gbps</strong> conectado a la red troncal o DMZ de la Facultad con IP pública o reverse proxy institucional.</td>
+            </tr>
+            <tr>
+                <td><strong>Arquitectura de CPU</strong></td>
+                <td>64 bits (amd64 / x86_64)</td>
+                <td>64 bits (amd64 / x86_64 o arm64).</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ========================================== -->
+    <h2>3. Requisitos del Sistema Operativo</h2>
+    <!-- ========================================== -->
+    <p>
+        El sistema está diseñado para operar con máxima estabilidad en distribuciones tipo servidor con soporte de largo plazo (LTS).
+    </p>
+
+    <h3>Sistemas Operativos Recomendados (Linux)</h3>
+    <ul>
+        <li><span class="badge-success">RECOMENDADO</span> <strong>Ubuntu Server 22.04 LTS o 24.04 LTS (64 bits)</strong>: Entorno ideal por disponibilidad de paquetes actualizados, herramientas de monitoreo y soporte extendido.</li>
+        <li><span class="badge-success">RECOMENDADO</span> <strong>Debian 12 (Bookworm) o Debian 11 (Bullseye)</strong>: Estabilidad garantizada para servidores universitarios.</li>
+        <li><span class="badge">COMPATIBLE</span> <strong>Red Hat Enterprise Linux (RHEL) 8/9, Rocky Linux 9 o AlmaLinux 9</strong>.</li>
+    </ul>
+
+    <h3>Alternativa Windows (Solo si el datacenter de la facultad lo exige)</h3>
+    <ul>
+        <li><strong>Windows Server 2019 / 2022 (64 bits)</strong>: Puede ejecutarse mediante servicio nativo de Windows (usando herramientas como NSSM) o consola supervisada.</li>
+    </ul>
+
+    <!-- ========================================== -->
+    <h2>4. Requisitos de Software y Componentes Necesarios</h2>
+    <!-- ========================================== -->
+
+    <h3>A. Motor de Base de Datos: PostgreSQL</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 30%;">Parámetro</th>
+                <th style="width: 70%;">Especificación Requerida</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Versión</strong></td>
+                <td><strong>PostgreSQL 14, 15, 16 o 17/18</strong> (PostgreSQL 14 o superior es mandatorio).</td>
+            </tr>
+            <tr>
+                <td><strong>Nombre de Base de Datos</strong></td>
+                <td><code>lacis</code></td>
+            </tr>
+            <tr>
+                <td><strong>Codificación (Encoding)</strong></td>
+                <td><strong>UTF8</strong> <span class="badge-danger">MANDATORIO</span> (Indispensable para preservar tildes, eñes y caracteres especiales de autores, títulos científicos y descripciones).</td>
+            </tr>
+            <tr>
+                <td><strong>Collation / Ctype</strong></td>
+                <td><code>es_AR.UTF-8</code>, <code>es_ES.UTF-8</code> o <code>C.UTF-8</code>.</td>
+            </tr>
+            <tr>
+                <td><strong>Puerto de Conexión</strong></td>
+                <td><code>5432</code> (puerto por defecto en servidores Linux) o <code>5433</code> (debe coincidir con la cadena de conexión configurada en el sistema).</td>
+            </tr>
+            <tr>
+                <td><strong>Script de Inicialización</strong></td>
+                <td>Archivo provisto en el proyecto: <code>Modelo Base de datos/Modelo Base de datos.sql</code> (incluye creación de tablas, relaciones, roles canónicos, datos de prueba y catálogo de software inicial).</td>
+            </tr>
+            <tr>
+                <td><strong>Acceso de Red</strong></td>
+                <td>Escucha local en <code>localhost</code> (127.0.0.1). <strong>No debe exponerse a Internet ni a la red pública</strong>.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>B. Entorno de Ejecución Go (Golang) — Dos Opciones Disponibles</h3>
+    <p>El administrador del servidor puede elegir entre dos estrategias de despliegue según las políticas de seguridad de la facultad:</p>
+
+    <div class="success-box">
+        <strong>Opción 1: Despliegue mediante Binario Precompilado (RECOMENDADA PARA PRODUCCIÓN)</strong><br>
+        Go permite compilar un único archivo binario estático y autosuficiente. Se puede compilar en cualquier máquina de desarrollo para la arquitectura Linux destino:
+        <div class="code-block"># Comando de compilación cruzada para servidor Linux (64 bits):
+GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w" -o lacis-server cmd/api/main.go</div>
+        <strong>Ventaja fundamental:</strong> <em>¡No es necesario instalar Go ni el compilador en el servidor de la facultad!</em> Solo se copia el archivo binario resultante <code>lacis-server</code> junto a las carpetas <code>ui/</code> y se ejecuta directamente.
+    </div>
+
+    <div class="info-box">
+        <strong>Opción 2: Compilación in-situ en el Servidor de la Facultad</strong><br>
+        Si el servidor cuenta con acceso a repositorios Git y el equipo prefiere compilar directamente:
+        <ul>
+            <li><strong>Versión de Go requerida:</strong> Go 1.20 o superior (Recomendado <strong>Go 1.22.x o 1.24.x LTS</strong>).</li>
+            <li>Paquetes adicionales: <code>git</code>, <code>build-essential</code> (opcional).</li>
+        </ul>
+    </div>
+
+    <h3>C. Servidor Web Frontal / Reverse Proxy (Nginx)</h3>
+    <p>
+        <strong>Nginx (versión 1.18 o superior)</strong> es el componente estándar recomendado para colocarse de cara a Internet como Proxy Inverso.
+    </p>
+    <ul>
+        <li><strong>Terminación SSL/TLS:</strong> Gestiona la encriptación HTTPS de forma segura sin sobrecargar la aplicación.</li>
+        <li><strong>Reenvío de Peticiones:</strong> Envía el tráfico HTTP entrante al puerto interno de la aplicación Go (<code>http://127.0.0.1:8080</code>).</li>
+        <li><strong>Límite de Tamaño de Archivos (Subida de Tesis en PDF):</strong> Es fundamental configurar la directiva <code>client_max_body_size 50M;</code> en Nginx para permitir la subida de tesis académicas extensas que suelen pesar entre 5 MB y 40 MB.</li>
+        <li><strong>Compresión Gzip y Caché de Estáticos:</strong> Acelera la descarga de hojas de estilo, scripts y logotipos institucionales.</li>
+    </ul>
+
+    <h3>D. Certificado de Seguridad SSL/TLS (HTTPS)</h3>
+    <ul>
+        <li><strong>Opción Certbot (Let's Encrypt):</strong> Certificado gratuito con renovación automática programada por cron/systemd (Recomendado si el servidor tiene un dominio o subdominio asignado, p. ej. <code>lacis.unsl.edu.ar</code>).</li>
+        <li><strong>Opción Certificado Institucional:</strong> Certificados comodín (Wildcard) provistos por el departamento de redes de la universidad (claves <code>.crt</code> / <code>.key</code>).</li>
+    </ul>
+
+    <h3>E. Administrador de Procesos y Arranque Automático (Systemd)</h3>
+    <p>
+        En servidores Linux, la aplicación debe correr como un servicio de sistema (demonio) administrado por <strong>Systemd</strong>. Esto garantiza:
+    </p>
+    <ul>
+        <li>Arranque automático al encender o reiniciar el servidor (On Boot).</li>
+        <li>Reinicio automático instantáneo en caso de fallos inesperados (Restart=always).</li>
+        <li>Supervisión de consumo y recolección de logs centralizada con <code>journalctl</code>.</li>
+    </ul>
+
+    <!-- ========================================== -->
+    <h2>5. Configuración de Red, Puertos y Firewall</h2>
+    <!-- ========================================== -->
+    <p>
+        Para mantener los estándares de ciberseguridad exigidos por la institución, la regla de oro es exponer únicamente los puertos web cifrados y restringir el resto a nivel local:
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">Puerto</th>
+                <th style="width: 15%;">Protocolo</th>
+                <th style="width: 25%;">Visibilidad</th>
+                <th style="width: 45%;">Función / Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>80</strong></td>
+                <td>TCP (HTTP)</td>
+                <td><span class="badge-success">PÚBLICO</span> (Internet)</td>
+                <td>Acceso web estándar. Redirige automáticamente todo el tráfico hacia el puerto 443 (HTTPS).</td>
+            </tr>
+            <tr>
+                <td><strong>443</strong></td>
+                <td>TCP (HTTPS)</td>
+                <td><span class="badge-success">PÚBLICO</span> (Internet)</td>
+                <td>Puerto seguro principal. Nginx recibe y desencripta el tráfico SSL del portal institucional.</td>
+            </tr>
+            <tr>
+                <td><strong>22</strong></td>
+                <td>TCP (SSH)</td>
+                <td><span class="badge-warning">RESTRINGIDO</span> (Facultad / VPN)</td>
+                <td>Acceso seguro de consola para los administradores de sistemas del servidor.</td>
+            </tr>
+            <tr>
+                <td><strong>8080</strong></td>
+                <td>TCP (Go Backend)</td>
+                <td><span class="badge-danger">PRIVADO / LOCALHOST</span></td>
+                <td>Puerto de escucha interno de la aplicación Go. <strong>BLOQUEADO al exterior</strong>; solo Nginx se comunica con él en <code>127.0.0.1:8080</code>.</td>
+            </tr>
+            <tr>
+                <td><strong>5432</strong></td>
+                <td>TCP (PostgreSQL)</td>
+                <td><span class="badge-danger">PRIVADO / LOCALHOST</span></td>
+                <td>Puerto del motor de base de datos. <strong>BLOQUEADO al exterior</strong>; solo escucha peticiones locales desde <code>127.0.0.1:5432</code>.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="warning-box">
+        <strong>¡Atención de Seguridad!</strong> Bajo ninguna circunstancia deben abrirse en el Firewall los puertos <code>8080</code> ni <code>5432/5433</code> a la red externa. Solo los puertos 80 y 443 deben recibir peticiones públicas.
+    </div>
+
+    <!-- ========================================== -->
+    <h2>6. Almacenamiento, Estructura de Directorios y Permisos</h2>
+    <!-- ========================================== -->
+    <p>
+        La aplicación requiere una estructura de directorios específica y permisos de lectura/escritura para funcionar correctamente.
+    </p>
+
+    <h3>A. Directorio de Trabajo de la Aplicación (Working Directory)</h3>
+    <div class="warning-box">
+        <strong>Requisito Crítico:</strong> El ejecutable de Go busca las plantillas HTML (<code>ui/html/**/*.html</code>) y los archivos estáticos (<code>ui/static/</code>) mediante rutas relativas al directorio donde se ejecuta. Por lo tanto, <strong>el servicio Systemd DEBE configurar la directiva <code>WorkingDirectory</code> apuntando a la raíz del proyecto</strong> (por ejemplo <code>/var/www/lacis</code>).
+    </div>
+
+    <h3>B. Directorios con Permisos de ESCRITURA Obligatorios (Uploads)</h3>
+    <p>El backend permite a los administradores cargar contenidos a través de formularios. Los siguientes subdirectorios deben existir y contar con permisos de escritura para el usuario del servicio (ej. <code>www-data</code>):</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 45%;">Ruta del Directorio</th>
+                <th style="width: 25%;">Tipo de Archivo</th>
+                <th style="width: 30%;">Permiso Requerido</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>ui/static/assets/img-GIS/IMGintegrantes/</code></td>
+                <td>Imágenes (.jpg, .png, .webp)</td>
+                <td>Lectura y Escritura (Fotos de investigadores)</td>
+            </tr>
+            <tr>
+                <td><code>ui/static/assets/CVs-GIS/</code></td>
+                <td>Documentos (.pdf)</td>
+                <td>Lectura y Escritura (Curriculums de docentes)</td>
+            </tr>
+            <tr>
+                <td><code>ui/static/assets/img-GIS/colabLogo/</code></td>
+                <td>Imágenes (.png, .jpg, .svg)</td>
+                <td>Lectura y Escritura (Logotipos de empresas colaboradoras)</td>
+            </tr>
+            <tr>
+                <td><code>ui/static/assets/tesis-GIS/</code></td>
+                <td>Documentos (.pdf)</td>
+                <td>Lectura y Escritura (Tesis completas de grado y posgrado)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>Comando sugerido en Linux para asignar permisos correctos:</p>
+    <div class="code-block"># Crear las carpetas de carga si no existieran:
+mkdir -p ui/static/assets/img-GIS/IMGintegrantes/
+mkdir -p ui/static/assets/CVs-GIS/
+mkdir -p ui/static/assets/img-GIS/colabLogo/
+mkdir -p ui/static/assets/tesis-GIS/
+
+# Asignar propietario al usuario de ejecución web (ej. www-data):
+sudo chown -R www-data:www-data /var/www/lacis
+sudo chmod -R 755 /var/www/lacis/ui/static/assets/</div>
+
+    <!-- ========================================== -->
+    <h2>7. Parámetros de Configuración, Variables de Entorno y Credenciales</h2>
+    <!-- ========================================== -->
+
+    <h3>A. Cadena de Conexión a Base de Datos (Variables de Entorno)</h3>
+    <p>
+        Para máxima seguridad y flexibilidad en servidores de producción, el sistema detecta dinámicamente las variables de entorno sin requerir cambios en el código fuente. Se admiten dos modalidades de configuración:
+    </p>
+    
+    <h4>Modalidad 1: Variable Única de Conexión (Recomendada)</h4>
+    <div class="code-block">DATABASE_URL=postgres://&lt;USUARIO&gt;:&lt;PASSWORD&gt;@&lt;HOST&gt;:&lt;PUERTO&gt;/&lt;NOMBRE_BD&gt;?sslmode=disable
+# Ejemplo típico para servidor de producción Linux:
+DATABASE_URL=postgres://lacis_user:ContrasenaSegura123#@localhost:5432/lacis?sslmode=disable</div>
+
+    <h4>Modalidad 2: Variables de Entorno Desacopladas</h4>
+    <div class="code-block">DB_HOST=localhost
+DB_PORT=5432
+DB_USER=lacis_user
+DB_PASSWORD=ContrasenaSegura123#
+DB_NAME=lacis
+DB_SSLMODE=disable</div>
+
+    <div class="info-box">
+        <strong>Retrocompatibilidad Local:</strong> Si no se define ninguna de las variables anteriores, el backend recurre de forma predeterminada a la configuración de desarrollo local (<code>postgres://postgres:postgres@localhost:5433/lacis?sslmode=disable</code>), asegurando que el script <code>iniciar.bat</code> siga funcionando sin inconvenientes.
+    </div>
+
+    <h3>B. Configuración de Puerto Web</h3>
+    <p>
+        El puerto de escucha interno se controla mediante la variable de entorno <code>PORT</code>.
+    </p>
+    <div class="code-block">PORT=8080   # (Puerto por defecto si no se especifica)</div>
+
+    <h3>C. Modo de Producción de Gin (GIN_MODE=release)</h3>
+    <div class="info-box">
+        <strong>Optimización de Rendimiento:</strong> En el servidor de producción se debe exportar obligatoriamente:
+        <br><code>GIN_MODE=release</code>
+        <br>Esto desactiva los registros de depuración detallados en consola, activa optimizaciones internas de enrutamiento y disminuye drásticamente el consumo de memoria RAM.
+    </div>
+
+    <h3>D. Credenciales de Acceso Inicial para Pruebas del Administrador</h3>
+    <p>
+        Una vez importado el script <code>Modelo Base de datos.sql</code>, el sistema queda preconfigurado con un superusuario administrador inicial para que el técnico y los responsables puedan verificar el correcto funcionamiento del login y los paneles de gestión:
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 30%;">Parámetro de Acceso</th>
+                <th style="width: 70%;">Valor de Configuración Inicial</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>URL de Inicio de Sesión</strong></td>
+                <td><code>https://&lt;dominio-o-ip&gt;/login</code></td>
+            </tr>
+            <tr>
+                <td><strong>Nombre de Usuario</strong></td>
+                <td><code>admin</code></td>
+            </tr>
+            <tr>
+                <td><strong>Contraseña Inicial</strong></td>
+                <td><code>admin123</code></td>
+            </tr>
+            <tr>
+                <td><strong>Rol Asignado</strong></td>
+                <td><code>ADMIN</code> (Acceso total: Integrantes, Tesis, Proyectos, Reconocimientos, Empresas, Estadísticas y Gestión de Usuarios).</td>
+            </tr>
+            <tr>
+                <td><strong>Panel de Control Destino</strong></td>
+                <td><code>/admin/dashboard</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="warning-box">
+        <strong>Recomendación de Seguridad Inmediata:</strong> Una vez verificado el despliegue en el servidor, se debe cambiar inmediatamente la contraseña del usuario <code>admin</code> desde el módulo <em>Administradores</em> (<code>/admin/usuarios</code>) o restablecer el hash bcrypt correspondiente en la base de datos.
+    </div>
+
+    <!-- ========================================== -->
+    <h2>8. Guía de Instalación y Despliegue Paso a Paso (Para el Sysadmin)</h2>
+    <!-- ========================================== -->
+
+    <h3>Paso 1: Instalación de Paquetes Base en Linux (Ubuntu/Debian)</h3>
+    <div class="code-block">sudo apt update && sudo apt upgrade -y
+sudo apt install -y postgresql postgresql-contrib nginx certbot python3-certbot-nginx git curl ufw</div>
+
+    <h3>Paso 2: Configuración de PostgreSQL y Creación de la Base de Datos</h3>
+    <div class="code-block"># Iniciar sesión en la consola de PostgreSQL:
+sudo -u postgres psql
+
+-- Crear el usuario para la aplicación con contraseña segura:
+CREATE USER lacis_user WITH PASSWORD 'ContrasenaSegura123#';
+
+-- Crear la base de datos con codificación UTF8:
+CREATE DATABASE lacis OWNER lacis_user ENCODING 'UTF8';
+
+-- Asignar todos los privilegios:
+GRANT ALL PRIVILEGES ON DATABASE lacis TO lacis_user;
+\q
+
+# Importar el esquema relacional y datos iniciales del proyecto:
+# (Ubicarse en el directorio del proyecto donde se encuentra la carpeta 'Modelo Base de datos')
+PGPASSWORD='ContrasenaSegura123#' psql -h localhost -U lacis_user -d lacis -f "Modelo Base de datos/Modelo Base de datos.sql"</div>
+
+    <h3>Paso 3: Aprovisionamiento de la Aplicación en el Servidor</h3>
+    <div class="code-block"># Crear directorio de despliegue institucional:
+sudo mkdir -p /var/www/lacis
+sudo chown -R $USER:$USER /var/www/lacis
+
+# Copiar los archivos del proyecto a /var/www/lacis:
+# La estructura resultante en /var/www/lacis debe ser:
+#   /var/www/lacis/lacis-server    (binario ejecutable compilado)
+#   /var/www/lacis/ui/             (plantillas HTML y archivos estáticos)
+#   /var/www/lacis/Modelo Base de datos/
+
+# Otorgar permisos de ejecución al binario:
+chmod +x /var/www/lacis/lacis-server</div>
+
+    <h3>Paso 4: Creación del Servicio en Systemd</h3>
+    <p>Crear el archivo de configuración del servicio en <code>/etc/systemd/system/lacis.service</code>:</p>
+    <div class="code-block">sudo nano /etc/systemd/system/lacis.service</div>
+    <p>Contenido del servicio con variables de entorno de producción:</p>
+    <div class="code-block">[Unit]
+Description=GIS-LaCIS Web Application (Go Backend)
+After=network.target postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/lacis
+ExecStart=/var/www/lacis/lacis-server
+Restart=always
+RestartSec=5
+
+# Variables de entorno de producción
+Environment=GIN_MODE=release
+Environment=PORT=8080
+Environment=DATABASE_URL=postgres://lacis_user:ContrasenaSegura123#@localhost:5432/lacis?sslmode=disable
+
+# Directivas de seguridad del proceso
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target</div>
+
+    <p>Habilitar e iniciar el servicio:</p>
+    <div class="code-block">sudo systemctl daemon-reload
+sudo systemctl enable lacis.service
+sudo systemctl start lacis.service
+
+# Verificar estado operativo:
+sudo systemctl status lacis.service</div>
+
+    <h3>Paso 5: Configuración de Nginx como Reverse Proxy y SSL</h3>
+    <p>Crear la configuración del sitio en Nginx en <code>/etc/nginx/sites-available/lacis.conf</code>:</p>
+    <div class="code-block">server {
+    listen 80;
+    server_name lacis.unsl.edu.ar; # (Reemplazar por el dominio institucional asignado)
+
+    # Límite para subida de archivos (PDFs de tesis de hasta 50 MB)
+    client_max_body_size 50M;
+
+    # Logs de acceso y error
+    access_log /var/log/nginx/lacis_access.log;
+    error_log /var/log/nginx/lacis_error.log;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+
+        # Cabeceras requeridas para conservar información del cliente real
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Timeouts para subidas pesadas de tesis
+        proxy_connect_timeout 90;
+        proxy_send_timeout 90;
+        proxy_read_timeout 90;
+    }
+}</div>
+
+    <p>Activar el sitio en Nginx y probar la sintaxis:</p>
+    <div class="code-block">sudo ln -s /etc/nginx/sites-available/lacis.conf /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx</div>
+
+    <h3>Paso 6: Emisión del Certificado SSL/TLS con Certbot</h3>
+    <div class="code-block">sudo certbot --nginx -d lacis.unsl.edu.ar</div>
+    <p>Certbot modificará automáticamente la configuración de Nginx para redirigir todo el tráfico HTTP (puerto 80) hacia HTTPS (puerto 443) con cifrado SSL robusto.</p>
+
+    <h3>Paso 7: Configuración de Reglas de Firewall (UFW)</h3>
+    <div class="code-block">sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp       # SSH (Administración)
+sudo ufw allow 80/tcp       # HTTP
+sudo ufw allow 443/tcp      # HTTPS
+sudo ufw enable</div>
+
+    <!-- ========================================== -->
+    <h2>9. Políticas de Respaldo (Backup) y Mantenimiento</h2>
+    <!-- ========================================== -->
+    <p>
+        Para garantizar la integridad y continuidad operativa del sistema, se definen dos políticas de respaldo fundamentales:
+    </p>
+
+    <h3>A. Respaldo Diario de la Base de Datos (PostgreSQL Dump)</h3>
+    <p>Crear un script de respaldo automatizado en <code>/opt/scripts/backup_lacis_db.sh</code>:</p>
+    <div class="code-block">#!/bin/bash
+BACKUP_DIR="/var/backups/lacis/db"
+FECHA=$(date +'%Y-%m-%d_%H%M%S')
+mkdir -p "$BACKUP_DIR"
+
+# Realizar dump en formato comprimido:
+pg_dump -U postgres -F c -b -v -f "$BACKUP_DIR/lacis_db_$FECHA.dump" lacis
+
+# Eliminar respaldos con más de 30 días de antigüedad:
+find "$BACKUP_DIR" -type f -name "*.dump" -mtime +30 -delete</div>
+
+    <h3>B. Respaldo de Archivos Multimedia y Documentos de Tesis</h3>
+    <p>Se recomienda respaldar periódicamente (o sincronizar mediante <code>rsync</code>) el directorio de archivos adjuntos:</p>
+    <div class="code-block">/var/www/lacis/ui/static/assets/</div>
+    <p>Contiene todos los PDFs de tesis académicas, CVs de docentes y fotografías cargadas desde el panel administrativo.</p>
+
+    <!-- ========================================== -->
+    <h2>10. Checklist de Verificación Final para el Administrador de Sistemas</h2>
+    <!-- ========================================== -->
+    <p>Utilice esta lista de cotejo antes de dar por finalizada la puesta en producción del sistema:</p>
+
+    <ul class="checklist">
+        <li><strong>PostgreSQL instalado y corriendo:</strong> Versión 14 o superior en ejecución sobre el puerto local 5432.</li>
+        <li><strong>Base de datos <code>lacis</code> inicializada:</strong> Codificación verificada en <code>UTF8</code> y script <code>Modelo Base de datos.sql</code> ejecutado sin errores.</li>
+        <li><strong>Binario o entorno de Go desplegado:</strong> Ejecutable <code>lacis-server</code> compilado con éxito y con permisos <code>chmod +x</code>.</li>
+        <li><strong>Directorio de trabajo configurado:</strong> El proceso corre teniendo como raíz la carpeta donde residen las subcarpetas <code>ui/html/</code> y <code>ui/static/</code>.</li>
+        <li><strong>Permisos de escritura asignados:</strong> Carpetas <code>IMGintegrantes</code>, <code>CVs-GIS</code>, <code>colabLogo</code> y <code>tesis-GIS</code> con permisos para el usuario <code>www-data</code>.</li>
+        <li><strong>Servicio Systemd creado y habilitado:</strong> <code>lacis.service</code> configurado con <code>Restart=always</code> y en estado <em>Active (running)</em>.</li>
+        <li><strong>Reverse Proxy Nginx configurado:</strong> Reenvío correcto a <code>http://127.0.0.1:8080</code> con directiva <code>client_max_body_size 50M;</code> activa.</li>
+        <li><strong>Certificado SSL/TLS instalado:</strong> Acceso funcional y forzado mediante protocolo seguro HTTPS (candado verde activo en el navegador).</li>
+        <li><strong>Firewall ajustado:</strong> Puertos 8080 y 5432 cerrados a Internet; solo 80, 443 y 22 habilitados.</li>
+        <li><strong>Tareas programadas de Backup activas:</strong> Cron de respaldo periódico de PostgreSQL y carpeta <code>assets</code> configurado.</li>
+    </ul>
+
+    <!-- ========================================== -->
+    <h2>11. Paquete de Archivos a Entregar y Datos a Coordinar</h2>
+    <!-- ========================================== -->
+
+    <h3>A. Archivos que el Equipo de Desarrollo debe Entregar al Técnico</h3>
+    <p>Para que el técnico pueda montar el sistema inmediatamente, entréguele un archivo comprimido (<code>.zip</code> o <code>.tar.gz</code>) o acceso al repositorio con los siguientes componentes esenciales:</p>
+    <ul>
+        <li><strong>El Binario de Go:</strong> Archivo ejecutable compilado para Linux (<code>lacis-server</code>) o el código fuente completo en Go.</li>
+        <li><strong>Directorio <code>ui/html/</code>:</strong> Contiene todas las plantillas HTML del portal público y del panel de administración.</li>
+        <li><strong>Directorio <code>ui/static/</code>:</strong> Contiene las hojas de estilo CSS, scripts JS, tipografías, logotipos institucionales e imágenes predeterminadas.</li>
+        <li><strong>Directorio <code>Modelo Base de datos/</code>:</strong> Contiene el script <code>Modelo Base de datos.sql</code> (DDL y datos iniciales).</li>
+        <li><strong>Documento Técnico de Infraestructura:</strong> Este archivo <code>Documentacion_Requisitos_Servidor.doc</code> para que siga la guía paso a paso.</li>
+    </ul>
+
+    <h3>B. Datos Clave que deben Coordinar con el Técnico de la Facultad</h3>
+    <p>Antes del lanzamiento, acuerden los siguientes 3 puntos institucionales:</p>
+    <ol>
+        <li><strong>Dominio o Subdominio Web:</strong> Definir el nombre DNS que la facultad o universidad asignará al portal (por ejemplo: <code>lacis.unsl.edu.ar</code> o <code>gis-lacis.fcfmyn.unsl.edu.ar</code>). Este nombre se coloca en el archivo <code>lacis.conf</code> de Nginx.</li>
+        <li><strong>Certificado SSL Institucional:</strong> Consultar si el centro de cómputos posee un certificado SSL Wildcard para el dominio institucional (ej. <code>*.unsl.edu.ar</code>) o si el técnico configurará <strong>Certbot (Let's Encrypt)</strong> como indica el Paso 6.</li>
+        <li><strong>IP Pública o Salida a Internet:</strong> Confirmar que el firewall institucional tenga ruteados los puertos 80 y 443 hacia la máquina virtual o servidor asignado.</li>
+    </ol>
+
+    <div class="footer-note">
+        <strong>GIS-LACIS</strong> — Grupo de Ingeniería de Software & Laboratorio de Computación Inteligente y Sistemas<br>
+        Facultad de Ciencias Físico Matemáticas y Naturales (FCFMyN) — Universidad Nacional de San Luis (UNSL)<br>
+        Documento de Especificación de Servidor para Puesta en Producción Web
+    </div>
+
+</body>
+</html>
