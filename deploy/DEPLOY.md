@@ -95,6 +95,108 @@ Si algo falla, mirá la pestaña *Logs* del servicio web:
 
 Subí los cambios con `git push` a `main`. Railway construye y publica solo. **No vuelvas a cargar `db/lacis.sql`.** Si un cambio agrega una tabla o columna nueva, hay que aplicar ese cambio a mano en la base de Railway con `psql` (como en el paso 3, pero con el archivo del cambio).
 
+### 8.1 Antes de empezar
+
+Necesitás la copia de esta carpeta en tu PC (la que se creó en el paso 2), Git instalado y acceso propio al repositorio de GitHub. Para actualizar el sitio **no** hace falta volver a cargar la base de datos, ni tocar el volumen, ni cambiar variables en Railway. Volver a publicar no cuesta nada extra.
+
+### 8.2 Elegir el camino
+
+- **Camino corto**: el cambio es solo de archivos estáticos (hojas de estilo, scripts, imágenes) o de plantillas HTML. No necesita la base de datos local.
+- **Camino completo**: cualquier otro cambio (código en Go, datos, esquema) o si tenés dudas. Regenera toda la copia y necesita la base de datos local.
+
+### 8.3 Camino corto: copiar solo lo que cambió
+
+Copiá cada archivo modificado desde el proyecto de desarrollo a la misma ruta dentro de esta carpeta. Por ejemplo, para el cambio de la leyenda institucional en el celular:
+
+```powershell
+$Dev = "H:\GIS-LACIS-Simon"
+$Copia = "H:\GIS-LACIS-Deploy"
+Copy-Item "$Dev\ui\static\css-GIS\style.css" "$Copia\ui\static\css-GIS\style.css"
+Copy-Item "$Dev\ui\html\html-GIS\index.html" "$Copia\ui\html\html-GIS\index.html"
+Copy-Item "$Dev\deploy\DEPLOY.md" "$Copia\DEPLOY.md"
+```
+
+Después seguí en el punto 8.6. Si esta carpeta ya tiene su carpeta oculta `.git`, saltá el punto 8.5.
+
+### 8.4 Camino completo: regenerar la copia
+
+1. Levantá la base de datos local con `pg_ctl` (no uses `iniciar.bat`: cierra todos los procesos de PostgreSQL de la PC):
+
+```powershell
+& "C:\Program Files\PostgreSQL\18\bin\pg_ctl.exe" -D "H:\GIS-LACIS-Simon\pg_data" -o "-p 5433" -l "$env:TEMP\pg.log" start
+```
+
+2. Desde el proyecto de desarrollo, regenerá la copia:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File deploy\generar_copia_deploy.ps1 -DesarrollosPrueba '172,173' -UsuariosPrueba '57' -Reemplazar
+```
+
+3. Apagá la base de datos:
+
+```powershell
+& "C:\Program Files\PostgreSQL\18\bin\pg_ctl.exe" -D "H:\GIS-LACIS-Simon\pg_data" stop
+```
+
+Regenerar con `-Reemplazar` borra la carpeta entera, **incluida su carpeta `.git`**. Por eso hay que conectarla de nuevo (punto 8.5).
+
+### 8.5 Conectar la copia con el repositorio publicado
+
+Hacelo solo si la carpeta no tiene `.git` (después del camino completo). Estos comandos van **dentro de la copia** y toda la configuración es local a esta carpeta: nunca uses `--global`.
+
+```powershell
+cd H:\GIS-LACIS-Deploy
+git init
+git branch -M main
+git config core.autocrlf false
+git config user.name gislacis-byte
+git config user.email 338333962+gislacis-byte@users.noreply.github.com
+git remote add origin https://gislacis-byte@github.com/gislacis-byte/GIS-LACIS.git
+git fetch origin
+git reset origin/main
+```
+
+`git reset origin/main` deja tus archivos como están y hace que Git compare contra lo ya publicado: así solo aparecen las diferencias reales y no se crea un historial paralelo. El usuario va dentro de la dirección (`https://gislacis-byte@...`) para que Git no use el inicio de sesión guardado de otra cuenta.
+
+Si Git avisa `detected dubious ownership` (pasa en el disco H:), agregá `-c safe.directory=H:/GIS-LACIS-Deploy` justo después de `git` en cada comando, o pedí que se agregue esa carpeta como segura.
+
+### 8.6 Revisar antes de subir
+
+```powershell
+git status
+git diff --stat
+```
+
+Tienen que aparecer **solo** los archivos que quisiste cambiar (en el ejemplo, `style.css`, `index.html` y `DEPLOY.md`). Si aparecen muchos más, o archivos "borrados" que el repositorio publicado tiene y tu copia no, **no subas nada**: significa que el repositorio publicado tiene cambios que tu copia no incluye. Traelos primero con `git fetch origin` y revisalos. No uses `git push --force` bajo ningún concepto.
+
+### 8.7 Confirmar y subir
+
+```powershell
+git add .
+git commit -m "Leyenda institucional visible en el inicio del celular"
+```
+
+```powershell
+git push origin main
+```
+
+Git te va a pedir tus credenciales de GitHub en ese momento: ingresalas vos, esta guía nunca las incluye. Antes del commit podés comprobar la identidad con `git config user.email`: tiene que devolver la dirección `noreply` de la cuenta de la materia.
+
+### 8.8 Verificar
+
+1. En Railway, abrí el servicio web y esperá a que el último despliegue figure como terminado. Durante unos segundos el sitio no responde; si el despliegue falla, sigue funcionando la versión anterior.
+2. Abrí la dirección pública desde un celular (o con el navegador en ancho de celular) y comprobá que debajo de "Grupo de Ingeniería de Software" se ve, al mismo tiempo, "Departamento de Informática · Universidad Nacional de San Luis".
+3. Revisá que `/lacis`, el login y una imagen subida desde el panel sigan igual.
+
+### 8.9 Problemas conocidos
+
+- **La carpeta no tiene `.git` y `git status` dice "not a git repository"**: se regeneró con `-Reemplazar`. Seguí el punto 8.5.
+- **`detected dubious ownership`**: el disco H: no guarda propietarios. Usá `-c safe.directory=H:/GIS-LACIS-Deploy` como se explica en 8.5.
+- **El `push` pide las credenciales de otra cuenta, o responde que no tenés permiso**: el remoto tiene que llevar el usuario en la dirección (`https://gislacis-byte@github.com/...`). Corregilo con `git remote set-url origin https://gislacis-byte@github.com/gislacis-byte/GIS-LACIS.git`.
+- **`git status` muestra todos los archivos como modificados**: faltó `git config core.autocrlf false`. Configuralo y volvé a mirar.
+- **Los PDF o las imágenes aparecen como modificados sin que los hayas tocado**: es la misma causa; no confirmes hasta que `git status` quede limpio.
+- **Railway tarda o el despliegue falla**: mirá la pestaña *Logs* del servicio. Mientras tanto sigue publicada la versión anterior.
+
 ### Si el sitio ya estaba publicado: descripción de Simon Riberi
 
 La descripción de Simon Riberi cambió en `db/lacis.sql`, pero ese archivo no se vuelve a cargar. Si ya cargaste los datos antes, corregí esa fila a mano: guardá este comando en un archivo `actualizar-descripcion.sql` (codificación UTF-8) y ejecutalo con `psql "<DATABASE_PUBLIC_URL>" -f actualizar-descripcion.sql`. Tiene que responder `UPDATE 1`; después abrí `/integrantes` y revisá la tarjeta.
