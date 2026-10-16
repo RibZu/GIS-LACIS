@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     CargarLista();
     CargarLogros();
     CargarColaboradores();
-    listaResponsive();
 });
 
 let cacheProyectos = [];
@@ -50,33 +49,43 @@ function obtenerNombres(id) {
 }
 
 function CargarLista() {
-    let lista = document.getElementById("lista-proyecto");
-    if (!lista) return;
+    const lista = document.getElementById("lista-proyecto");
+    const carruselInner = document.getElementById("carruselProyectosInner");
 
     fetch('/api/v1/proyectos')
         .then(response => response.json())
         .then(data => {
             cacheProyectos = data || [];
-            lista.innerHTML = "";
-            if (cacheProyectos.length === 0) {
-                const vacio = document.createElement("li");
-                vacio.textContent = "No hay proyectos disponibles actualmente.";
-                vacio.className = "text-muted p-2";
-                lista.appendChild(vacio);
-                return;
+
+            // 1. Cargar vista Desktop si existe el contenedor
+            if (lista) {
+                lista.innerHTML = "";
+                if (cacheProyectos.length === 0) {
+                    const vacio = document.createElement("li");
+                    vacio.textContent = "No hay proyectos disponibles actualmente.";
+                    vacio.className = "text-muted p-2";
+                    lista.appendChild(vacio);
+                } else {
+                    cacheProyectos.forEach((p, index) => {
+                        const nuevoNom = document.createElement("li");
+                        nuevoNom.textContent = p.titulo;
+                        if (index === 0) nuevoNom.classList.add("active");
+
+                        nuevoNom.addEventListener("click", () => {
+                            lista.querySelectorAll("li").forEach(el => el.classList.remove("active"));
+                            nuevoNom.classList.add("active");
+                            mostrarDetalleProyecto(p);
+                        });
+                        lista.appendChild(nuevoNom);
+                    });
+
+                    mostrarDetalleProyecto(cacheProyectos[0]);
+                }
             }
 
-            cacheProyectos.forEach((p, index) => {
-                const nuevoNom = document.createElement("li");
-                nuevoNom.textContent = p.titulo;
-                nuevoNom.addEventListener("click", () => {
-                    mostrarDetalleProyecto(p);
-                });
-                lista.appendChild(nuevoNom);
-            });
-
-            if (cacheProyectos.length > 0) {
-                mostrarDetalleProyecto(cacheProyectos[0]);
+            // 2. Cargar vista Mobile (Carrusel) si existe el contenedor
+            if (carruselInner) {
+                renderCarruselProyectos(cacheProyectos);
             }
         })
         .catch(err => console.error("Error al cargar lista de proyectos:", err));
@@ -205,100 +214,66 @@ function mostrarEmail() {
     }
 }
 
-function listaResponsive() {
-    const mediaQuery = window.matchMedia("(max-width: 900px)");
-    if (mediaQuery.matches) {
-        const nom1 = document.getElementById("listaNom1");
-        const nom2 = document.getElementById("listaNom2");
-        if (nom1) nom1.remove();
-        if (nom2) nom2.remove();
+function renderCarruselProyectos(proyectos) {
+    const inner = document.getElementById("carruselProyectosInner");
+    const indicador = document.getElementById("carruselIndicadorTexto");
+    const carruselEl = document.getElementById("carouselExampleControls");
+    if (!inner) return;
 
-        const listaContainer = document.getElementById("Lista");
-        if (!listaContainer) return;
+    inner.innerHTML = "";
 
-        const cs = document.createElement("div");
-        cs.className = "carousel slide";
-        cs.setAttribute('data-bs-ride', 'carousel');
-        cs.id = "carouselExampleControls";
+    if (!proyectos || proyectos.length === 0) {
+        inner.innerHTML = `
+            <div class="carousel-item active">
+                <div class="carrusel-item-contenido text-center py-4 text-muted">
+                    No hay proyectos disponibles actualmente.
+                </div>
+            </div>`;
+        if (indicador) indicador.textContent = "";
+        return;
+    }
 
-        const ci = document.createElement("div");
-        ci.className = "carousel-inner";
+    proyectos.forEach((item, index) => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = index === 0 ? "carousel-item active" : "carousel-item";
 
-        const btnPrev = document.createElement("button");
-        btnPrev.className = "carousel-control-prev";
-        btnPrev.setAttribute('data-bs-target', '#carouselExampleControls');
-        btnPrev.setAttribute('data-bs-slide', 'prev');
-        btnPrev.setAttribute('type', 'button');
+        const anios = (item.anio_inicio && item.anio_fin && item.anio_inicio !== item.anio_fin)
+            ? `${item.anio_inicio} - ${item.anio_fin}`
+            : (item.anio_inicio || item.anio_fin || "");
 
-        const sp1 = document.createElement("span");
-        sp1.className = "letraAzul fs-3";
+        const descHtml = (item.descripcion || "").replace(/\n/g, '<br>');
 
-        const i1 = document.createElement("i");
-        i1.className = "fa-solid fa-arrow-left";
+        itemDiv.innerHTML = `
+            <div class="carrusel-item-contenido">
+                ${anios ? `<div class="mb-2"><span class="carrusel-periodo-badge">${anios}</span></div>` : ""}
+                <h4 class="carrusel-titulo-proyecto">${item.titulo || ""}</h4>
+                <div class="carrusel-descripcion-proyecto mt-3">${descHtml}</div>
+            </div>
+        `;
+        inner.appendChild(itemDiv);
+    });
 
-        const btnNext = document.createElement("button");
-        btnNext.className = "carousel-control-next";
-        btnNext.setAttribute('data-bs-target', '#carouselExampleControls');
-        btnNext.setAttribute('data-bs-slide', 'next');
-        btnNext.setAttribute('type', 'button');
+    if (indicador) {
+        indicador.textContent = `Proyecto 1 de ${proyectos.length}`;
+    }
 
-        const sp2 = document.createElement("span");
-        sp2.className = "letraAzul fs-3";
-        const i2 = document.createElement("i");
-        i2.className = "fa-solid fa-arrow-right";
+    if (carruselEl) {
+        if (window.bootstrap && bootstrap.Carousel) {
+            bootstrap.Carousel.getOrCreateInstance(carruselEl, {
+                interval: false,
+                touch: true,
+                wrap: true
+            });
+        }
 
-        listaContainer.appendChild(cs);
-        cs.appendChild(ci);
-        cs.appendChild(btnPrev);
-        btnPrev.appendChild(sp1);
-        sp1.appendChild(i1);
-
-        cs.appendChild(btnNext);
-        btnNext.appendChild(sp2);
-        sp2.appendChild(i2);
-
-        fetch('/api/v1/proyectos')
-            .then(response => response.json())
-            .then(data => {
-                const proyectos = data || [];
-                if (proyectos.length === 0) return;
-
-                proyectos.forEach((item, index) => {
-                    const nuevoNomR = document.createElement("div");
-                    nuevoNomR.className = index === 0 ? "carousel-item active" : "carousel-item";
-
-                    const cic = document.createElement("div");
-                    cic.className = "p-4";
-
-                    const titulo = document.createElement("h5");
-                    titulo.className = "letraAzul text-center fw-bold fs-7 mt-3";
-                    const periodo = document.createElement("p");
-                    periodo.className = "text-muted text-center";
-                    const info = document.createElement("p");
-                    info.className = "mt-3 fs-6";
-
-                    titulo.innerHTML = item.titulo;
-                    const anios = (item.anio_inicio && item.anio_fin && item.anio_inicio !== item.anio_fin)
-                        ? `${item.anio_inicio} - ${item.anio_fin}`
-                        : (item.anio_inicio || item.anio_fin || "");
-                    periodo.innerHTML = anios;
-                    info.innerHTML = (item.descripcion || "").replace(/\n/g, '<br>');
-
-                    nuevoNomR.appendChild(cic);
-                    cic.appendChild(titulo);
-                    cic.appendChild(periodo);
-                    cic.appendChild(info);
-                    ci.appendChild(nuevoNomR);
-                });
-            })
-            .catch(err => console.error("Error en carrusel responsive de proyectos:", err));
+        // Remover listeners anteriores si los hubiera y escuchar cambios de slide
+        carruselEl.removeEventListener('slide.bs.carousel', carruselEl._slideHandler);
+        carruselEl._slideHandler = (event) => {
+            if (indicador) {
+                const nextIndex = typeof event.to === 'number' ? event.to : 0;
+                indicador.textContent = `Proyecto ${nextIndex + 1} de ${proyectos.length}`;
+            }
+        };
+        carruselEl.addEventListener('slide.bs.carousel', carruselEl._slideHandler);
     }
 }
-
-window.addEventListener("resize", () => {
-    if (window.innerWidth > 900) {
-        location.reload();
-    } else {
-        listaResponsive();
-    }
-});

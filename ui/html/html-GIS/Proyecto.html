@@ -42,17 +42,39 @@
 
     <div class="container-fluid contenedor-explorador px-3 px-md-4">
       <div class="bloque-principal w-100 blur-in" data-aos="fade-up" data-aos-duration="1000">
-        <div class="row g-4" style="min-height: 400px;" id="Lista">
+        <div class="row g-4" id="Lista">
 
-          <div class="col-md-4 border-end d-flex flex-column pe-md-4" id="listaNom1">
+          <!-- Vista Desktop (>= 992px) -->
+          <div class="col-lg-4 border-end d-none d-lg-flex flex-column pe-lg-4" id="listaNom1">
             <h6 class="lista-header-titulo mb-3">Líneas de Investigación</h6>
             <ul id="lista-proyecto" class="list-group flex-grow-1 overflow-auto lista-scroll list-unstyled"></ul>
           </div>
 
-          <div class="col-md-8 d-flex flex-column justify-content-start ps-md-4" id="listaNom2">
+          <div class="col-lg-8 d-none d-lg-flex flex-column justify-content-start ps-lg-4" id="listaNom2">
             <h3 id="titulo-proyecto" class="mt-2"></h3>
             <h6 id="periodo-proyecto"></h6>
             <p id="info-proyecto" class="mt-2"></p>
+          </div>
+
+          <!-- Vista Mobile / Tablet (< 992px) con Carrusel -->
+          <div class="col-12 d-lg-none" id="carruselProyectosWrapper">
+            <div id="carouselExampleControls" class="carousel slide" data-bs-touch="true" data-bs-interval="false">
+              <div class="carousel-inner" id="carruselProyectosInner">
+                <!-- Se llena dinámicamente con los proyectos -->
+              </div>
+              <div
+                class="carrusel-controles-movil d-flex align-items-center justify-content-between pt-3 mt-3 border-top">
+                <button class="btn-carrusel-movil" type="button" data-bs-target="#carouselExampleControls"
+                  data-bs-slide="prev" aria-label="Proyecto anterior">
+                  <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div class="carrusel-indicador-pills" id="carruselIndicadorTexto"></div>
+                <button class="btn-carrusel-movil" type="button" data-bs-target="#carouselExampleControls"
+                  data-bs-slide="next" aria-label="Proyecto siguiente">
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -103,8 +125,8 @@
                   <p class="info-extension">
                     <strong>Director:</strong> Dr. BERON Mario Marcelo<br>
                     <strong>Codirectora:</strong> Mg. PEREZ, Norma Beatriz<br><br>
-                    <strong>Resumen:</strong> <br>Los ciudadanos de la ciudad de San Luis capital y ciudades aledañas no
-                    poseen alternativas de entrenamiento en técnicas, methods y herramientas para resolver tareas usando
+                    <strong>Resumen:</strong> <br>Los ciudadanos de la ciudad de San Luis Capital y ciudades aledañas no
+                    poseen alternativas de entrenamiento en técnicas, metodos y herramientas para resolver tareas usando
                     razonamiento creativo que les faciliten el acceso a empleos y estudios de nivel superior. El avance
                     vertiginoso de la tecnología requiere que los ciudadanos se capaciten en el uso de herramientas
                     informáticas y en programación para adaptarse a la evolución social que se está llevando a cabo en
