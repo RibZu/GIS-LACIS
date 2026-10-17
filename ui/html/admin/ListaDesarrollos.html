@@ -40,6 +40,25 @@
                 </div>
             </div>
 
+            {{ if .Error }}
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                <div>{{ .Error }}</div>
+            </div>
+            {{ else }}
+            {{ if .ErrorAviso }}
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                <div>{{ .ErrorAviso }}</div>
+            </div>
+            {{ end }}
+            {{ if .Aviso }}
+            <div class="alert alert-success d-flex align-items-center" role="status">
+                <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                <div>{{ .Aviso }}</div>
+            </div>
+            {{ end }}
+
             <div class="filter-container mb-3">
                 <div class="input-group search-input-group">
                     <input type="text" id="buscadorInput" class="form-control" placeholder="Buscar por título...">
@@ -98,9 +117,12 @@
                                     <a href="/admin/editar-desarrollo?id={{ .ID }}" class="btn-action btn-action-edit" title="Editar Producto de Software">
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
-                                    <a href="/admin/borrar-desarrollo?id={{ .ID }}" class="btn-action btn-action-delete" title="Eliminar" onclick="return confirm('¿Está seguro de que desea eliminar &#39;{{ .Titulo }}&#39;?');">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </a>
+                                    <form method="post" action="/admin/borrar-desarrollo" class="d-inline" onsubmit="return confirm('¿Está seguro de que desea eliminar &#39;{{ .Titulo }}&#39;?');">
+                                        <input type="hidden" name="id" value="{{ .ID }}">
+                                        <button type="submit" class="btn-action btn-action-delete" title="Eliminar">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -122,6 +144,7 @@
                 <i class="bi bi-search fs-2 d-block mb-2 text-secondary"></i>
                 No se encontraron productos de software que coincidan con la búsqueda.
             </div>
+            {{ end }}
 
         </div>
     </main>
@@ -142,16 +165,18 @@
         var items = Array.prototype.slice.call(document.querySelectorAll('#listaDesarrollos .des-accordion-item'));
         var noResultsMsg = document.getElementById('noResultsMsg');
 
-        buscador.addEventListener('input', function () {
-            var q = buscador.value.trim().toLowerCase();
-            var visibles = 0;
-            items.forEach(function (item) {
-                var coincide = item.getAttribute('data-titulo').toLowerCase().indexOf(q) !== -1;
-                item.style.display = coincide ? '' : 'none';
-                if (coincide) visibles++;
+        if (buscador) {
+            buscador.addEventListener('input', function () {
+                var q = buscador.value.trim().toLowerCase();
+                var visibles = 0;
+                items.forEach(function (item) {
+                    var coincide = item.getAttribute('data-titulo').toLowerCase().indexOf(q) !== -1;
+                    item.style.display = coincide ? '' : 'none';
+                    if (coincide) visibles++;
+                });
+                noResultsMsg.classList.toggle('d-none', visibles > 0 || items.length === 0);
             });
-            noResultsMsg.classList.toggle('d-none', visibles > 0 || items.length === 0);
-        });
+        }
     </script>
 </body>
 </html>

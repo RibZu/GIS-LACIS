@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 
@@ -9,16 +10,74 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func currentUsuario(c *gin.Context, s *usuario.Service) (*usuario.UsuarioGestor, bool) {
+const claveUsuarioContexto = "usuario"
+
+const mensajeServicioNoDisponible = "No pudimos verificar tu sesión en este momento. Probá de nuevo en unos minutos."
+
+type resultadoUsuario int
+
+const (
+	usuarioEncontrado resultadoUsuario = iota
+	usuarioSinSesion
+	usuarioErrorDeLectura
+)
+
+func buscarUsuario(c *gin.Context, s *usuario.Service) (*usuario.UsuarioGestor, resultadoUsuario) {
+	if v, existe := c.Get(claveUsuarioContexto); existe {
+		if u, esUsuario := v.(*usuario.UsuarioGestor); esUsuario {
+			return u, usuarioEncontrado
+		}
+	}
 	id, ok := CurrentUserID(c)
 	if !ok {
-		return nil, false
+		return nil, usuarioSinSesion
 	}
 	u, err := s.Read(id)
 	if err != nil {
-		return nil, false
+		if errors.Is(err, usuario.ErrNotFound) {
+			return nil, usuarioSinSesion
+		}
+		return nil, usuarioErrorDeLectura
 	}
-	return u, true
+	c.Set(claveUsuarioContexto, u)
+	return u, usuarioEncontrado
+}
+
+func currentUsuario(c *gin.Context, s *usuario.Service) (*usuario.UsuarioGestor, bool) {
+	u, resultado := buscarUsuario(c, s)
+	return u, resultado == usuarioEncontrado
+}
+
+func redirigirAlLogin(c *gin.Context) {
+	if _, estado := leerSesion(c); estado == sesionVencida {
+		c.Redirect(http.StatusFound, "/login?sesion=expirada")
+	} else {
+		c.Redirect(http.StatusFound, "/login")
+	}
+	c.Abort()
+}
+
+func autenticar(c *gin.Context, s *usuario.Service, esAPI bool) (*usuario.UsuarioGestor, bool) {
+	u, resultado := buscarUsuario(c, s)
+	switch resultado {
+	case usuarioEncontrado:
+		return u, true
+	case usuarioErrorDeLectura:
+		if esAPI {
+			c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Servicio no disponible"})
+		} else {
+			paginaError(c, http.StatusServiceUnavailable, "Servicio no disponible", mensajeServicioNoDisponible)
+		}
+		c.Abort()
+	default:
+		if esAPI {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "No autenticado"})
+			c.Abort()
+		} else {
+			redirigirAlLogin(c)
+		}
+	}
+	return nil, false
 }
 
 func esAdmin(u *usuario.UsuarioGestor) bool {
@@ -42,10 +101,8 @@ func tieneModulo(u *usuario.UsuarioGestor, modulo string) bool {
 
 func RequireLogin(s *usuario.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		_, ok := currentUsuario(c, s)
-		if !ok {
-			c.Redirect(http.StatusFound, "/login")
-			c.Abort()
+		c.Header("Cache-Control", "no-store")
+		if _, ok := autenticar(c, s, false); !ok {
 			return
 		}
 		c.Next()
@@ -54,10 +111,8 @@ func RequireLogin(s *usuario.Service) gin.HandlerFunc {
 
 func RequireModule(s *usuario.Service, modulo string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		u, ok := currentUsuario(c, s)
+		u, ok := autenticar(c, s, false)
 		if !ok {
-			c.Redirect(http.StatusFound, "/login")
-			c.Abort()
 			return
 		}
 		if !tieneModulo(u, modulo) {
@@ -71,10 +126,8 @@ func RequireModule(s *usuario.Service, modulo string) gin.HandlerFunc {
 
 func RequireAdmin(s *usuario.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		u, ok := currentUsuario(c, s)
+		u, ok := autenticar(c, s, false)
 		if !ok {
-			c.Redirect(http.StatusFound, "/login")
-			c.Abort()
 			return
 		}
 		if !esAdmin(u) {
@@ -88,10 +141,8 @@ func RequireAdmin(s *usuario.Service) gin.HandlerFunc {
 
 func RequireModuleAPI(s *usuario.Service, modulo string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		u, ok := currentUsuario(c, s)
+		u, ok := autenticar(c, s, true)
 		if !ok {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "No autenticado"})
-			c.Abort()
 			return
 		}
 		if !tieneModulo(u, modulo) {

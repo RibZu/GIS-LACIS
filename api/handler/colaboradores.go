@@ -14,7 +14,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// ColaboradorHandler maneja las peticiones HTTP de empresas colaboradoras
 type ColaboradorHandler struct {
 	service *colaborador.Service
 	logger  *zap.Logger
@@ -27,7 +26,6 @@ func NewColaboradorHandler(s *colaborador.Service, l *zap.Logger) *ColaboradorHa
 	}
 }
 
-// API_GetAll retorna la lista de colaboradores activos en JSON (endpoint público)
 func (h *ColaboradorHandler) API_GetAll(c *gin.Context) {
 	colabs, err := h.service.GetAll()
 	if err != nil {
@@ -38,7 +36,6 @@ func (h *ColaboradorHandler) API_GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, colabs)
 }
 
-// API_GetAllAdmin retorna todos los colaboradores (incluye inactivos) para el panel admin
 func (h *ColaboradorHandler) API_GetAllAdmin(c *gin.Context) {
 	colabs, err := h.service.GetAllAdmin()
 	if err != nil {
@@ -49,7 +46,6 @@ func (h *ColaboradorHandler) API_GetAllAdmin(c *gin.Context) {
 	c.JSON(http.StatusOK, colabs)
 }
 
-// View_ColaboradoresAdmin renderiza la vista HTML del panel admin de colaboradores
 func (h *ColaboradorHandler) View_ColaboradoresAdmin(c *gin.Context) {
 	c.HTML(http.StatusOK, "EditarColaboradores.html", gin.H{"LoggedIn": true})
 }
@@ -58,12 +54,11 @@ func (h *ColaboradorHandler) saveLogoFile(c *gin.Context) (string, error) {
 	file, err := c.FormFile("logo")
 	if err != nil {
 		if errors.Is(err, http.ErrMissingFile) {
-			return "", nil // No file provided
+			return "", nil
 		}
 		return "", err
 	}
 
-	// guardar en ui/static/assets/img-GIS
 	ext := filepath.Ext(file.Filename)
 	filename := fmt.Sprintf("colab_%d%s", time.Now().UnixNano(), ext)
 	uploadPath := filepath.Join("ui", "static", "assets", "img-GIS", "colabLogo", filename)
@@ -75,7 +70,6 @@ func (h *ColaboradorHandler) saveLogoFile(c *gin.Context) (string, error) {
 	return "/static/assets/img-GIS/colabLogo/" + filename, nil
 }
 
-// API_Create crea un nuevo colaborador desde form-data
 func (h *ColaboradorHandler) API_Create(c *gin.Context) {
 	descripcion := c.PostForm("descripcion")
 
@@ -100,7 +94,6 @@ func (h *ColaboradorHandler) API_Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, item)
 }
 
-// API_Read obtiene un colaborador por ID
 func (h *ColaboradorHandler) API_Read(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id <= 0 {
@@ -122,7 +115,6 @@ func (h *ColaboradorHandler) API_Read(c *gin.Context) {
 	c.JSON(http.StatusOK, colab)
 }
 
-// API_Update actualiza campos de un colaborador por ID (form-data)
 func (h *ColaboradorHandler) API_Update(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id <= 0 {
@@ -179,7 +171,6 @@ func (h *ColaboradorHandler) API_Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"mensaje": "colaborador dado de baja exitosamente"})
 }
 
-// API_Restaurar reactiva un colaborador dado de baja
 func (h *ColaboradorHandler) API_Restaurar(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id <= 0 {

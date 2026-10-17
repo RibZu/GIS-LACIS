@@ -9,7 +9,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// EstadisticaHandler maneja la vista del módulo de estadísticas (solo lectura).
 type EstadisticaHandler struct {
 	service *estadistica.Service
 	logger  *zap.Logger
@@ -19,8 +18,6 @@ func NewEstadisticaHandler(s *estadistica.Service, l *zap.Logger) *EstadisticaHa
 	return &EstadisticaHandler{service: s, logger: l}
 }
 
-// Ver renderiza /admin/estadisticas. Si no se pueden leer los datos muestra un aviso y un 500,
-// sin ningún número.
 func (h *EstadisticaHandler) Ver(c *gin.Context) {
 	est, err := h.service.Obtener()
 	if err != nil {

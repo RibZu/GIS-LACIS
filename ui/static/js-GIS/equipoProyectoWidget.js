@@ -1,11 +1,3 @@
-/*
- * Buscador de "Equipo del Proyecto" — un solo clic agrega a la persona
- * (igual que el buscador de Desarrollos), y el rol se elige/edita
- * directamente en la fila de la lista con un <select> inline.
- *
- * Uso: crearWidgetEquipoProyecto({ ...ids..., integrantesActivos, roles, seleccionInicial, onAgregar, onQuitar, onRolCambiado, onSinCoincidencias })
- * Devuelve: { agregarDirecto(id, nombre, rol), resetear(seleccionInicial), obtenerSeleccionados() }
- */
 function crearWidgetEquipoProyecto(config) {
     var seleccionados = (config.seleccionInicial || []).slice();
     var integrantesActivos = config.integrantesActivos || [];

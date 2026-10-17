@@ -1,0 +1,15 @@
+.git
+.idea
+.claude
+.specify
+specs
+pg_data
+test
+deploy
+db
+DEPLOY.md
+*.exe
+*.doc
+*.drawio*
+tmp_scratch_pw
+Modelo Base de datos

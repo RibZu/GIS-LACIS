@@ -162,7 +162,7 @@ func MigrarIntegrantesDesdeJSON(db *sql.DB, baseDir string, logger *zap.Logger) 
 		}
 	}
 
-	prefixes := []string{"Dr.Sci", "Dr.", "Mg.", "Esp.", "Lic.", "Ing.", "Est."}
+	prefixes := []string{"Dr.Sci", "Dr.", "Mg.", "Esp.", "Lic.", "Ing.", "Est.", "Tec."}
 	compoundSurnames := map[string][2]string{
 		"Novillo Rangone Gabriel":        {"Novillo Rangone", "Gabriel"},
 		"Olguin Quevedo Gonzalo Gabriel": {"Olguin Quevedo", "Gonzalo Gabriel"},

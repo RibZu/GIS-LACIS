@@ -22,12 +22,10 @@ func NewService(s Storage, l *zap.Logger) *Service {
 	}
 }
 
-// GetAllAdmin devuelve todos los colaboradores sin filtrar.
 func (s *Service) GetAllAdmin() ([]Colaborador, error) {
 	return s.storage.GetAll()
 }
 
-// GetAll devuelve solo los colaboradores activos.
 func (s *Service) GetAll() ([]Colaborador, error) {
 	all, err := s.storage.GetAll()
 	if err != nil {
@@ -67,7 +65,7 @@ func (s *Service) Read(id int) (*Colaborador, error) {
 }
 
 func (s *Service) Update(id int, fields UpdateFields) error {
-	// Verificar existencia
+
 	_, err := s.Read(id)
 	if err != nil {
 		return err
@@ -94,7 +92,7 @@ func (s *Service) Delete(id int) error {
 }
 
 func (s *Service) Restaurar(id int) error {
-	// Reutiliza Update
+
 	activo := true
 	return s.Update(id, UpdateFields{Activo: &activo})
 }

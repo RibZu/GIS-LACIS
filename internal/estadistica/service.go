@@ -18,13 +18,7 @@ func NewService(s Storage, l *zap.Logger) *Service {
 	return &Service{storage: s, logger: l}
 }
 
-// Obtener calcula las estadísticas en el momento. Si cualquier lectura falla devuelve un error y
-// ningún número, para no mostrar resultados parciales.
 func (s *Service) Obtener() (*Estadisticas, error) {
-	integrantesLacis, err := s.storage.ContarIntegrantesActivosLacis()
-	if err != nil {
-		return nil, s.fallo("integrantes activos", err)
-	}
 	nombres, err := s.storage.NombresParticipantesExternos()
 	if err != nil {
 		return nil, s.fallo("participantes externos", err)
@@ -47,7 +41,7 @@ func (s *Service) Obtener() (*Estadisticas, error) {
 	}
 
 	est := &Estadisticas{
-		IntegrantesActivosLacis: integrantesLacis,
+		IntegrantesActivosLacis: contarActivosLacis(integrantes),
 		ParticipantesExternos:   contarPersonasDistintas(nombres),
 		Productos:               len(productos),
 	}
@@ -68,13 +62,21 @@ func (s *Service) Obtener() (*Estadisticas, error) {
 	return est, nil
 }
 
+func contarActivosLacis(filas []IntegranteResumen) int {
+	total := 0
+	for _, f := range filas {
+		if f.Activo && f.PerteneceLacis {
+			total++
+		}
+	}
+	return total
+}
+
 func (s *Service) fallo(que string, err error) error {
 	s.logger.Error("No se pudieron obtener las estadísticas", zap.String("lectura", que), zap.Error(err))
 	return fmt.Errorf("estadisticas: %w", err)
 }
 
-// porcentajes reparte 100 entre parte y el resto de total. Redondea parte al entero más cercano y
-// el segundo porcentaje es lo que falta, así suman 100. Sin total devuelve 0 y 0.
 func porcentajes(parte, total int) (int, int) {
 	if total == 0 {
 		return 0, 0
@@ -83,8 +85,6 @@ func porcentajes(parte, total int) (int, int) {
 	return p, 100 - p
 }
 
-// contarPersonasDistintas cuenta los nombres distintos ignorando mayúsculas y espacios de más, así
-// la misma persona cargada en varios productos cuenta una sola vez. Los nombres vacíos no cuentan.
 func contarPersonasDistintas(nombres []string) int {
 	vistos := make(map[string]struct{}, len(nombres))
 	for _, n := range nombres {
@@ -96,8 +96,6 @@ func contarPersonasDistintas(nombres []string) int {
 	return len(vistos)
 }
 
-// seriePorAnio arma una fila por cada año entre el primero y el último de la lista, incluso los
-// años sin ninguno, para que la serie no salte años. La usan productos y tesis.
 func seriePorAnio(anios []int) []CantidadPorAnio {
 	if len(anios) == 0 {
 		return nil
@@ -125,8 +123,6 @@ func seriePorAnio(anios []int) []CantidadPorAnio {
 	return serie
 }
 
-// estadisticasIntegrantes cuenta igual que lo hacía antes lista.js en la lista de integrantes: todo
-// el que no está activo es inactivo, y LaCIS y Grupo Software se cuentan por separado.
 func estadisticasIntegrantes(filas []IntegranteResumen) EstadisticasIntegrantes {
 	e := EstadisticasIntegrantes{Registrados: len(filas)}
 	for _, f := range filas {
@@ -145,16 +141,12 @@ func estadisticasIntegrantes(filas []IntegranteResumen) EstadisticasIntegrantes 
 	return e
 }
 
-// esPosgrado es la misma regla que usaba antes listaTesis.js en la lista de tesis. Se dejó tal cual
-// a pedido del usuario: no cambiarla aunque dependa del texto del nivel.
 func esPosgrado(nivel string) bool {
 	n := strings.ToLower(nivel)
 	return strings.Contains(n, "doctor") || strings.Contains(n, "maestr") ||
 		strings.Contains(n, "especializ") || strings.Contains(n, "posgrado")
 }
 
-// estadisticasTesis arma las tarjetas de tesis y los gráficos por año y de PDF. Las tesis sin año
-// cuentan en todo menos en la serie por año.
 func estadisticasTesis(filas []TesisResumen) EstadisticasTesis {
 	e := EstadisticasTesis{Registradas: len(filas), HayTesis: len(filas) > 0}
 	var anios []int

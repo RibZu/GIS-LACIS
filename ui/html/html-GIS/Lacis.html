@@ -371,7 +371,9 @@
                     <p class="descripcion-seccion fs-6 text-muted mx-auto mt-3" style="max-width: 600px;">Sistemas, herramientas y productos de software desarrollados por integrantes de LaCIS y del Grupo de Ingeniería de Software.</p>
                 </div>
 
-                {{ if .Desarrollos }}
+                {{ if .ErrorProductos }}
+                <p class="text-center text-muted py-4" role="status">No pudimos cargar esta información. Probá de nuevo en unos minutos.</p>
+                {{ else if .Desarrollos }}
                 <div class="row g-4 justify-content-center" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
                     {{ range $i, $d := .Desarrollos }}
                     <div class="col-12 col-md-6 col-lg-4 producto-item{{ if ge $i 6 }} producto-oculto d-none{{ end }}">

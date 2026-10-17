@@ -105,8 +105,6 @@
 }
 .participant-search-add-externo:hover { text-decoration: underline; }
 
-/* Estado del producto en la lista: con repositorio (tiene "Enlace / URL") o con licencia (no lo tiene).
-   Mismo tamaño que .badge-pertenencia; se distinguen por el texto y el ícono, no solo por el color. */
 .badge-repositorio,
 .badge-licencia {
     display: inline-flex; align-items: center; gap: 4px;

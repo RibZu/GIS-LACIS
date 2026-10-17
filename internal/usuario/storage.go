@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+
+	"github.com/lib/pq"
 )
 
 var ErrNotFound = errors.New("not found")
@@ -15,6 +17,20 @@ type Storage interface {
 	GetAll() ([]UsuarioGestor, error)
 	Update(id int, usuario *UpdateFieldGestor) error
 	Delete(id int) error
+	ContarAdmins() (int, error)
+}
+
+func traducirErrorUnico(err error) error {
+	var pqErr *pq.Error
+	if errors.As(err, &pqErr) && pqErr.Code == "23505" {
+		switch pqErr.Constraint {
+		case "usuario_gestor_username_key":
+			return ErrUsernameDuplicado
+		case "usuario_gestor_email_key":
+			return ErrEmailDuplicado
+		}
+	}
+	return nil
 }
 
 type PostgressStorage struct {
@@ -31,6 +47,9 @@ func (c *PostgressStorage) Create(u *UsuarioGestor) error {
 	err := c.db.QueryRow(query, u.IntegrantesId, u.Username, u.PasswordHash, u.Email, u.Rol, u.Modulos).Scan(&u.ID)
 
 	if err != nil {
+		if dup := traducirErrorUnico(err); dup != nil {
+			return dup
+		}
 		return fmt.Errorf("Error al insertar usuario en PostgreSQL: %w", err)
 	}
 	return nil
@@ -87,7 +106,7 @@ func (c *PostgressStorage) Read(id int) (*UsuarioGestor, error) {
 }
 
 func (c *PostgressStorage) GetAll() ([]UsuarioGestor, error) {
-	query := `SELECT id, username, password_hash, email, ultimo_acceso, rol, modulos FROM usuario_gestor`
+	query := `SELECT id, username, password_hash, email, ultimo_acceso, rol, modulos FROM usuario_gestor ORDER BY id`
 	rows, err := c.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -106,6 +125,15 @@ func (c *PostgressStorage) GetAll() ([]UsuarioGestor, error) {
 		return nil, err
 	}
 	return usuarios, nil
+}
+
+func (c *PostgressStorage) ContarAdmins() (int, error) {
+	var total int
+	err := c.db.QueryRow(`SELECT COUNT(*) FROM usuario_gestor WHERE rol = 'ADMIN'`).Scan(&total)
+	if err != nil {
+		return 0, fmt.Errorf("error al contar administradores: %w", err)
+	}
+	return total, nil
 }
 
 func (c *PostgressStorage) Delete(id int) error {
@@ -162,6 +190,9 @@ func (c *PostgressStorage) Update(id int, fields *UpdateFieldGestor) error {
 	args = append(args, id)
 	res, err := c.db.Exec(query, args...)
 	if err != nil {
+		if dup := traducirErrorUnico(err); dup != nil {
+			return dup
+		}
 		return fmt.Errorf("error al actualizar usuario en la base de datos: %w", err)
 	}
 	rowsAffected, err := res.RowsAffected()

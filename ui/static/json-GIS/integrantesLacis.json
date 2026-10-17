@@ -273,11 +273,11 @@
     {
         "clase_rol": "estudiante",
         "rol": "ESTUDIANTE",
-        "nombre": "Est. Simon Martin Riberi Zunino",
-        "imagen": "",
+        "nombre": "Tec. Simon Martin Riberi Zunino",
+        "imagen": "../../static/assets/img-GIS/IMGintegrantes/Simon Riberi.jpg",
         "cv": "../../static/assets/CVs-GIS/Simon_Riberi_CV.pdf",
         "linkedin": "https://www.linkedin.com/in/simon-riberi-5a28bb238/",
         "especializacion": "Desarrollo Web (Backend y Frontend), Bases de Datos",
-        "descripcion": "Estudiante avanzado de la Tecnicatura Universitaria en Web (UNSL)."
+        "descripcion": "Técnico Universitario en Web (UNSL). Desarrollador web con experiencia en proyectos reales y académicos utilizando diversas tecnologías entre las que se incluyen Go, PostgreSQL, JavaScript, PHP, React y Node.js. Participó en el diseño, desarrollo y mantenimiento del sitio web oficial de LaCIS como Práctica."
     }
 ]

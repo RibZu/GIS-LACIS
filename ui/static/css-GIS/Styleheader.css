@@ -124,3 +124,127 @@ nav.bg-is .nav-link:hover::after {
 body:has(> .subheader-modulo) {
   padding-top: 0 !important;
 }
+
+.footer-lacis {
+  padding: 2rem 0 1.5rem;
+  font-family: 'Montserrat', 'Manrope', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.footer-lacis a {
+  text-decoration: none;
+}
+
+.footer-marca {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem 1.75rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-grupo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem 1.25rem;
+}
+
+.footer-logo {
+  display: block;
+  height: 44px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.footer-logo-lacis {
+  height: 52px;
+}
+
+.footer-facultad {
+  max-width: 15rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.footer-contenido {
+  row-gap: 1.5rem;
+  padding: 1.75rem 0;
+  align-items: stretch;
+}
+
+.footer-contenido p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.footer-lacis .footer-mapa {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  margin: 0;
+  border: 0;
+  border-radius: 12px;
+}
+
+.footer-linea {
+  margin: 0 0 1.25rem;
+  border-color: rgba(255, 255, 255, 0.2);
+  opacity: 1;
+}
+
+.footer-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+}
+
+.footer-copyright,
+.footer-credito {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.footer-derecha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem 1.25rem;
+}
+
+.footer-credito a {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.footer-credito a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 767.98px) {
+  .footer-contenido {
+    text-align: center;
+  }
+
+  .footer-barra,
+  .footer-derecha {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .footer-lacis .footer-mapa {
+    min-height: 220px;
+  }
+}

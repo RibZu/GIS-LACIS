@@ -257,6 +257,11 @@ h1, h2, h3, h4, h5 {
         color: var(--blanco-fondo) !important;
     }
 
+    .seccion-principal .eyebrow-institucional {
+        opacity: 1;
+        transition: none;
+    }
+
     blockquote {
         display: none;
     }
@@ -283,4 +288,12 @@ h1, h2, h3, h4, h5 {
     overflow-x: hidden;
 }
 
+}
+
+@media (max-width: 950px) and (prefers-reduced-motion: reduce) {
+    .contenido-principal.animacion-al-scroll:has(> .eyebrow-institucional) {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }

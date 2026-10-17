@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"PaginaSEG/internal/desarrollo"
 	"PaginaSEG/internal/integrante"
@@ -10,6 +12,32 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
+
+const (
+	urlListaDesarrollos       = "/admin/desarrollos"
+	mensajeDesarrolloGenerico = "No se pudo guardar. Probá de nuevo en unos minutos."
+	mensajeLecturaProductos   = "No pudimos cargar los productos. Probá de nuevo en unos minutos."
+)
+
+func mensajeYEstadoDesarrollo(err error) (string, int) {
+	switch {
+	case errors.Is(err, desarrollo.ErrAnioInvalido):
+		return "Ingresá un año válido.", http.StatusBadRequest
+	case errors.Is(err, desarrollo.ErrTituloRequerido):
+		return "Ingresá un título.", http.StatusBadRequest
+	case errors.Is(err, desarrollo.ErrTituloLargo):
+		return "El título no puede superar los 255 caracteres.", http.StatusBadRequest
+	case errors.Is(err, desarrollo.ErrURLLarga):
+		return "El enlace no puede superar los 500 caracteres.", http.StatusBadRequest
+	case errors.Is(err, desarrollo.ErrContactoLargo):
+		return "El contacto no puede superar los 255 caracteres.", http.StatusBadRequest
+	case errors.Is(err, desarrollo.ErrParticipanteLargo):
+		return "Cada participante externo puede tener hasta 150 caracteres.", http.StatusBadRequest
+	case errors.Is(err, desarrollo.ErrIntegranteInexistente):
+		return "Alguno de los integrantes elegidos ya no existe. Revisá la lista de participantes.", http.StatusBadRequest
+	}
+	return mensajeDesarrolloGenerico, http.StatusInternalServerError
+}
 
 type DesarrolloHandler struct {
 	service           *desarrollo.Service
@@ -27,37 +55,12 @@ type DesarrolloConParticipantes struct {
 	ParticipantesExternos []string
 }
 
-func (h *DesarrolloHandler) Lista(c *gin.Context) {
-	desarrollos, err := h.service.GetAll()
-	if err != nil {
-		h.logger.Error("Error al obtener desarrollos para plantilla ListaDesarrollos.html", zap.Error(err))
-		c.String(http.StatusInternalServerError, "Error al cargar la lista de desarrollos")
-		return
-	}
-
-	var lista []DesarrolloConParticipantes
-	for _, d := range desarrollos {
-		vinculados, _ := h.service.ObtenerIntegrantes(d.ID)
-		externos, _ := h.service.ObtenerParticipantesExternos(d.ID)
-		lista = append(lista, DesarrolloConParticipantes{
-			Desarrollo:            d,
-			Integrantes:           vinculados,
-			ParticipantesExternos: externos,
-		})
-	}
-
-	c.HTML(http.StatusOK, "ListaDesarrollos.html", gin.H{
-		"Desarrollos": lista,
-		"LoggedIn":    true,
-	})
-}
-
-func (h *DesarrolloHandler) Crear(c *gin.Context) {
-	integrantes, _ := h.integranteService.GetAll()
-	c.HTML(http.StatusOK, "CrearDesarrollo.html", gin.H{
-		"Integrantes": integrantes,
-		"LoggedIn":    true,
-	})
+type formularioDesarrollo struct {
+	Desarrollo    desarrollo.Desarrollo
+	AnioTexto     string
+	AnioNumerico  bool
+	IntegranteIDs []int
+	Externos      []string
 }
 
 func leerParticipantesDelForm(c *gin.Context) (integranteIDs []int, externos []string) {
@@ -66,61 +69,181 @@ func leerParticipantesDelForm(c *gin.Context) (integranteIDs []int, externos []s
 			integranteIDs = append(integranteIDs, id)
 		}
 	}
-	externos = c.PostFormArray("externos")
+	for _, nombre := range c.PostFormArray("externos") {
+		if strings.TrimSpace(nombre) != "" {
+			externos = append(externos, nombre)
+		}
+	}
 	return integranteIDs, externos
 }
 
-func (h *DesarrolloHandler) Insertar(c *gin.Context) {
-	anio, _ := strconv.Atoi(c.PostForm("anio"))
-
-	req := desarrollo.Desarrollo{
-		Titulo:      c.PostForm("titulo"),
-		Anio:        anio,
-		URL:         c.PostForm("url"),
-		Contacto:    c.PostForm("contacto"),
-		Descripcion: c.PostForm("descripcion"),
+func leerFormularioDesarrollo(c *gin.Context) formularioDesarrollo {
+	texto := strings.TrimSpace(c.PostForm("anio"))
+	anio, err := strconv.Atoi(texto)
+	ids, externos := leerParticipantesDelForm(c)
+	return formularioDesarrollo{
+		Desarrollo: desarrollo.Desarrollo{
+			Titulo:      c.PostForm("titulo"),
+			Anio:        anio,
+			URL:         c.PostForm("url"),
+			Contacto:    c.PostForm("contacto"),
+			Descripcion: c.PostForm("descripcion"),
+		},
+		AnioTexto:     texto,
+		AnioNumerico:  err == nil,
+		IntegranteIDs: ids,
+		Externos:      externos,
 	}
+}
 
-	err := h.service.Create(&req)
+func vinculadosDesdeIDs(todos []integrante.Integrante, ids []int) []integrante.Integrante {
+	porID := make(map[int]integrante.Integrante, len(todos))
+	for _, it := range todos {
+		porID[it.ID] = it
+	}
+	var vinculados []integrante.Integrante
+	vistos := map[int]bool{}
+	for _, id := range ids {
+		if it, existe := porID[id]; existe && !vistos[id] {
+			vistos[id] = true
+			vinculados = append(vinculados, it)
+		}
+	}
+	return vinculados
+}
+
+func (h *DesarrolloHandler) integrantesParaFormulario(c *gin.Context) ([]integrante.Integrante, bool) {
+	todos, err := h.integranteService.GetAll()
 	if err != nil {
-		h.logger.Error("Error al crear desarrollo desde formulario HTML", zap.Error(err))
-		integrantes, _ := h.integranteService.GetAll()
-		c.HTML(http.StatusBadRequest, "CrearDesarrollo.html", gin.H{
-			"Error":       err.Error(),
-			"Integrantes": integrantes,
-			"LoggedIn":    true,
+		h.logger.Error("Error al obtener los integrantes para el formulario de productos", zap.Error(err))
+		paginaError(c, http.StatusInternalServerError, "No pudimos cargar el formulario", "No pudimos cargar la lista de integrantes. Probá de nuevo en unos minutos.")
+		return nil, false
+	}
+	return todos, true
+}
+
+func (h *DesarrolloHandler) productosConParticipantes() ([]DesarrolloConParticipantes, error) {
+	desarrollos, err := h.service.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	integrantes, externos, err := h.service.ParticipantesPorDesarrollo()
+	if err != nil {
+		return nil, err
+	}
+	lista := make([]DesarrolloConParticipantes, 0, len(desarrollos))
+	for _, d := range desarrollos {
+		lista = append(lista, DesarrolloConParticipantes{
+			Desarrollo:            d,
+			Integrantes:           integrantes[d.ID],
+			ParticipantesExternos: externos[d.ID],
+		})
+	}
+	return lista, nil
+}
+
+func (h *DesarrolloHandler) Lista(c *gin.Context) {
+	avisoOK, avisoError := avisosDesdeQuery(c)
+
+	lista, err := h.productosConParticipantes()
+	if err != nil {
+		h.logger.Error("Error al obtener productos para plantilla ListaDesarrollos.html", zap.Error(err))
+		c.HTML(http.StatusInternalServerError, "ListaDesarrollos.html", gin.H{
+			"Error":    mensajeLecturaProductos,
+			"LoggedIn": true,
 		})
 		return
 	}
 
-	integranteIDs, externos := leerParticipantesDelForm(c)
-	if err := h.service.VincularIntegrantes(req.ID, integranteIDs); err != nil {
-		h.logger.Error("Error al vincular integrantes al desarrollo", zap.Int("desarrollo_id", req.ID), zap.Error(err))
+	c.HTML(http.StatusOK, "ListaDesarrollos.html", gin.H{
+		"Desarrollos": lista,
+		"LoggedIn":    true,
+		"Aviso":       avisoOK,
+		"ErrorAviso":  avisoError,
+	})
+}
+
+func (h *DesarrolloHandler) Crear(c *gin.Context) {
+	integrantes, ok := h.integrantesParaFormulario(c)
+	if !ok {
+		return
 	}
-	if err := h.service.VincularParticipantesExternos(req.ID, externos); err != nil {
-		h.logger.Error("Error al vincular participantes externos al desarrollo", zap.Int("desarrollo_id", req.ID), zap.Error(err))
+	c.HTML(http.StatusOK, "CrearDesarrollo.html", gin.H{
+		"Integrantes": integrantes,
+		"LoggedIn":    true,
+	})
+}
+
+func (h *DesarrolloHandler) rechazarCreacion(c *gin.Context, err error, form formularioDesarrollo) {
+	mensaje, estado := mensajeYEstadoDesarrollo(err)
+	if estado == http.StatusBadRequest {
+		h.logger.Warn("Alta de producto rechazada", zap.String("motivo", mensaje))
+	}
+	todos, ok := h.integrantesParaFormulario(c)
+	if !ok {
+		return
+	}
+	d := form.Desarrollo
+	c.HTML(estado, "CrearDesarrollo.html", gin.H{
+		"Error":                 mensaje,
+		"Desarrollo":            &d,
+		"AnioTexto":             form.AnioTexto,
+		"Integrantes":           todos,
+		"Vinculados":            vinculadosDesdeIDs(todos, form.IntegranteIDs),
+		"ParticipantesExternos": form.Externos,
+		"LoggedIn":              true,
+	})
+}
+
+func (h *DesarrolloHandler) Insertar(c *gin.Context) {
+	form := leerFormularioDesarrollo(c)
+	if !form.AnioNumerico {
+		h.rechazarCreacion(c, desarrollo.ErrAnioInvalido, form)
+		return
 	}
 
-	c.Redirect(http.StatusSeeOther, "/admin/desarrollos")
+	req := form.Desarrollo
+	if err := h.service.CrearCompleto(&req, form.IntegranteIDs, form.Externos); err != nil {
+		h.rechazarCreacion(c, err, form)
+		return
+	}
+
+	c.Redirect(http.StatusSeeOther, urlListaDesarrollos+"?ok=producto-creado")
 }
 
 func (h *DesarrolloHandler) Editar(c *gin.Context) {
-	idParam := c.Query("id")
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil || id <= 0 {
-		c.Redirect(http.StatusSeeOther, "/admin/desarrollos")
+		c.Redirect(http.StatusSeeOther, urlListaDesarrollos+"?error=no-encontrado")
 		return
 	}
 
 	d, err := h.service.Read(id)
 	if err != nil {
-		c.Redirect(http.StatusSeeOther, "/admin/desarrollos")
+		if errors.Is(err, desarrollo.ErrNotFound) || errors.Is(err, desarrollo.ErrIDInvalido) {
+			c.Redirect(http.StatusSeeOther, urlListaDesarrollos+"?error=no-encontrado")
+			return
+		}
+		paginaError(c, http.StatusInternalServerError, "No pudimos cargar el producto", "No pudimos cargar el producto. Probá de nuevo en unos minutos.")
 		return
 	}
 
-	todos, _ := h.integranteService.GetAll()
-	vinculados, _ := h.service.ObtenerIntegrantes(id)
-	externos, _ := h.service.ObtenerParticipantesExternos(id)
+	todos, ok := h.integrantesParaFormulario(c)
+	if !ok {
+		return
+	}
+	vinculados, err := h.service.ObtenerIntegrantes(id)
+	if err != nil {
+		h.logger.Error("Error al obtener los integrantes del producto", zap.Int("id", id), zap.Error(err))
+		paginaError(c, http.StatusInternalServerError, "No pudimos cargar el producto", "No pudimos cargar el producto. Probá de nuevo en unos minutos.")
+		return
+	}
+	externos, err := h.service.ObtenerParticipantesExternos(id)
+	if err != nil {
+		h.logger.Error("Error al obtener los participantes externos del producto", zap.Int("id", id), zap.Error(err))
+		paginaError(c, http.StatusInternalServerError, "No pudimos cargar el producto", "No pudimos cargar el producto. Probá de nuevo en unos minutos.")
+		return
+	}
 
 	c.HTML(http.StatusOK, "EditarDesarrollo.html", gin.H{
 		"Desarrollo":            d,
@@ -131,89 +254,95 @@ func (h *DesarrolloHandler) Editar(c *gin.Context) {
 	})
 }
 
+func (h *DesarrolloHandler) rechazarEdicion(c *gin.Context, err error, id int, form formularioDesarrollo) {
+	mensaje, estado := mensajeYEstadoDesarrollo(err)
+	if estado == http.StatusBadRequest {
+		h.logger.Warn("Edición de producto rechazada", zap.Int("id", id), zap.String("motivo", mensaje))
+	}
+	todos, ok := h.integrantesParaFormulario(c)
+	if !ok {
+		return
+	}
+	d := form.Desarrollo
+	d.ID = id
+	c.HTML(estado, "EditarDesarrollo.html", gin.H{
+		"Error":                 mensaje,
+		"Desarrollo":            &d,
+		"AnioTexto":             form.AnioTexto,
+		"Integrantes":           todos,
+		"Vinculados":            vinculadosDesdeIDs(todos, form.IntegranteIDs),
+		"ParticipantesExternos": form.Externos,
+		"LoggedIn":              true,
+	})
+}
+
 func (h *DesarrolloHandler) Actualizar(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	if id <= 0 {
-		c.Redirect(http.StatusSeeOther, "/admin/desarrollos")
+		c.Redirect(http.StatusSeeOther, urlListaDesarrollos+"?error=no-encontrado")
 		return
 	}
 
-	titulo := c.PostForm("titulo")
-	anio, _ := strconv.Atoi(c.PostForm("anio"))
-	url := c.PostForm("url")
-	contacto := c.PostForm("contacto")
-	descripcion := c.PostForm("descripcion")
+	form := leerFormularioDesarrollo(c)
+	if !form.AnioNumerico {
+		h.rechazarEdicion(c, desarrollo.ErrAnioInvalido, id, form)
+		return
+	}
 
 	fields := desarrollo.UpdateFields{
-		Titulo:      &titulo,
-		Anio:        &anio,
-		URL:         &url,
-		Contacto:    &contacto,
-		Descripcion: &descripcion,
+		Titulo:      &form.Desarrollo.Titulo,
+		Anio:        &form.Desarrollo.Anio,
+		URL:         &form.Desarrollo.URL,
+		Contacto:    &form.Desarrollo.Contacto,
+		Descripcion: &form.Desarrollo.Descripcion,
 	}
 
-	err := h.service.Update(id, fields)
-	if err != nil {
-		h.logger.Error("Error al actualizar desarrollo desde formulario HTML", zap.Int("id", id), zap.Error(err))
-		d, _ := h.service.Read(id)
-		todos, _ := h.integranteService.GetAll()
-		vinculados, _ := h.service.ObtenerIntegrantes(id)
-		externos, _ := h.service.ObtenerParticipantesExternos(id)
-		c.HTML(http.StatusBadRequest, "EditarDesarrollo.html", gin.H{
-			"Error":                 err.Error(),
-			"Desarrollo":            d,
-			"Integrantes":           todos,
-			"Vinculados":            vinculados,
-			"ParticipantesExternos": externos,
-			"LoggedIn":              true,
-		})
+	if err := h.service.ActualizarCompleto(id, fields, form.IntegranteIDs, form.Externos); err != nil {
+		if errors.Is(err, desarrollo.ErrNotFound) {
+			c.Redirect(http.StatusSeeOther, urlListaDesarrollos+"?error=no-encontrado")
+			return
+		}
+		h.rechazarEdicion(c, err, id, form)
 		return
 	}
 
-	integranteIDs, externos := leerParticipantesDelForm(c)
-	if err := h.service.VincularIntegrantes(id, integranteIDs); err != nil {
-		h.logger.Error("Error al vincular integrantes al desarrollo", zap.Int("desarrollo_id", id), zap.Error(err))
-	}
-	if err := h.service.VincularParticipantesExternos(id, externos); err != nil {
-		h.logger.Error("Error al vincular participantes externos al desarrollo", zap.Int("desarrollo_id", id), zap.Error(err))
-	}
-
-	c.Redirect(http.StatusSeeOther, "/admin/desarrollos")
+	c.Redirect(http.StatusSeeOther, urlListaDesarrollos+"?ok=producto-actualizado")
 }
 
 func (h *DesarrolloHandler) Borrar(c *gin.Context) {
-	idParam := c.Query("id")
-	id, err := strconv.Atoi(idParam)
-	if err == nil && id > 0 {
-		if errDel := h.service.Delete(id); errDel != nil {
-			h.logger.Error("Error al eliminar desarrollo desde la plantilla", zap.Int("id", id), zap.Error(errDel))
-		}
+	id, err := strconv.Atoi(c.PostForm("id"))
+	if err != nil || id <= 0 {
+		c.Redirect(http.StatusSeeOther, urlListaDesarrollos+"?error=no-encontrado")
+		return
 	}
-	c.Redirect(http.StatusSeeOther, "/admin/desarrollos")
+
+	err = h.service.Delete(id)
+	switch {
+	case err == nil:
+		c.Redirect(http.StatusSeeOther, urlListaDesarrollos+"?ok=producto-eliminado")
+	case errors.Is(err, desarrollo.ErrNotFound), errors.Is(err, desarrollo.ErrIDInvalido):
+		c.Redirect(http.StatusSeeOther, urlListaDesarrollos+"?error=no-encontrado")
+	default:
+		h.logger.Error("Error al eliminar producto desde la lista", zap.Int("id", id), zap.Error(err))
+		c.Redirect(http.StatusSeeOther, urlListaDesarrollos+"?error=error-eliminar")
+	}
+}
+
+func (h *DesarrolloHandler) BorrarGet(c *gin.Context) {
+	c.Redirect(http.StatusSeeOther, urlListaDesarrollos)
 }
 
 func (h *DesarrolloHandler) ViewLacis(c *gin.Context) {
-	desarrollos, err := h.service.GetAll()
-	if err != nil {
-		h.logger.Error("Error al obtener desarrollos para la sección de productos de software en Lacis.html", zap.Error(err))
-		desarrollos = []desarrollo.Desarrollo{}
-	}
-
-	var lista []DesarrolloConParticipantes
-	for _, d := range desarrollos {
-		vinculados, _ := h.service.ObtenerIntegrantes(d.ID)
-		externos, _ := h.service.ObtenerParticipantesExternos(d.ID)
-		lista = append(lista, DesarrolloConParticipantes{
-			Desarrollo:            d,
-			Integrantes:           vinculados,
-			ParticipantesExternos: externos,
-		})
-	}
-
+	lista, err := h.productosConParticipantes()
 	_, loggedIn := CurrentUserID(c)
 
-	c.HTML(http.StatusOK, "Lacis.html", gin.H{
-		"Desarrollos": lista,
-		"LoggedIn":    loggedIn,
-	})
+	datos := gin.H{"LoggedIn": loggedIn}
+	if err != nil {
+		h.logger.Error("Error al obtener productos para la sección de productos de software en Lacis.html", zap.Error(err))
+		datos["ErrorProductos"] = true
+	} else {
+		datos["Desarrollos"] = lista
+	}
+
+	c.HTML(http.StatusOK, "Lacis.html", datos)
 }
